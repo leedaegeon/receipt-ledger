@@ -1,0 +1,41 @@
+{
+  "suite": "exceptions",
+  "cases": [
+    {
+      "label": "empty-json",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "broken-json",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "missing-header",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "invalid-option",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "bad-feedback",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "encoding-csv",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "invalid-pdf",
+      "pass": true,
+      "error": null
+    }
+  ],
+  "all_pass": true
+}

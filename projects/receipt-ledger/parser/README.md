@@ -147,6 +147,7 @@ python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 ```
 - 기대 출력: `QA_SMOKE_OK`
+- summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
 - 포함 검증:
   - 5,000행 벤치마크 목표 통과(`overall: PASS`)
   - `fixtures/empty.json` 빈 JSON 에러 메시지

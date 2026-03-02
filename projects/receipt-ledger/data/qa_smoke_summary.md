@@ -1,10 +1,15 @@
 # Receipt Ledger QA Smoke Summary
 
-- suite: exceptions
+- suite: all
 - overall: PASS
+- passed: 8
+- failed: 0
+
+## All Cases
 
 | case | pass | note |
 |---|:---:|---|
+| benchmark-5000 | ✅ |  |
 | empty-json | ✅ |  |
 | broken-json | ✅ |  |
 | missing-header | ✅ |  |

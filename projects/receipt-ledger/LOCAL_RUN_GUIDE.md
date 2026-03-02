@@ -188,6 +188,7 @@ cat ../data/qa_policy_brief.md
 - 실패 시 어떤 케이스가 깨졌는지 `FAIL <label>: ...` 형태로 즉시 표시
 - `qa_smoke_summary.md`에 passed/failed 카운트 + 실패 케이스 테이블 표시
 - `qa_integrated_summary.md` 상단에서 policy 상태(`failed <= max_failures`) 확인
+- `qa_policy_brief.md`에서 우선순위(HIGH/MEDIUM)와 Action Items 확인
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

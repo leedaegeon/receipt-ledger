@@ -17,6 +17,7 @@ def main():
                 break
 
     lines = ["# QA Policy Brief", "", status_line, ""]
+    action_items = []
 
     if bench.exists():
         b = json.loads(bench.read_text(encoding="utf-8"))
@@ -26,7 +27,8 @@ def main():
         lines.append("## Benchmark Fail Steps")
         if failing_steps:
             for s in failing_steps:
-                lines.append(f"- ❌ {s}")
+                lines.append(f"- 🔴 [HIGH] {s}")
+                action_items.append(f"[HIGH] benchmark step `{s}` 성능 목표 미달 원인 분석/최적화")
         else:
             lines.append("- 없음")
         lines.append("")
@@ -37,9 +39,20 @@ def main():
         lines.append("## Smoke Failed Cases")
         if failed_cases:
             for c in failed_cases:
-                lines.append(f"- ❌ {c.get('label')}: {(c.get('error') or '').replace(chr(10), ' ')}")
+                label = c.get('label')
+                err = (c.get('error') or '').replace(chr(10), ' ')
+                lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
+                action_items.append(f"[MEDIUM] smoke case `{label}` 실패 수정 및 fixture/메시지 재검증")
         else:
             lines.append("- 없음")
+
+    lines.append("")
+    lines.append("## Action Items")
+    if action_items:
+        for item in action_items:
+            lines.append(f"- {item}")
+    else:
+        lines.append("- 없음 (현재 정책 기준 PASS)")
 
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"saved -> {out}")

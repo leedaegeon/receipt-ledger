@@ -90,6 +90,15 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/benchmark_summary.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Append policy status to job summary (top)
+        if: always() && matrix.suite == 'benchmark'
+        run: |
+          STATUS_LINE=$(grep -m1 "^- status(policy):" ../data/qa_integrated_summary.md || true)
+          if [ -n "$STATUS_LINE" ]; then
+            echo "$STATUS_LINE" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Append integrated summary to job summary
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_integrated_summary.md >> $GITHUB_STEP_SUMMARY

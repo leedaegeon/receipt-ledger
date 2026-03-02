@@ -29,9 +29,25 @@ def main():
     normalized_path = Path(args.normalized_json)
     feedback_path = Path(args.feedback_json)
 
-    txs = json.loads(normalized_path.read_text())
-    feedback = json.loads(feedback_path.read_text())
+    if not normalized_path.exists():
+        raise SystemExit(f"normalized 파일이 없습니다: {normalized_path}")
+    if not feedback_path.exists():
+        raise SystemExit(f"feedback 파일이 없습니다: {feedback_path}")
+
+    try:
+        txs = json.loads(normalized_path.read_text(encoding="utf-8"))
+        feedback = json.loads(feedback_path.read_text(encoding="utf-8"))
+    except UnicodeDecodeError as e:
+        raise SystemExit(f"입력 파일 인코딩 오류(UTF-8 필요): {e}")
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"손상된 JSON 형식입니다: {e}")
+
+    if not isinstance(txs, list):
+        raise SystemExit("normalized JSON은 transaction 배열(list)이어야 합니다.")
+
     items = feedback.get("items", []) if isinstance(feedback, dict) else feedback
+    if not isinstance(items, list):
+        raise SystemExit("feedback JSON은 items 배열(list)을 포함해야 합니다.")
 
     rules = load_rules(Path(args.rules) if args.rules else None)
 

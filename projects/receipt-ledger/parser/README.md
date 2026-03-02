@@ -94,6 +94,44 @@ python3 verify_fixed_cost_detection.py
 - 기대 결과: `OK: fixed-cost detection verified`
 - 산출물: `../data/sample_fixed_cost.report.json`
 
+## D12: 성능/예외 처리 검증
+
+### 1) 파이프라인 벤치마크 (5,000행 synthetic)
+```bash
+cd projects/receipt-ledger/parser
+python3 benchmark_pipeline.py --rows 5000 --repeats 3 --out ../data/benchmark_pipeline_result.json
+```
+- 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
+- 결과 파일: `../data/benchmark_pipeline_result.json`
+
+### 2) 입력 예외 처리 확인
+```bash
+# 빈 파일
+: > ../data/empty.json
+python3 monthly_report.py ../data/empty.json
+
+# 손상 JSON
+printf '{broken' > ../data/broken.json
+python3 export_uncategorized.py ../data/broken.json
+
+# 잘못된 인코딩(예: cp949 파일)
+python3 run_import.py ../data/sample_cp949.csv
+```
+- 기대: 각 스크립트가 `입력 파일 인코딩 오류`, `손상된 JSON 형식`, `필수 헤더 누락` 등 명확한 에러 메시지 출력
+
+### 3) 고정비 탐지 파라미터 튜닝
+기본값은 유지하면서 아래 CLI 옵션으로 조정 가능합니다.
+- `--fixed-cost-amount-tolerance-ratio` (기본 0.15)
+- `--fixed-cost-amount-tolerance-abs` (기본 10000)
+- `--fixed-cost-min-months` (기본 2)
+- `--fixed-cost-min-average-amount` (기본 30000)
+
+예시:
+```bash
+python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-months 3
+python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --fixed-cost-min-months 3
+```
+
 ## 다음 액션
 1. 앱 UI에서 미분류 리스트 화면 연결
 2. 카테고리 선택 시 apply_feedback와 동일 로직 호출

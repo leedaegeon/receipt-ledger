@@ -64,12 +64,31 @@ def _build_tx(date_text: str, direction_text: str, amount_text: str, merchant_te
     )
 
 
-def parse_csv_with_invalid(path: Path, account_label: str = "토스뱅크") -> Tuple[List[Transaction], list[dict]]:
+def parse_csv_with_invalid(
+    path: Path,
+    account_label: str = "토스뱅크",
+    fixed_cost_options: dict | None = None,
+) -> Tuple[List[Transaction], list[dict]]:
     rows: List[Transaction] = []
     invalid: list[dict] = []
+
     with path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError("CSV가 비어있거나 헤더를 읽을 수 없습니다.")
+
+        header_set = set(reader.fieldnames)
+        has_date = any(h in header_set for h in DATE_HEADERS)
+        has_amount = any(h in header_set for h in AMOUNT_HEADERS)
+        if not has_date or not has_amount:
+            raise ValueError(
+                "필수 헤더 누락: 날짜 헤더(" + ", ".join(DATE_HEADERS) + "), "
+                "금액 헤더(" + ", ".join(AMOUNT_HEADERS) + ") 중 하나 이상이 필요합니다."
+            )
+
+        row_count = 0
         for idx, r in enumerate(reader, start=2):
+            row_count += 1
             date_text = _pick(r, DATE_HEADERS)
             amount_text = _pick(r, AMOUNT_HEADERS)
             merchant_text = _pick(r, MERCHANT_HEADERS)
@@ -83,18 +102,30 @@ def parse_csv_with_invalid(path: Path, account_label: str = "토스뱅크") -> T
             except Exception as e:
                 invalid.append({"row": idx, "reason": f"parse_error:{type(e).__name__}", "raw": r})
                 continue
+
+        if row_count == 0:
+            raise ValueError("CSV 데이터 행이 없습니다. (헤더만 존재)")
+
     deduped = deduplicate(rows)
-    fixed_candidates = detect_fixed_cost_candidates(deduped)
+    fixed_candidates = detect_fixed_cost_candidates(deduped, **(fixed_cost_options or {}))
     annotate_fixed_cost_candidates(deduped, fixed_candidates)
     return deduped, invalid
 
 
-def parse_csv(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:
-    rows, _ = parse_csv_with_invalid(path, account_label)
+def parse_csv(
+    path: Path,
+    account_label: str = "토스뱅크",
+    fixed_cost_options: dict | None = None,
+) -> List[Transaction]:
+    rows, _ = parse_csv_with_invalid(path, account_label, fixed_cost_options=fixed_cost_options)
     return rows
 
 
-def parse_pdf_with_invalid(path: Path, account_label: str = "토스뱅크") -> Tuple[List[Transaction], list[dict]]:
+def parse_pdf_with_invalid(
+    path: Path,
+    account_label: str = "토스뱅크",
+    fixed_cost_options: dict | None = None,
+) -> Tuple[List[Transaction], list[dict]]:
     parser_js = Path(__file__).with_name("pdf_extract.js")
     proc = subprocess.run(
         ["node", str(parser_js), str(path)],
@@ -103,6 +134,8 @@ def parse_pdf_with_invalid(path: Path, account_label: str = "토스뱅크") -> T
         check=True,
     )
     text = proc.stdout
+    if not text.strip():
+        raise ValueError("PDF 텍스트 추출 결과가 비어 있습니다. 손상 파일이거나 지원되지 않는 형식일 수 있습니다.")
 
     owner_match = re.search(r"예금주\s+([가-힣A-Za-z0-9_]+)", text)
     owner_name = owner_match.group(1) if owner_match else ""
@@ -151,11 +184,15 @@ def parse_pdf_with_invalid(path: Path, account_label: str = "토스뱅크") -> T
                 tx.category = "금융이체"
 
     deduped = deduplicate(rows)
-    fixed_candidates = detect_fixed_cost_candidates(deduped)
+    fixed_candidates = detect_fixed_cost_candidates(deduped, **(fixed_cost_options or {}))
     annotate_fixed_cost_candidates(deduped, fixed_candidates)
     return deduped, invalid
 
 
-def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:
-    rows, _ = parse_pdf_with_invalid(path, account_label)
+def parse_pdf(
+    path: Path,
+    account_label: str = "토스뱅크",
+    fixed_cost_options: dict | None = None,
+) -> List[Transaction]:
+    rows, _ = parse_pdf_with_invalid(path, account_label, fixed_cost_options=fixed_cost_options)
     return rows

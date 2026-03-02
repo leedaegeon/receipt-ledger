@@ -111,7 +111,7 @@ python3 benchmark_summary.py
 - 결과 파일:
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
   - `../data/benchmark_history.jsonl` (실행 이력 누적)
-  - `../data/benchmark_summary.md` (최근 5회 추이 + 이전 실행 대비 Δ 포함)
+  - `../data/benchmark_summary.md` (최근 5회 추이 + 이전 실행 대비 Δ + 회귀 경고 포함)
 
 ### 2) 입력 예외 처리 확인
 ```bash

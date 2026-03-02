@@ -29,8 +29,10 @@ D12/D13 자동검증에서 사용하는 실패 기준을 명시한다.
 
 관련 옵션:
 - `qa_smoke.py --max-failures <n> --report-json <path>`
+- `check_action_item_ownership.py --fail-on-unassigned-high`
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
+  - `failOnUnassignedHigh` (default: false)
 
 정책 판정:
 - policy PASS 조건 = `failed_count <= max_failures`

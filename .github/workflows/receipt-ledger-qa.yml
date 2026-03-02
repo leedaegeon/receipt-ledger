@@ -15,6 +15,10 @@ on:
         description: 'Allowed failed cases in qa_smoke before job failure'
         required: false
         default: '0'
+      failOnUnassignedHigh:
+        description: 'Fail when HIGH action items have owner/due as TBD (true/false)'
+        required: false
+        default: 'false'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -98,22 +102,16 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Warn if HIGH action items have TBD owner/due
+      - name: Check HIGH action item ownership
         if: always() && matrix.suite == 'benchmark'
+        env:
+          FAIL_UNASSIGNED_HIGH: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnUnassignedHigh || 'false' }}
         run: |
-          python - <<'PY' > /tmp/high_action_warn.md
-          import json
-          from pathlib import Path
-          p = Path('../data/qa_action_items.json')
-          if not p.exists():
-              raise SystemExit(0)
-          d = json.loads(p.read_text(encoding='utf-8'))
-          warn = [x for x in d.get('items', []) if x.get('priority') == 'HIGH' and (x.get('owner') == 'TBD' or x.get('due') == 'TBD')]
-          if warn:
-              print('## ⚠️ HIGH Action Items need owner/due')
-              for w in warn:
-                  print(f"- {w.get('task')} (owner={w.get('owner')}, due={w.get('due')})")
-          PY
+          if [ "$FAIL_UNASSIGNED_HIGH" = "true" ]; then
+            python check_action_item_ownership.py --path ../data/qa_action_items.json --fail-on-unassigned-high | tee /tmp/high_action_warn.md
+          else
+            python check_action_item_ownership.py --path ../data/qa_action_items.json | tee /tmp/high_action_warn.md
+          fi
           cat /tmp/high_action_warn.md >> $GITHUB_STEP_SUMMARY
 
       - name: Append integrated summary to job summary

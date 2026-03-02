@@ -89,6 +89,14 @@ def main():
         raise AssertionError("[encoding-csv] expected failure")
     assert_contains(out, "인코딩 오류", "encoding-csv")
 
+    # 8) invalid pdf content
+    invalid_pdf = fixtures / "invalid.pdf"
+    rc, out = run([sys.executable, "run_import.py", str(invalid_pdf)], parser_dir)
+    if rc == 0:
+        raise AssertionError("[invalid-pdf] expected failure")
+    if ("PDF 텍스트 추출 실패" not in out) and ("지원되지 않는 형식" not in out):
+        raise AssertionError(f"[invalid-pdf] expected PDF extraction failure message, got:\n{out}")
+
     print("QA_SMOKE_OK")
 
 

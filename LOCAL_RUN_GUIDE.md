@@ -171,10 +171,10 @@ python3 run_import.py ./fixtures/invalid.pdf
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite all --max-failures 0 --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark --report-json ../data/qa_smoke_report.json
-python3 qa_smoke.py --suite exceptions --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite benchmark --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json
 python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
@@ -189,9 +189,10 @@ cat ../data/qa_integrated_summary.md
 
 CI 실행 위치:
 - `.github/workflows/receipt-ledger-qa.yml`
-- workflow_dispatch에서 회귀 기준 조정 가능:
+- workflow_dispatch에서 기준 조정 가능:
   - `regressionThresholdSec` (기본 0.2)
   - `failOnRegression` (기본 true)
+  - `maxAllowedFailures` (기본 0)
 - 성공 시 benchmark 결과 아티팩트(`receipt-ledger-benchmark`) 업로드
 
 ### 5-4) 고정비 탐지 파라미터 조정

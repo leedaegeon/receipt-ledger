@@ -19,6 +19,7 @@ def parse_args():
     ap = argparse.ArgumentParser(description="Receipt-ledger QA smoke runner")
     ap.add_argument("--suite", choices=["all", "benchmark", "exceptions"], default="all")
     ap.add_argument("--report-json", default=None, help="Optional path to save suite/case pass-fail report")
+    ap.add_argument("--max-failures", type=int, default=0, help="Allowed failure count before non-zero exit")
     return ap.parse_args()
 
 
@@ -144,11 +145,14 @@ def main():
         p.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"saved -> {p}")
 
-    if not report["all_pass"]:
-        failed = [c for c in report["cases"] if not c["pass"]]
+    failed = [c for c in report["cases"] if not c["pass"]]
+    report["failed_count"] = len(failed)
+    report["max_failures"] = args.max_failures
+
+    if len(failed) > args.max_failures:
         for c in failed:
             print(f"FAIL {c['label']}: {c['error']}")
-        raise SystemExit("QA_SMOKE_FAIL")
+        raise SystemExit(f"QA_SMOKE_FAIL: failed={len(failed)} allowed={args.max_failures}")
 
     print("QA_SMOKE_OK")
 

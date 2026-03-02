@@ -144,10 +144,10 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --f
 ## D13 QA 자동화 준비 (Smoke)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite all --max-failures 0 --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark --report-json ../data/qa_smoke_report.json
-python3 qa_smoke.py --suite exceptions --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite benchmark --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json
 python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
@@ -173,9 +173,10 @@ CI 준비:
 # matrix suite: benchmark / exceptions 로 분리 실행
 # 각 suite는 qa_smoke_report.json + qa_smoke_summary.md 생성 후 Job Summary에 첨부
 # benchmark job은 benchmark_summary.py도 추가 생성
-# workflow_dispatch 입력으로 회귀 기준 외부화 가능:
+# workflow_dispatch 입력으로 기준 외부화 가능:
 #   regressionThresholdSec (기본 0.2)
 #   failOnRegression (기본 true)
+#   maxAllowedFailures (기본 0)
 ```
 
 ## 다음 액션

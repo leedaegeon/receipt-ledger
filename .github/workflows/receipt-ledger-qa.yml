@@ -41,7 +41,15 @@ jobs:
         run: npm ci
 
       - name: Run QA smoke (${{ matrix.suite }})
-        run: python qa_smoke.py --suite ${{ matrix.suite }}
+        run: python qa_smoke.py --suite ${{ matrix.suite }} --report-json ../data/qa_smoke_report.json
+
+      - name: Build QA smoke summary markdown
+        if: always()
+        run: python qa_smoke_summary.py
+
+      - name: Append QA smoke summary to job summary
+        if: always()
+        run: cat ../data/qa_smoke_summary.md >> $GITHUB_STEP_SUMMARY
 
       - name: Build benchmark summary markdown
         if: always() && matrix.suite == 'benchmark'
@@ -59,3 +67,12 @@ jobs:
           path: |
             projects/receipt-ledger/data/benchmark_pipeline_result.json
             projects/receipt-ledger/data/benchmark_summary.md
+
+      - name: Upload smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: receipt-ledger-smoke-${{ matrix.suite }}
+          path: |
+            projects/receipt-ledger/data/qa_smoke_report.json
+            projects/receipt-ledger/data/qa_smoke_summary.md

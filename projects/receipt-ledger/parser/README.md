@@ -139,10 +139,12 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --f
 ## D13 QA 자동화 준비 (Smoke)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all
+python3 qa_smoke.py --suite all --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark
-python3 qa_smoke.py --suite exceptions
+python3 qa_smoke.py --suite benchmark --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --report-json ../data/qa_smoke_report.json
+python3 qa_smoke_summary.py
+cat ../data/qa_smoke_summary.md
 ```
 - 기대 출력: `QA_SMOKE_OK`
 - 포함 검증:
@@ -160,7 +162,8 @@ CI 준비:
 # GitHub Actions: .github/workflows/receipt-ledger-qa.yml
 # 수동 실행(workflow_dispatch) 또는 parser 변경 시 자동 실행
 # matrix suite: benchmark / exceptions 로 분리 실행
-# benchmark job은 benchmark_summary.py로 markdown 요약 생성 후 Job Summary에 첨부
+# 각 suite는 qa_smoke_report.json + qa_smoke_summary.md 생성 후 Job Summary에 첨부
+# benchmark job은 benchmark_summary.py도 추가 생성
 ```
 
 ## 다음 액션

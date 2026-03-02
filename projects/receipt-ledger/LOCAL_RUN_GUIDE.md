@@ -166,15 +166,17 @@ python3 run_import.py ./fixtures/invalid.pdf
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all
+python3 qa_smoke.py --suite all --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark
-python3 qa_smoke.py --suite exceptions
+python3 qa_smoke.py --suite benchmark --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --report-json ../data/qa_smoke_report.json
+python3 qa_smoke_summary.py
+cat ../data/qa_smoke_summary.md
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`
 - benchmark suite에서 `overall: PASS` 포함
-- 실패 시 어떤 케이스가 깨졌는지 `[label] expected ...` 형태로 즉시 표시
+- 실패 시 어떤 케이스가 깨졌는지 `FAIL <label>: ...` 형태로 즉시 표시
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

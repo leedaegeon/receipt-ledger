@@ -6,6 +6,8 @@
 
 - Python 3.10+
 - Node.js 18+ (`pdf_extract.js` 경유 PDF 파싱 시 필요)
+  - **권장:** Node 22+
+  - Node 18 사용 시 `pdf-parse@1.1.1` 고정 설치 필요
 - (선택) Android Studio / Gradle 환경
 
 권장 작업 위치:
@@ -18,6 +20,32 @@ cd /home/node/.openclaw/workspace
 
 ```bash
 cd projects/receipt-ledger/parser
+```
+
+### 2-1) PDF 파싱용 Node 의존성 설치 (최초 1회)
+
+#### Node 22+ 권장
+```bash
+npm init -y
+npm i pdf-parse
+```
+
+#### Node 18 사용 시 (호환 고정)
+```bash
+rm -rf node_modules package-lock.json package.json
+npm init -y
+npm i --save-exact pdf-parse@1.1.1
+```
+
+간단 확인:
+```bash
+node -e "console.log(process.version, require('pdf-parse/package.json').version)"
+node pdf_extract.js ../data/tossbank_statement_2026-03.pdf | head -n 5
+```
+
+### 2-2) Import 실행
+
+```bash
 python3 run_import.py ../data/tossbank_statement_2026-03.pdf --month 2026-03 --account 토스뱅크 --out-dir ../data
 ```
 
@@ -84,6 +112,10 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 - parser 경로 오타
 - 입력 파일 경로 오타 또는 읽기 권한 부족
 - JSON 산출물이 실제 생성되지 않았는데 후속 단계로 진행한 경우
+- `CalledProcessError ... pdf_extract.js` 발생 시:
+  1) `node pdf_extract.js <pdf경로>` 단독 실행으로 Node 에러 원문 확인
+  2) Node 18 환경이면 `pdf-parse@1.1.1`로 재설치
+  3) `PDFParse is not a constructor`가 나오면 `pdf_extract.js`를 현재 저장소 버전으로 되돌린 뒤 재시도
 
 ---
 

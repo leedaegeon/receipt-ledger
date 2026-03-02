@@ -3,7 +3,12 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
-from tossbank_parser import parse_csv, parse_pdf
+from tossbank_parser import (
+    parse_csv,
+    parse_csv_with_invalid,
+    parse_pdf,
+    parse_pdf_with_invalid,
+)
 
 
 def main():
@@ -17,9 +22,9 @@ def main():
         sys.exit(1)
 
     if p.suffix.lower() == ".csv":
-        txs = parse_csv(p)
+        txs, invalid = parse_csv_with_invalid(p)
     elif p.suffix.lower() == ".pdf":
-        txs = parse_pdf(p)
+        txs, invalid = parse_pdf_with_invalid(p)
     else:
         print("Unsupported format. Use .csv or .pdf")
         sys.exit(1)
@@ -27,7 +32,12 @@ def main():
     out = [asdict(x) for x in txs]
     out_path = p.with_suffix(".normalized.json")
     out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2, default=str))
-    print(f"parsed={len(out)} -> {out_path}")
+
+    invalid_path = p.with_suffix(".invalid.json")
+    invalid_path.write_text(json.dumps(invalid, ensure_ascii=False, indent=2, default=str))
+
+    print(f"parsed={len(out)} invalid={len(invalid)} -> {out_path}")
+    print(f"invalid_report -> {invalid_path}")
 
 
 if __name__ == "__main__":

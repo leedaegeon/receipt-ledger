@@ -18,6 +18,7 @@
 ```bash
 cd projects/receipt-ledger/parser
 python3 run_import.py ../data/sample_tossbank.csv
+# 생성: .normalized.json + .invalid.json
 ```
 
 ## PDF 처리
@@ -39,7 +40,14 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json
 - 파싱 건수: 160
 - 미분류 비율(지출 기준): 16.9%
 
+## 수동 분류 학습 (rules.json 누적)
+```bash
+python3 learn_rule.py "씨유인덕원점" "편의점"
+python3 run_import.py ../data/tossbank_statement_2026-03.pdf
+```
+- `../data/rules.json`에 `normalized_merchant -> category`가 누적 저장됩니다.
+
 ## 다음 액션
-1. Invalid row 리포트 및 수동 매핑 UI 연결
-2. 사용자 수정 기반 분류 학습 저장
+1. Invalid row UI 연결 (행별 수정/재처리)
+2. 사용자 수정 기반 분류 학습 자동 저장(앱 연동)
 3. 고정비 후보 로직 고도화

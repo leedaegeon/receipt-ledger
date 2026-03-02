@@ -43,9 +43,19 @@ jobs:
       - name: Run QA smoke (${{ matrix.suite }})
         run: python qa_smoke.py --suite ${{ matrix.suite }}
 
-      - name: Upload benchmark result
+      - name: Build benchmark summary markdown
+        if: always() && matrix.suite == 'benchmark'
+        run: python benchmark_summary.py
+
+      - name: Append benchmark summary to job summary
+        if: always() && matrix.suite == 'benchmark'
+        run: cat ../data/benchmark_summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload benchmark artifacts
         if: always() && matrix.suite == 'benchmark'
         uses: actions/upload-artifact@v4
         with:
           name: receipt-ledger-benchmark
-          path: projects/receipt-ledger/data/benchmark_pipeline_result.json
+          path: |
+            projects/receipt-ledger/data/benchmark_pipeline_result.json
+            projects/receipt-ledger/data/benchmark_summary.md

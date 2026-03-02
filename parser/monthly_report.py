@@ -98,6 +98,17 @@ def parse_args():
 def main():
     args = parse_args()
     p = Path(args.normalized_json)
+    if not p.exists():
+        raise SystemExit(f"리포트 생성 실패: 입력 파일이 없습니다: {p}")
+    if args.fixed_cost_amount_tolerance_ratio < 0:
+        raise SystemExit("리포트 생성 실패: --fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.")
+    if args.fixed_cost_amount_tolerance_abs < 0:
+        raise SystemExit("리포트 생성 실패: --fixed-cost-amount-tolerance-abs 는 0 이상이어야 합니다.")
+    if args.fixed_cost_min_months < 1:
+        raise SystemExit("리포트 생성 실패: --fixed-cost-min-months 는 1 이상이어야 합니다.")
+    if args.fixed_cost_min_average_amount < 0:
+        raise SystemExit("리포트 생성 실패: --fixed-cost-min-average-amount 는 0 이상이어야 합니다.")
+
     fixed_cost_options = {
         "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
         "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,

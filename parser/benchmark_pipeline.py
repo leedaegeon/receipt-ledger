@@ -15,6 +15,10 @@ def parse_args():
     ap.add_argument("--rows", type=int, default=5000, help="Synthetic CSV row count (default: 5000)")
     ap.add_argument("--repeats", type=int, default=3, help="Repeat count per step (default: 3)")
     ap.add_argument("--out", default=None, help="Output JSON path")
+    ap.add_argument("--target-import-sec", type=float, default=5.0, help="Target avg seconds for import step")
+    ap.add_argument("--target-export-sec", type=float, default=1.0, help="Target avg seconds for export_uncategorized step")
+    ap.add_argument("--target-apply-sec", type=float, default=1.0, help="Target avg seconds for apply_feedback step")
+    ap.add_argument("--target-report-sec", type=float, default=1.0, help="Target avg seconds for monthly_report step")
     return ap.parse_args()
 
 
@@ -105,15 +109,37 @@ def main():
         apply_cmd = [sys.executable, "apply_feedback.py", str(normalized_path), str(feedback_path)]
         report_cmd = [sys.executable, "monthly_report.py", str(normalized_path), "--month", "2026-03"]
 
+        steps = {
+            "import": measure(import_cmd, parser_dir, args.repeats),
+            "export_uncategorized": measure(export_cmd, parser_dir, args.repeats),
+            "apply_feedback": measure(apply_cmd, parser_dir, args.repeats),
+            "monthly_report": measure(report_cmd, parser_dir, args.repeats),
+        }
+
+        targets = {
+            "import": args.target_import_sec,
+            "export_uncategorized": args.target_export_sec,
+            "apply_feedback": args.target_apply_sec,
+            "monthly_report": args.target_report_sec,
+        }
+        verdicts = {
+            step: {
+                "avg_sec": steps[step]["avg_sec"],
+                "target_sec": targets[step],
+                "pass": steps[step]["avg_sec"] <= targets[step],
+            }
+            for step in steps
+        }
+
         result = {
             "rows": args.rows,
             "repeats": args.repeats,
             "python": sys.executable,
-            "steps": {
-                "import": measure(import_cmd, parser_dir, args.repeats),
-                "export_uncategorized": measure(export_cmd, parser_dir, args.repeats),
-                "apply_feedback": measure(apply_cmd, parser_dir, args.repeats),
-                "monthly_report": measure(report_cmd, parser_dir, args.repeats),
+            "targets_sec": targets,
+            "steps": steps,
+            "verdict": {
+                "all_pass": all(v["pass"] for v in verdicts.values()),
+                "steps": verdicts,
             },
         }
 
@@ -121,6 +147,11 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
         print(json.dumps(result, ensure_ascii=False, indent=2))
+        print("\n[benchmark summary]")
+        for step, info in result["verdict"]["steps"].items():
+            status = "PASS" if info["pass"] else "FAIL"
+            print(f"- {step}: {status} avg={info['avg_sec']}s target<={info['target_sec']}s")
+        print(f"- overall: {'PASS' if result['verdict']['all_pass'] else 'FAIL'}")
         print(f"saved -> {out}")
 
 

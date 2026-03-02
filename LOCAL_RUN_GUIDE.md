@@ -114,9 +114,24 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --out ../data/benchmark_pipeline_result.json
 ```
-확인 포인트:
-- 각 단계(import/export_uncategorized/apply_feedback/monthly_report) 평균/최소/최대 실행 시간
-- 결과 JSON 생성 여부
+기대 출력(요약):
+- `- import: PASS avg=...s target<=5.0s`
+- `- export_uncategorized: PASS avg=...s target<=1.0s`
+- `- apply_feedback: PASS avg=...s target<=1.0s`
+- `- monthly_report: PASS avg=...s target<=1.0s`
+- `- overall: PASS`
+
+정밀 확인 명령:
+```bash
+python3 - <<'PY'
+import json
+p='../data/benchmark_pipeline_result.json'
+d=json.load(open(p, encoding='utf-8'))
+print('all_pass=', d['verdict']['all_pass'])
+for k,v in d['verdict']['steps'].items():
+    print(k, 'avg=', v['avg_sec'], 'target=', v['target_sec'], 'pass=', v['pass'])
+PY
+```
 
 ### 5-2) 예외 처리
 ```bash
@@ -133,9 +148,10 @@ printf 'foo,bar\n1,2\n' > ../data/missing_header.csv
 python3 run_import.py ../data/missing_header.csv
 ```
 기대 결과:
-- "입력 JSON 파일이 비어 있습니다"
-- "손상된 JSON 형식"
-- "필수 헤더 누락"
+- (a) `리포트 생성 실패: 입력 JSON 파일이 비어 있습니다.`
+- (b) `손상된 JSON 형식입니다:`
+- (c) `입력 데이터 오류: 필수 헤더 누락:`
+- 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
 ### 5-3) 고정비 탐지 파라미터 조정
 기본값은 유지되며 필요 시 CLI로 조정 가능합니다.

@@ -72,39 +72,47 @@ def parse_csv_with_invalid(
     rows: List[Transaction] = []
     invalid: list[dict] = []
 
-    with path.open("r", encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        if not reader.fieldnames:
-            raise ValueError("CSV가 비어있거나 헤더를 읽을 수 없습니다.")
+    try:
+        f = path.open("r", encoding="utf-8-sig", newline="")
+    except UnicodeDecodeError as e:
+        raise ValueError(f"CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요): {e}") from e
 
-        header_set = set(reader.fieldnames)
-        has_date = any(h in header_set for h in DATE_HEADERS)
-        has_amount = any(h in header_set for h in AMOUNT_HEADERS)
-        if not has_date or not has_amount:
-            raise ValueError(
-                "필수 헤더 누락: 날짜 헤더(" + ", ".join(DATE_HEADERS) + "), "
-                "금액 헤더(" + ", ".join(AMOUNT_HEADERS) + ") 중 하나 이상이 필요합니다."
-            )
+    with f:
+        try:
+            reader = csv.DictReader(f)
+            if not reader.fieldnames:
+                raise ValueError("CSV가 비어있거나 헤더를 읽을 수 없습니다.")
 
-        row_count = 0
-        for idx, r in enumerate(reader, start=2):
-            row_count += 1
-            date_text = _pick(r, DATE_HEADERS)
-            amount_text = _pick(r, AMOUNT_HEADERS)
-            merchant_text = _pick(r, MERCHANT_HEADERS)
-            direction_text = _pick(r, DIRECTION_HEADERS)
+            header_set = set(reader.fieldnames)
+            has_date = any(h in header_set for h in DATE_HEADERS)
+            has_amount = any(h in header_set for h in AMOUNT_HEADERS)
+            if not has_date or not has_amount:
+                raise ValueError(
+                    "필수 헤더 누락: 날짜 헤더(" + ", ".join(DATE_HEADERS) + "), "
+                    "금액 헤더(" + ", ".join(AMOUNT_HEADERS) + ") 중 하나 이상이 필요합니다."
+                )
 
-            if not sum(bool(x) for x in [date_text, amount_text, merchant_text]) >= 2:
-                invalid.append({"row": idx, "reason": "insufficient_fields", "raw": r})
-                continue
-            try:
-                rows.append(_build_tx(date_text, direction_text, amount_text, merchant_text, account_label))
-            except Exception as e:
-                invalid.append({"row": idx, "reason": f"parse_error:{type(e).__name__}", "raw": r})
-                continue
+            row_count = 0
+            for idx, r in enumerate(reader, start=2):
+                row_count += 1
+                date_text = _pick(r, DATE_HEADERS)
+                amount_text = _pick(r, AMOUNT_HEADERS)
+                merchant_text = _pick(r, MERCHANT_HEADERS)
+                direction_text = _pick(r, DIRECTION_HEADERS)
 
-        if row_count == 0:
-            raise ValueError("CSV 데이터 행이 없습니다. (헤더만 존재)")
+                if not sum(bool(x) for x in [date_text, amount_text, merchant_text]) >= 2:
+                    invalid.append({"row": idx, "reason": "insufficient_fields", "raw": r})
+                    continue
+                try:
+                    rows.append(_build_tx(date_text, direction_text, amount_text, merchant_text, account_label))
+                except Exception as e:
+                    invalid.append({"row": idx, "reason": f"parse_error:{type(e).__name__}", "raw": r})
+                    continue
+
+            if row_count == 0:
+                raise ValueError("CSV 데이터 행이 없습니다. (헤더만 존재)")
+        except csv.Error as e:
+            raise ValueError(f"CSV 형식 오류(따옴표/구분자 손상 가능): {e}") from e
 
     deduped = deduplicate(rows)
     fixed_candidates = detect_fixed_cost_candidates(deduped, **(fixed_cost_options or {}))
@@ -127,12 +135,19 @@ def parse_pdf_with_invalid(
     fixed_cost_options: dict | None = None,
 ) -> Tuple[List[Transaction], list[dict]]:
     parser_js = Path(__file__).with_name("pdf_extract.js")
-    proc = subprocess.run(
-        ["node", str(parser_js), str(path)],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    try:
+        proc = subprocess.run(
+            ["node", str(parser_js), str(path)],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except FileNotFoundError as e:
+        raise ValueError("PDF 파싱에 node 실행파일이 필요합니다. (Node.js 22+ 설치 확인)") from e
+    except subprocess.CalledProcessError as e:
+        msg = (e.stderr or e.stdout or "").strip()
+        raise ValueError(f"PDF 텍스트 추출 실패(pdf_extract.js): {msg}") from e
+
     text = proc.stdout
     if not text.strip():
         raise ValueError("PDF 텍스트 추출 결과가 비어 있습니다. 손상 파일이거나 지원되지 않는 형식일 수 있습니다.")

@@ -28,7 +28,13 @@ def main():
         if failing_steps:
             for s in failing_steps:
                 lines.append(f"- 🔴 [HIGH] {s}")
-                action_items.append(f"[HIGH] benchmark step `{s}` 성능 목표 미달 원인 분석/최적화")
+                action_items.append({
+                    "priority": "HIGH",
+                    "task": f"benchmark step `{s}` 성능 목표 미달 원인 분석/최적화",
+                    "owner": "TBD",
+                    "due": "TBD",
+                    "verify": "python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json",
+                })
         else:
             lines.append("- 없음")
         lines.append("")
@@ -42,15 +48,25 @@ def main():
                 label = c.get('label')
                 err = (c.get('error') or '').replace(chr(10), ' ')
                 lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
-                action_items.append(f"[MEDIUM] smoke case `{label}` 실패 수정 및 fixture/메시지 재검증")
+                action_items.append({
+                    "priority": "MEDIUM",
+                    "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
+                    "owner": "TBD",
+                    "due": "TBD",
+                    "verify": "python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json",
+                })
         else:
             lines.append("- 없음")
 
     lines.append("")
     lines.append("## Action Items")
     if action_items:
-        for item in action_items:
-            lines.append(f"- {item}")
+        for idx, item in enumerate(action_items, start=1):
+            lines.append(f"### {idx}. [{item['priority']}] {item['task']}")
+            lines.append(f"- owner: {item['owner']}")
+            lines.append(f"- due: {item['due']}")
+            lines.append(f"- verify: `{item['verify']}`")
+            lines.append("")
     else:
         lines.append("- 없음 (현재 정책 기준 PASS)")
 

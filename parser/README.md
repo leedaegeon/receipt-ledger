@@ -159,7 +159,7 @@ cat ../data/qa_policy_brief.md
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
 - integrated summary는 benchmark + exceptions 결과를 한 문서로 통합
 - integrated summary 상단에 policy 상태(`failed <= max_failures`)가 표시됨
-- `qa_policy_brief.md`는 실패 원인(step/case) + 우선순위(HIGH/MEDIUM) + Action Items를 짧게 요약
+- `qa_policy_brief.md`는 실패 원인(step/case) + 우선순위(HIGH/MEDIUM) + Action Items(owner/due/verify 템플릿) 요약
 - 포함 검증:
   - 5,000행 벤치마크 목표 통과(`overall: PASS`)
   - `fixtures/empty.json` 빈 JSON 에러 메시지

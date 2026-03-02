@@ -36,6 +36,9 @@
 - Report: `buildMonthlyReport(...)` 결과를 `reportState`로 바인딩해 요약 표시 (`ReportScreen`)
 - 통합 샘플: `AppShell(viewModel)`에서 탭 전환으로 전체 플로우 검증
 
+## 로컬 실행 가이드
+- 프로젝트 전체 로컬 실행/스모크 테스트 절차: [`../LOCAL_RUN_GUIDE.md`](../LOCAL_RUN_GUIDE.md)
+
 ## 주의사항
 - 현재 템플릿은 **UI/상태 흐름 검증용**입니다.
 - 실제 배포 앱에서는 Python 실행 대신 Kotlin 이식/서버 API/임베디드 런타임 전략이 필요합니다.

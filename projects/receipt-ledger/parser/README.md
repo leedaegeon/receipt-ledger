@@ -1,5 +1,7 @@
 # TossBank Parser Prototype (Week 1)
 
+> 로컬 실행 + Android 파이프라인 smoke test 통합 문서: [`../LOCAL_RUN_GUIDE.md`](../LOCAL_RUN_GUIDE.md)
+
 ## 완료 범위 (D4~D7)
 - D4 파서 v1: CSV 기반 거래 파싱
 - D5 헤더 매핑: 후보 헤더 자동 탐지 로직

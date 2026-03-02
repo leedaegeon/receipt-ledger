@@ -2,6 +2,15 @@ name: receipt-ledger-qa
 
 on:
   workflow_dispatch:
+    inputs:
+      regressionThresholdSec:
+        description: 'Benchmark regression threshold in seconds (delta vs previous run)'
+        required: false
+        default: '0.2'
+      failOnRegression:
+        description: 'Fail benchmark job when regression exceeds threshold (true/false)'
+        required: false
+        default: 'true'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -53,7 +62,15 @@ jobs:
 
       - name: Build benchmark summary markdown
         if: always() && matrix.suite == 'benchmark'
-        run: python benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
+        env:
+          REG_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.regressionThresholdSec || '0.2' }}
+          FAIL_ON_REG: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnRegression || 'true' }}
+        run: |
+          if [ "$FAIL_ON_REG" = "true" ]; then
+            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD" --fail-on-regression
+          else
+            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD"
+          fi
 
       - name: Build integrated QA summary markdown
         if: always() && matrix.suite == 'benchmark'

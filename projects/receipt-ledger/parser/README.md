@@ -173,6 +173,9 @@ CI 준비:
 # matrix suite: benchmark / exceptions 로 분리 실행
 # 각 suite는 qa_smoke_report.json + qa_smoke_summary.md 생성 후 Job Summary에 첨부
 # benchmark job은 benchmark_summary.py도 추가 생성
+# workflow_dispatch 입력으로 회귀 기준 외부화 가능:
+#   regressionThresholdSec (기본 0.2)
+#   failOnRegression (기본 true)
 ```
 
 ## 다음 액션

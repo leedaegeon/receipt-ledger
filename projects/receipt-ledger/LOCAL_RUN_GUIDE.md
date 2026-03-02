@@ -162,6 +162,7 @@ python3 qa_smoke.py
 - 마지막 줄 `QA_SMOKE_OK`
 - 중간 출력에 `overall: PASS` 포함
 - 실패 시 어떤 케이스가 깨졌는지 `[label] expected ...` 형태로 즉시 표시
+- 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:
 - `.github/workflows/receipt-ledger-qa.yml`

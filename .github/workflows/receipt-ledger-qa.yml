@@ -98,6 +98,24 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Warn if HIGH action items have TBD owner/due
+        if: always() && matrix.suite == 'benchmark'
+        run: |
+          python - <<'PY' > /tmp/high_action_warn.md
+          import json
+          from pathlib import Path
+          p = Path('../data/qa_action_items.json')
+          if not p.exists():
+              raise SystemExit(0)
+          d = json.loads(p.read_text(encoding='utf-8'))
+          warn = [x for x in d.get('items', []) if x.get('priority') == 'HIGH' and (x.get('owner') == 'TBD' or x.get('due') == 'TBD')]
+          if warn:
+              print('## ⚠️ HIGH Action Items need owner/due')
+              for w in warn:
+                  print(f"- {w.get('task')} (owner={w.get('owner')}, due={w.get('due')})")
+          PY
+          cat /tmp/high_action_warn.md >> $GITHUB_STEP_SUMMARY
+
       - name: Append integrated summary to job summary
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_integrated_summary.md >> $GITHUB_STEP_SUMMARY
@@ -112,6 +130,7 @@ jobs:
             projects/receipt-ledger/data/benchmark_summary.md
             projects/receipt-ledger/data/qa_integrated_summary.md
             projects/receipt-ledger/data/qa_policy_brief.md
+            projects/receipt-ledger/data/qa_action_items.json
 
       - name: Upload smoke artifacts
         if: always()

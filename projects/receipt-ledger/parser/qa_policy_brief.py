@@ -8,6 +8,7 @@ def main():
     bench = root / "data" / "benchmark_pipeline_result.json"
     smoke = root / "data" / "qa_smoke_report.json"
     out = root / "data" / "qa_policy_brief.md"
+    out_json = root / "data" / "qa_action_items.json"
 
     status_line = "- status(policy): (unknown)"
     if integrated.exists():
@@ -71,7 +72,22 @@ def main():
         lines.append("- 없음 (현재 정책 기준 PASS)")
 
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    out_json.write_text(
+        json.dumps(
+            {
+                "status_line": status_line,
+                "count": len(action_items),
+                "items": action_items,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
     print(f"saved -> {out}")
+    print(f"saved -> {out_json}")
 
 
 if __name__ == "__main__":

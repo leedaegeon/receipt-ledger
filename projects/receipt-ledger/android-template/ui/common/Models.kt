@@ -52,5 +52,6 @@ data class ReviewUiState(
     val templatePath: String? = null,
     val items: List<UncategorizedItem> = emptyList(),
     val saving: Boolean = false,
+    val pendingSelections: Int = 0,
     val error: String? = null,
 )

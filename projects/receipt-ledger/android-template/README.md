@@ -6,6 +6,8 @@
 - `ui/upload/UploadScreen.kt`
   - `ActivityResultContracts.OpenDocument()` 기반 파일 선택기 wiring
   - URI 영구 권한(`takePersistableUriPermission`) 예시
+- `ui/review/UncategorizedReviewScreen.kt`
+  - 미분류 목록 + 항목 탭 시 다이얼로그 오픈 흐름
 - `ui/review/CategorySelectionDialog.kt`
   - 미분류 거래 카테고리 선택 다이얼로그 템플릿
 - `ui/common/Models.kt`
@@ -21,7 +23,7 @@
 
 ## 연결 포인트
 - UploadScreen: 파일 선택 → `onFilePicked(uri, displayName)` → `runImport(...)`
-- Review: 아이템 탭 → `CategorySelectionDialog` → 선택값 반영
+- Review: 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
 - Report: `buildMonthlyReport(...)` 호출 후 요약 표시
 
 ## 주의사항

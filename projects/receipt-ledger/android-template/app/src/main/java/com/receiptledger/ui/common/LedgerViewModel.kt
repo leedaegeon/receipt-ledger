@@ -169,13 +169,12 @@ class LedgerViewModelFactory(
     private val pipeline: LedgerPipeline,
     private val reviewFileGateway: ReviewFileGateway = ReviewFileGateway(),
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: androidx.lifecycle.CreationExtras): T {
-        val savedStateHandle = androidx.lifecycle.SavedStateHandle.createHandle(extras, null)
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return LedgerViewModel(
             pipeline = pipeline,
             reviewFileGateway = reviewFileGateway,
-            savedStateHandle = savedStateHandle,
+            savedStateHandle = SavedStateHandle(),
         ) as T
     }
 }

@@ -17,7 +17,7 @@
 ## 실행
 ```bash
 cd projects/receipt-ledger/parser
-python3 run_import.py ../data/sample_tossbank.csv
+python3 run_import.py ../data/sample_tossbank.csv --month 2026-02 --account 토스뱅크
 # 생성: .normalized.json + .invalid.json
 ```
 
@@ -33,7 +33,7 @@ python3 run_import.py ../data/tossbank_statement_2026-03.pdf
 
 ## 월간 리포트 생성
 ```bash
-python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json
+python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --month 2026-02 --account 토스뱅크
 ```
 
 ## 실파일 최신 결과

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "source": "../data/tossbank_statement_2026-03.2026-02.normalized.json",
+    "uncategorized_expense_count": 12,
+    "unique_merchants": 10
+  },
+  "items": [
+    {
+      "merchant_name": "부족한돈 자동환전 (USD) LUMA AI",
+      "normalized_merchant_name": "부족한돈 자동환전 (usd) luma ai",
+      "count": 2,
+      "category": ""
+    },
+    {
+      "merchant_name": "3층다락방",
+      "normalized_merchant_name": "3층다락방",
+      "count": 2,
+      "category": "식비"
+    },
+    {
+      "merchant_name": "(주)씨앤에스자산관리",
+      "normalized_merchant_name": "씨앤에스자산관리",
+      "count": 1,
+      "category": ""
+    },
+    {
+      "merchant_name": "홍지민(모임통장)",
+      "normalized_merchant_name": "홍지민(모임통장)",
+      "count": 1,
+      "category": ""
+    },
+    {
+      "merchant_name": "공공서비스요금창구_KICC",
+      "normalized_merchant_name": "공공서비스요금창구_kicc",
+      "count": 1,
+      "category": "주거/고정비"
+    },
+    {
+      "merchant_name": "조희장",
+      "normalized_merchant_name": "조희장",
+      "count": 1,
+      "category": ""
+    },
+    {
+      "merchant_name": "이벤트",
+      "normalized_merchant_name": "이벤트",
+      "count": 1,
+      "category": ""
+    },
+    {
+      "merchant_name": "세외수입_KICC(창구결제)",
+      "normalized_merchant_name": "세외수입_kicc(창구결제)",
+      "count": 1,
+      "category": ""
+    },
+    {
+      "merchant_name": "인덕원스타타워 외",
+      "normalized_merchant_name": "인덕원스타타워 외",
+      "count": 1,
+      "category": "주거/고정비"
+    },
+    {
+      "merchant_name": "후타가와",
+      "normalized_merchant_name": "후타가와",
+      "count": 1,
+      "category": "식비"
+    }
+  ]
+}

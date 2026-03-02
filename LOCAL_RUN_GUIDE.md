@@ -123,6 +123,7 @@ cat ../data/benchmark_summary.md
 - `- apply_feedback: PASS avg=...s target<=1.0s`
 - `- monthly_report: PASS avg=...s target<=1.0s`
 - `- overall: PASS`
+- `benchmark_summary.md`의 Recent Runs에서 Δ(이전 실행 대비 증감) 확인
 
 정밀 확인 명령:
 ```bash

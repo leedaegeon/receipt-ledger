@@ -144,11 +144,11 @@ python3 qa_smoke.py
 - 기대 출력: `QA_SMOKE_OK`
 - 포함 검증:
   - 5,000행 벤치마크 목표 통과(`overall: PASS`)
-  - 빈 JSON 에러 메시지
-  - 손상 JSON 에러 메시지
-  - CSV 헤더 누락 에러 메시지
+  - `fixtures/empty.json` 빈 JSON 에러 메시지
+  - `fixtures/broken.json` 손상 JSON 에러 메시지
+  - `fixtures/missing_header.csv` 헤더 누락 에러 메시지
   - 고정비 옵션 유효성 에러 메시지
-  - feedback schema 에러 메시지
+  - `fixtures/bad_feedback.json` feedback schema 에러 메시지
 
 CI 준비:
 ```bash

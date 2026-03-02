@@ -26,11 +26,15 @@ def main():
 
     if warn:
         print("## ⚠️ HIGH Action Items need owner/due")
+        print(f"- count: {len(warn)}")
         for w in warn:
-            print(f"- {w.get('task')} (owner={w.get('owner')}, due={w.get('due')})")
+            print(
+                f"- id={w.get('id')} task={w.get('task')} owner={w.get('owner')} due={w.get('due')}"
+            )
 
     if args.fail_on_unassigned_high and warn:
-        raise SystemExit(f"unassigned HIGH action items: {len(warn)}")
+        ids = ",".join(str(w.get("id")) for w in warn)
+        raise SystemExit(f"unassigned HIGH action items: count={len(warn)} ids={ids}")
 
 
 if __name__ == "__main__":

@@ -198,6 +198,7 @@ CI 실행 위치:
   - `regressionThresholdSec` (기본 0.2)
   - `failOnRegression` (기본 true)
   - `maxAllowedFailures` (기본 0)
+  - `failOnUnassignedHigh` (기본 false)
 - 성공 시 benchmark 결과 아티팩트(`receipt-ledger-benchmark`) 업로드
 
 ### 5-4) 고정비 탐지 파라미터 조정

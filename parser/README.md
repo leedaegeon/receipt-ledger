@@ -184,6 +184,7 @@ CI 준비:
 #   regressionThresholdSec (기본 0.2)
 #   failOnRegression (기본 true)
 #   maxAllowedFailures (기본 0)
+#   failOnUnassignedHigh (기본 false)
 ```
 
 정책 기준 문서: `../QA_POLICY.md`

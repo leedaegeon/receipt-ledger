@@ -161,6 +161,11 @@ python3 qa_smoke.py
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`
 - 중간 출력에 `overall: PASS` 포함
+- 실패 시 어떤 케이스가 깨졌는지 `[label] expected ...` 형태로 즉시 표시
+
+CI 실행 위치:
+- `.github/workflows/receipt-ledger-qa.yml`
+- 성공 시 benchmark 결과 아티팩트(`receipt-ledger-benchmark`) 업로드
 
 ### 5-4) 고정비 탐지 파라미터 조정
 기본값은 유지되며 필요 시 CLI로 조정 가능합니다.

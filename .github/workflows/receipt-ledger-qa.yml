@@ -1,0 +1,39 @@
+name: receipt-ledger-qa
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'projects/receipt-ledger/parser/**'
+      - 'projects/receipt-ledger/data/sample_tossbank.csv'
+      - 'projects/receipt-ledger/LOCAL_RUN_GUIDE.md'
+  pull_request:
+    paths:
+      - 'projects/receipt-ledger/parser/**'
+      - 'projects/receipt-ledger/data/sample_tossbank.csv'
+      - 'projects/receipt-ledger/LOCAL_RUN_GUIDE.md'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/receipt-ledger/parser
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run QA smoke
+        run: python qa_smoke.py
+
+      - name: Upload benchmark result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: receipt-ledger-benchmark
+          path: projects/receipt-ledger/data/benchmark_pipeline_result.json

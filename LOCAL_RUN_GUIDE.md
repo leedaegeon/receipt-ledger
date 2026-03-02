@@ -107,6 +107,43 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
   2) `node -v`가 22+인지 확인
   3) `PDFParse is not a constructor`가 나오면 `npm i pdf-parse` 재설치 후 `pdf_extract.js`를 현재 저장소 버전으로 되돌린 뒤 재시도
 
+## 5) D12 검증 절차 (성능 + 예외 처리)
+
+### 5-1) 성능 벤치마크
+```bash
+cd projects/receipt-ledger/parser
+python3 benchmark_pipeline.py --rows 5000 --repeats 3 --out ../data/benchmark_pipeline_result.json
+```
+확인 포인트:
+- 각 단계(import/export_uncategorized/apply_feedback/monthly_report) 평균/최소/최대 실행 시간
+- 결과 JSON 생성 여부
+
+### 5-2) 예외 처리
+```bash
+# (a) 빈 파일
+: > ../data/empty.json
+python3 monthly_report.py ../data/empty.json
+
+# (b) 손상 형식 JSON
+printf '{broken' > ../data/broken.json
+python3 export_uncategorized.py ../data/broken.json
+
+# (c) CSV 필수 헤더 누락
+printf 'foo,bar\n1,2\n' > ../data/missing_header.csv
+python3 run_import.py ../data/missing_header.csv
+```
+기대 결과:
+- "입력 JSON 파일이 비어 있습니다"
+- "손상된 JSON 형식"
+- "필수 헤더 누락"
+
+### 5-3) 고정비 탐지 파라미터 조정
+기본값은 유지되며 필요 시 CLI로 조정 가능합니다.
+```bash
+python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-months 3
+python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --fixed-cost-min-months 3
+```
+
 ---
 
 필요 시 이 문서를 기준으로 CI smoke job(예: import → export_uncategorized → monthly_report)으로 확장하세요.

@@ -12,6 +12,10 @@ def parse_args():
     ap.add_argument("--out-dir", default=None, help="Output directory (default: input file directory)")
     ap.add_argument("--month", default=None, help="Target month label (e.g. 2026-02)")
     ap.add_argument("--account", default="토스뱅크", help="Account label")
+    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=0.15)
+    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=10000)
+    ap.add_argument("--fixed-cost-min-months", type=int, default=2)
+    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=30000)
     return ap.parse_args()
 
 
@@ -21,12 +25,28 @@ def main():
     if not p.exists():
         raise SystemExit(f"File not found: {p}")
 
-    if p.suffix.lower() == ".csv":
-        txs, invalid = parse_csv_with_invalid(p, account_label=args.account)
-    elif p.suffix.lower() == ".pdf":
-        txs, invalid = parse_pdf_with_invalid(p, account_label=args.account)
-    else:
-        raise SystemExit("Unsupported format. Use .csv or .pdf")
+    fixed_cost_options = {
+        "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
+        "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
+        "min_months": args.fixed_cost_min_months,
+        "min_average_amount": args.fixed_cost_min_average_amount,
+    }
+
+    try:
+        if p.suffix.lower() == ".csv":
+            txs, invalid = parse_csv_with_invalid(p, account_label=args.account, fixed_cost_options=fixed_cost_options)
+        elif p.suffix.lower() == ".pdf":
+            txs, invalid = parse_pdf_with_invalid(p, account_label=args.account, fixed_cost_options=fixed_cost_options)
+        else:
+            raise SystemExit("Unsupported format. Use .csv or .pdf")
+    except UnicodeDecodeError as e:
+        raise SystemExit(f"입력 파일 인코딩 오류(UTF-8 필요): {p} ({e})")
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"입력 JSON 형식 오류: {p} ({e})")
+    except ValueError as e:
+        raise SystemExit(f"입력 데이터 오류: {e}")
+    except Exception as e:
+        raise SystemExit(f"파싱 실패: {type(e).__name__}: {e}")
 
     out_dir = Path(args.out_dir) if args.out_dir else p.parent
     out_dir.mkdir(parents=True, exist_ok=True)

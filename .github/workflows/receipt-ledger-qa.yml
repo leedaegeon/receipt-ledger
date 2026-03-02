@@ -47,17 +47,25 @@ jobs:
         if: always()
         run: python qa_smoke_summary.py
 
-      - name: Append QA smoke summary to job summary
-        if: always()
-        run: cat ../data/qa_smoke_summary.md >> $GITHUB_STEP_SUMMARY
-
       - name: Build benchmark summary markdown
         if: always() && matrix.suite == 'benchmark'
         run: python benchmark_summary.py
 
+      - name: Build integrated QA summary markdown
+        if: always() && matrix.suite == 'benchmark'
+        run: python qa_report_merge.py
+
+      - name: Append QA smoke summary to job summary
+        if: always()
+        run: cat ../data/qa_smoke_summary.md >> $GITHUB_STEP_SUMMARY
+
       - name: Append benchmark summary to job summary
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/benchmark_summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Append integrated summary to job summary
+        if: always() && matrix.suite == 'benchmark'
+        run: cat ../data/qa_integrated_summary.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload benchmark artifacts
         if: always() && matrix.suite == 'benchmark'
@@ -67,6 +75,7 @@ jobs:
           path: |
             projects/receipt-ledger/data/benchmark_pipeline_result.json
             projects/receipt-ledger/data/benchmark_summary.md
+            projects/receipt-ledger/data/qa_integrated_summary.md
 
       - name: Upload smoke artifacts
         if: always()

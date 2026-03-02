@@ -172,6 +172,8 @@ python3 qa_smoke.py --suite benchmark --report-json ../data/qa_smoke_report.json
 python3 qa_smoke.py --suite exceptions --report-json ../data/qa_smoke_report.json
 python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
+python3 qa_report_merge.py
+cat ../data/qa_integrated_summary.md
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`

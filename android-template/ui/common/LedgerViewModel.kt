@@ -96,12 +96,19 @@ class LedgerViewModel(
      */
     fun seedReviewItemsForTemplate() {
         _reviewState.value = ReviewUiState(
-            items = listOf(
-                UncategorizedItem(id = "1", merchant = "배달의민족", amount = 18500, date = "2026-03-01"),
-                UncategorizedItem(id = "2", merchant = "스타벅스", amount = 6100, date = "2026-03-01"),
-            ),
-            recentCategories = restoredRecentCategories,
-            pendingSelections = 2,
+            items = SampleData.previewReviewItems,
+            recentCategories = restoredRecentCategories.ifEmpty { SampleData.previewRecentCategories },
+            pendingSelections = SampleData.previewReviewItems.count { it.selectedCategory == null },
+        )
+    }
+
+    fun seedUploadForPreview(importResult: ImportResult = SampleData.previewImportResult) {
+        _uploadState.value = UploadUiState(
+            pickedUri = "content://preview/sample.pdf",
+            displayName = "sample_tossbank_statement.pdf",
+            importing = false,
+            lastImport = importResult,
+            error = null,
         )
     }
 

@@ -1,8 +1,10 @@
 import csv
+import re
+import subprocess
 from pathlib import Path
 from typing import List
 
-from models import RawRow, Transaction
+from models import Transaction
 from normalize import parse_datetime, parse_amount, normalize_merchant, resolve_direction
 from classifier import classify
 from dedup import make_hash, deduplicate
@@ -58,15 +60,84 @@ def parse_csv(path: Path, account_label: str = "토스뱅크") -> List[Transacti
     return deduplicate(rows)
 
 
-def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:
-    """
-    현재 런타임에는 PDF 텍스트 추출 라이브러리가 없어 placeholder로 유지.
-    우선순위:
-    1) pypdf / pdfplumber 도입
-    2) 페이지별 텍스트 추출
-    3) 라인 파서(날짜/금액/적요) 적용
-    """
-    raise NotImplementedError(
-        "PDF 파서는 환경 의존 라이브러리 설치 후 활성화됩니다. "
-        "임시로 PDF를 CSV로 변환해 parse_csv를 사용하세요."
+ROW_RE = re.compile(
+    r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(.+?)\s+([\-0-9,]+)\s+([\-0-9,]+)\s+(.+)$"
+)
+
+
+SKIP_PREFIXES = (
+    "거래내역서",
+    "예금주",
+    "계좌번호",
+    "예금종류",
+    "조회기간",
+    "본 확인서는",
+    "단위:",
+    "거래일자",
+    "-- ",
+)
+
+
+def _build_tx(date_text: str, direction_text: str, amount_text: str, merchant_text: str, account_label: str) -> Transaction:
+    occurred_at = parse_datetime(date_text)
+    amount_signed = parse_amount(amount_text)
+    direction = resolve_direction(amount_signed, direction_text, merchant_text)
+    merchant = (merchant_text or "미상").strip()
+    n_merchant = normalize_merchant(merchant)
+    category = classify(n_merchant)
+    h = make_hash(occurred_at, abs(amount_signed), n_merchant, account_label)
+    return Transaction(
+        occurred_at=occurred_at,
+        amount=abs(amount_signed),
+        direction=direction,
+        merchant_name=merchant,
+        normalized_merchant_name=n_merchant,
+        category=category,
+        memo=None,
+        account_label=account_label,
+        source_row_hash=h,
     )
+
+
+def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:
+    parser_js = Path(__file__).with_name("pdf_extract.js")
+    proc = subprocess.run(
+        ["node", str(parser_js), str(path)],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    text = proc.stdout
+
+    rows: List[Transaction] = []
+    last_idx = -1
+
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith(tuple(SKIP_PREFIXES)):
+            continue
+        if re.match(r"^\d+\s*/\s*\d+", line):
+            continue
+
+        m = ROW_RE.match(line)
+        if m:
+            dt, gubun, amount, _balance, merchant = m.groups()
+            try:
+                rows.append(_build_tx(dt, gubun, amount, merchant, account_label))
+                last_idx = len(rows) - 1
+            except Exception:
+                continue
+            continue
+
+        # 줄바꿈으로 merchant가 이어진 경우 (예: 올리브영 + 관악)
+        if last_idx >= 0:
+            tail = re.sub(r"\s+", " ", line).strip()
+            if tail and len(tail) <= 30 and not re.search(r"\d{4}-\d{2}-\d{2}", tail):
+                tx = rows[last_idx]
+                tx.merchant_name = f"{tx.merchant_name} {tail}".strip()
+                tx.normalized_merchant_name = normalize_merchant(tx.merchant_name)
+                tx.category = classify(tx.normalized_merchant_name)
+
+    return deduplicate(rows)

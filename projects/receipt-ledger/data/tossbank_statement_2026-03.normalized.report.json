@@ -1,0 +1,229 @@
+{
+  "total_income": 8034868,
+  "total_expense": 6019934,
+  "net_cashflow": 2014934,
+  "category_breakdown": [
+    [
+      "쇼핑",
+      2173912
+    ],
+    [
+      "주거/고정비",
+      1445900
+    ],
+    [
+      "미분류",
+      1200116
+    ],
+    [
+      "현금",
+      600000
+    ],
+    [
+      "식비",
+      243050
+    ],
+    [
+      "구독",
+      232000
+    ],
+    [
+      "생활",
+      30000
+    ],
+    [
+      "교통",
+      28800
+    ],
+    [
+      "의료/건강",
+      28200
+    ],
+    [
+      "금융이체",
+      14900
+    ],
+    [
+      "카페",
+      12500
+    ],
+    [
+      "편의점",
+      8400
+    ],
+    [
+      "환급",
+      2156
+    ]
+  ],
+  "top_expense_transactions": [
+    {
+      "occurred_at": "2026-02-13 21:45:46",
+      "amount": 700000,
+      "direction": "expense",
+      "merchant_name": "월세",
+      "normalized_merchant_name": "월세",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "a2b1fcb9c25411bd267aec061c83509566d8b77d"
+    },
+    {
+      "occurred_at": "2026-02-13 19:10:39",
+      "amount": 695795,
+      "direction": "expense",
+      "merchant_name": "대표인증(4)_나이스",
+      "normalized_merchant_name": "대표인증(4)_나이스",
+      "category": "쇼핑",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "a0c19652fb52c594b4f7cf86476a1300f02876be"
+    },
+    {
+      "occurred_at": "2026-02-12 23:21:37",
+      "amount": 695795,
+      "direction": "expense",
+      "merchant_name": "대표인증(4)_나이스",
+      "normalized_merchant_name": "대표인증(4)_나이스",
+      "category": "쇼핑",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "e5dec51e26c42de5a1711897aafa60c3459c3489"
+    },
+    {
+      "occurred_at": "2026-02-13 19:11:17",
+      "amount": 670000,
+      "direction": "expense",
+      "merchant_name": "조희장",
+      "normalized_merchant_name": "조희장",
+      "category": "미분류",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "4b6a742850bc7c96c1e38e5516b36959742c4a6b"
+    },
+    {
+      "occurred_at": "2026-02-16 09:15:49",
+      "amount": 627900,
+      "direction": "expense",
+      "merchant_name": "인덕원월세",
+      "normalized_merchant_name": "인덕원월세",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "b67162e1010aed5cdd64b0aee788958ac4d1e37b"
+    },
+    {
+      "occurred_at": "2026-02-13 10:07:08",
+      "amount": 600000,
+      "direction": "expense",
+      "merchant_name": "ATM현금",
+      "normalized_merchant_name": "atm현금",
+      "category": "현금",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "6dc45db6fced403b8707537302a389abf338d7b4"
+    },
+    {
+      "occurred_at": "2026-01-26 22:58:14",
+      "amount": 301680,
+      "direction": "expense",
+      "merchant_name": "인덕원스타타워 외",
+      "normalized_merchant_name": "인덕원스타타워 외",
+      "category": "미분류",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "50c395b73e42591c3cc65b21d61785fd8e6303ea"
+    },
+    {
+      "occurred_at": "2026-02-08 23:59:36",
+      "amount": 270725,
+      "direction": "expense",
+      "merchant_name": "중고거래_네이버페이",
+      "normalized_merchant_name": "중고거래_네이버페이",
+      "category": "쇼핑",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "bd123f295197cbdafea719a21272a15ba3c8a15f"
+    },
+    {
+      "occurred_at": "2026-01-25 09:18:38",
+      "amount": 232000,
+      "direction": "expense",
+      "merchant_name": "구독료",
+      "normalized_merchant_name": "구독료",
+      "category": "구독",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "2c1e724e061b5f237f0645b31f102b0300e325c6"
+    },
+    {
+      "occurred_at": "2026-02-04 10:16:58",
+      "amount": 108049,
+      "direction": "expense",
+      "merchant_name": "현대샵",
+      "normalized_merchant_name": "현대샵",
+      "category": "쇼핑",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "2a81384f23f09ffcf96582f7ad5ec2e6d62087a0"
+    }
+  ],
+  "fixed_cost_candidates": [
+    {
+      "occurred_at": "2026-02-17 11:55:36",
+      "amount": 100000,
+      "direction": "expense",
+      "merchant_name": "월세",
+      "normalized_merchant_name": "월세",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "e797a7903cf509c1eef6f4a79ecb092a35a06480"
+    },
+    {
+      "occurred_at": "2026-02-16 09:15:49",
+      "amount": 627900,
+      "direction": "expense",
+      "merchant_name": "인덕원월세",
+      "normalized_merchant_name": "인덕원월세",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "b67162e1010aed5cdd64b0aee788958ac4d1e37b"
+    },
+    {
+      "occurred_at": "2026-02-13 21:45:46",
+      "amount": 700000,
+      "direction": "expense",
+      "merchant_name": "월세",
+      "normalized_merchant_name": "월세",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "a2b1fcb9c25411bd267aec061c83509566d8b77d"
+    },
+    {
+      "occurred_at": "2026-01-26 19:09:02",
+      "amount": 18000,
+      "direction": "expense",
+      "merchant_name": "KT통신요금01",
+      "normalized_merchant_name": "kt통신요금01",
+      "category": "주거/고정비",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "119b1744602bb7be56ac8df346485ae403a25a38"
+    },
+    {
+      "occurred_at": "2026-01-25 09:18:38",
+      "amount": 232000,
+      "direction": "expense",
+      "merchant_name": "구독료",
+      "normalized_merchant_name": "구독료",
+      "category": "구독",
+      "memo": null,
+      "account_label": "토스뱅크",
+      "source_row_hash": "2c1e724e061b5f237f0645b31f102b0300e325c6"
+    }
+  ],
+  "uncategorized_count": 12
+}

@@ -30,7 +30,16 @@ python3 run_import.py ../data/tossbank_statement_2026-03.pdf
 # parsed=160 -> tossbank_statement_2026-03.normalized.json
 ```
 
+## 월간 리포트 생성
+```bash
+python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json
+```
+
+## 실파일 최신 결과
+- 파싱 건수: 160
+- 미분류 비율(지출 기준): 16.9%
+
 ## 다음 액션
-1. 분류 룰 고도화(미분류 축소)
-2. Invalid row 리포트 및 수동 매핑 UI 연결
-3. 월간 리포트 집계 모듈 연결
+1. Invalid row 리포트 및 수동 매핑 UI 연결
+2. 사용자 수정 기반 분류 학습 저장
+3. 고정비 후보 로직 고도화

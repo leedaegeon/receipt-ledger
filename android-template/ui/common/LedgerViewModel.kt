@@ -16,6 +16,9 @@ class LedgerViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    private val restoredRecentCategories: List<String> =
+        savedStateHandle.get<ArrayList<String>>("recentCategories")?.toList().orEmpty()
+
     private val _uploadState = MutableStateFlow(UploadUiState())
     val uploadState: StateFlow<UploadUiState> = _uploadState.asStateFlow()
 
@@ -64,6 +67,7 @@ class LedgerViewModel(
             _reviewState.value = ReviewUiState(
                 templatePath = templatePath,
                 items = items,
+                recentCategories = restoredRecentCategories,
                 pendingSelections = items.count { it.selectedCategory == null },
             )
         }.onFailure { e ->
@@ -96,6 +100,7 @@ class LedgerViewModel(
                 UncategorizedItem(id = "1", merchant = "배달의민족", amount = 18500, date = "2026-03-01"),
                 UncategorizedItem(id = "2", merchant = "스타벅스", amount = 6100, date = "2026-03-01"),
             ),
+            recentCategories = restoredRecentCategories,
             pendingSelections = 2,
         )
     }
@@ -105,8 +110,13 @@ class LedgerViewModel(
             val updated = state.items.map { item ->
                 if (item.id == itemId) item.copy(selectedCategory = category) else item
             }
+            val recent = listOf(category) + state.recentCategories.filterNot { it == category }
+            val trimmed = recent.take(5)
+            savedStateHandle["recentCategories"] = ArrayList(trimmed)
+
             state.copy(
                 items = updated,
+                recentCategories = trimmed,
                 pendingSelections = updated.count { it.selectedCategory == null },
                 error = null,
             )

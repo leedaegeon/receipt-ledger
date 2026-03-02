@@ -20,6 +20,10 @@
 - `ui/common/LedgerViewModel.kt`
   - 상태/이벤트
   - `LedgerViewModelFactory` + `SavedStateHandle` 생성 노트
+- `ui/common/AppShell.kt`
+  - 업로드/검수/리포트 탭 기반 통합 샘플
+- `ui/report/ReportScreen.kt`
+  - 월간 요약 카드 렌더링 템플릿
 
 ## ViewModel Factory 노트
 - Compose/NavGraph 스코프에서 동일 ViewModel을 공유하려면 동일 owner를 사용하세요.
@@ -29,7 +33,8 @@
 ## 연결 포인트
 - UploadScreen: 파일 선택 → `onFilePicked(uri, displayName)` → `runImport(...)`
 - Review: 템플릿 로드(`loadReviewTemplate`) → 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
-- Report: `buildMonthlyReport(...)` 호출 후 요약 표시
+- Report: `buildMonthlyReport(...)` 호출 후 요약 표시 (`ReportScreen`)
+- 통합 샘플: `AppShell(viewModel)`에서 탭 전환으로 전체 플로우 검증
 
 ## 주의사항
 - 현재 템플릿은 **UI/상태 흐름 검증용**입니다.

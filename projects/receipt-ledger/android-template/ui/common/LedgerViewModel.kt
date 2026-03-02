@@ -118,6 +118,7 @@ class LedgerViewModel(
                 items = updated,
                 recentCategories = trimmed,
                 pendingSelections = updated.count { it.selectedCategory == null },
+                lastApplyResult = null,
                 error = null,
             )
         }
@@ -125,12 +126,12 @@ class LedgerViewModel(
 
     fun saveReviewFeedback(normalizedPath: String, feedbackPath: String) {
         viewModelScope.launch {
-            _reviewState.update { it.copy(saving = true, error = null) }
+            _reviewState.update { it.copy(saving = true, lastApplyResult = null, error = null) }
             runCatching {
                 reviewFileGateway.writeFeedback(feedbackPath, _reviewState.value.items)
                 pipeline.applyFeedback(normalizedPath, feedbackPath)
-            }.onSuccess {
-                _reviewState.update { it.copy(saving = false) }
+            }.onSuccess { result ->
+                _reviewState.update { it.copy(saving = false, lastApplyResult = result) }
             }.onFailure { e ->
                 _reviewState.update { it.copy(saving = false, error = e.message ?: "feedback save failed") }
             }

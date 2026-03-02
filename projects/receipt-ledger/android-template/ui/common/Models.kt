@@ -54,6 +54,7 @@ data class ReviewUiState(
     val recentCategories: List<String> = emptyList(),
     val saving: Boolean = false,
     val pendingSelections: Int = 0,
+    val lastApplyResult: ApplyResult? = null,
     val error: String? = null,
 )
 

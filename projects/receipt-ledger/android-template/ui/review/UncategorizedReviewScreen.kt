@@ -70,6 +70,14 @@ fun UncategorizedReviewScreen(
             }
         }
 
+        state.lastApplyResult?.let { result ->
+            Text(
+                text = "저장 완료 · 규칙 ${result.updatedRules}개 반영 / 재분류 ${result.recategorizedCount}건 (총 규칙 ${result.rulesTotal})",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+
         state.error?.let {
             Text(text = it, color = MaterialTheme.colorScheme.error)
         }

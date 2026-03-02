@@ -147,6 +147,7 @@ python3 qa_smoke.py
   - `fixtures/empty.json` 빈 JSON 에러 메시지
   - `fixtures/broken.json` 손상 JSON 에러 메시지
   - `fixtures/missing_header.csv` 헤더 누락 에러 메시지
+  - `fixtures/cp949.csv` 인코딩 에러 메시지
   - 고정비 옵션 유효성 에러 메시지
   - `fixtures/bad_feedback.json` feedback schema 에러 메시지
 

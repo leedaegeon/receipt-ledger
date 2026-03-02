@@ -99,7 +99,7 @@ python3 verify_fixed_cost_detection.py
 ### 1) 파이프라인 벤치마크 (5,000행 synthetic)
 ```bash
 cd projects/receipt-ledger/parser
-python3 benchmark_pipeline.py --rows 5000 --repeats 3 --out ../data/benchmark_pipeline_result.json
+python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
 ```
 - 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s
@@ -136,7 +136,19 @@ python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-mo
 python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --fixed-cost-min-months 3
 ```
 
+## D13 QA 자동화 준비 (Smoke)
+```bash
+cd projects/receipt-ledger/parser
+python3 qa_smoke.py
+```
+- 기대 출력: `QA_SMOKE_OK`
+- 포함 검증:
+  - 5,000행 벤치마크 목표 통과(`overall: PASS`)
+  - 빈 JSON 에러 메시지
+  - 손상 JSON 에러 메시지
+  - CSV 헤더 누락 에러 메시지
+
 ## 다음 액션
-1. 앱 UI에서 미분류 리스트 화면 연결
-2. 카테고리 선택 시 apply_feedback와 동일 로직 호출
-3. 고정비 후보 UX(후보 승인/제외 피드백) 연결
+1. qa_smoke.py를 CI job으로 연결
+2. fixture 기반 상세 케이스(encoding/csv quoting/pdf failure) 확장
+3. Android 템플릿과 parser smoke 결과 연동(개발자 메뉴)

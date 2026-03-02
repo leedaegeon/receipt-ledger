@@ -16,6 +16,14 @@ def _load_recent_history(history_path: Path, max_items: int = 5):
     return rows[-max_items:]
 
 
+def _fmt_delta(curr, prev):
+    if curr is None or prev is None:
+        return "-"
+    d = round(float(curr) - float(prev), 4)
+    sign = "+" if d > 0 else ""
+    return f"{sign}{d}"
+
+
 def main():
     root = Path(__file__).resolve().parents[1]
     result_path = root / "data" / "benchmark_pipeline_result.json"
@@ -47,14 +55,27 @@ def main():
             "",
             "## Recent Runs (latest 5)",
             "",
-            "| ts(UTC) | import avg(s) | export avg(s) | apply avg(s) | report avg(s) | all_pass |",
-            "|---|---:|---:|---:|---:|:---:|",
+            "| ts(UTC) | import avg(s) | Δimport | export avg(s) | Δexport | apply avg(s) | Δapply | report avg(s) | Δreport | all_pass |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|:---:|",
         ])
+        prev = None
         for r in recent:
             s = r.get("steps", {})
+            imp = s.get("import", {}).get("avg_sec")
+            exp = s.get("export_uncategorized", {}).get("avg_sec")
+            app = s.get("apply_feedback", {}).get("avg_sec")
+            rep = s.get("monthly_report", {}).get("avg_sec")
+
+            p = (prev or {}).get("steps", {})
+            p_imp = p.get("import", {}).get("avg_sec")
+            p_exp = p.get("export_uncategorized", {}).get("avg_sec")
+            p_app = p.get("apply_feedback", {}).get("avg_sec")
+            p_rep = p.get("monthly_report", {}).get("avg_sec")
+
             lines.append(
-                f"| {r.get('ts')} | {s.get('import', {}).get('avg_sec')} | {s.get('export_uncategorized', {}).get('avg_sec')} | {s.get('apply_feedback', {}).get('avg_sec')} | {s.get('monthly_report', {}).get('avg_sec')} | {'✅' if r.get('all_pass') else '❌'} |"
+                f"| {r.get('ts')} | {imp} | {_fmt_delta(imp, p_imp)} | {exp} | {_fmt_delta(exp, p_exp)} | {app} | {_fmt_delta(app, p_app)} | {rep} | {_fmt_delta(rep, p_rep)} | {'✅' if r.get('all_pass') else '❌'} |"
             )
+            prev = r
 
     text = "\n".join(lines) + "\n"
     out_path.write_text(text, encoding="utf-8")

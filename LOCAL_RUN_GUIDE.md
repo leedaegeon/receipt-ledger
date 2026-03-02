@@ -177,6 +177,7 @@ cat ../data/qa_smoke_summary.md
 - 마지막 줄 `QA_SMOKE_OK`
 - benchmark suite에서 `overall: PASS` 포함
 - 실패 시 어떤 케이스가 깨졌는지 `FAIL <label>: ...` 형태로 즉시 표시
+- `qa_smoke_summary.md`에 passed/failed 카운트 + 실패 케이스 테이블 표시
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

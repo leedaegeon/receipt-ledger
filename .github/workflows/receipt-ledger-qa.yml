@@ -28,6 +28,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pdf parser dependency
+        run: npm ci
+
       - name: Run QA smoke
         run: python qa_smoke.py
 

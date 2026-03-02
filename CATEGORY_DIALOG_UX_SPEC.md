@@ -40,4 +40,4 @@
 - 화면 템플릿: `android-template/ui/review/UncategorizedReviewScreen.kt`
 - UI 컴포넌트: `android-template/ui/review/CategorySelectionDialog.kt`
 - 상태 소스: `LedgerViewModel.reviewState.items`
-- 저장 동작: `apply_feedback.py` 반영 전 feedback json 업데이트
+- 저장 동작: `FeedbackTemplateMapper.toApplyFeedbackJson`으로 feedback json 생성 후 `apply_feedback.py` 반영

@@ -1,0 +1,68 @@
+[
+  {
+    "occurred_at": "2026-02-01 08:12:00",
+    "amount": 4500,
+    "direction": "expense",
+    "merchant_name": "스타벅스 강남점",
+    "normalized_merchant_name": "스타벅스 강남점",
+    "category": "카페",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "37c084d5df019f93d86ea5ecf33e43cdfb14c075"
+  },
+  {
+    "occurred_at": "2026-02-01 12:01:00",
+    "amount": 12000,
+    "direction": "expense",
+    "merchant_name": "한식당 점심",
+    "normalized_merchant_name": "한식당 점심",
+    "category": "미분류",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "5b39a5a938166254968f42a770f1974532ab26db"
+  },
+  {
+    "occurred_at": "2026-02-02 09:10:00",
+    "amount": 2500000,
+    "direction": "income",
+    "merchant_name": "급여",
+    "normalized_merchant_name": "급여",
+    "category": "미분류",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "359fd59e6eee2744b3923da6b9a7c5b85d4d43db"
+  },
+  {
+    "occurred_at": "2026-02-02 19:55:00",
+    "amount": 1300,
+    "direction": "expense",
+    "merchant_name": "버스",
+    "normalized_merchant_name": "버스",
+    "category": "교통",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "760eefec326473874142a8d03854205c921198b6"
+  },
+  {
+    "occurred_at": "2026-02-03 20:11:00",
+    "amount": 15900,
+    "direction": "expense",
+    "merchant_name": "NETFLIX",
+    "normalized_merchant_name": "netflix",
+    "category": "미분류",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "54ddd4e3f334ede78a19483a84ab60e5bec2214b"
+  },
+  {
+    "occurred_at": "2026-02-03 21:01:00",
+    "amount": 50000,
+    "direction": "transfer",
+    "merchant_name": "토스 이체",
+    "normalized_merchant_name": "토스 이체",
+    "category": "금융이체",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "7f5255a399ae028c1579eea6f939e6d175f0b1ed"
+  }
+]

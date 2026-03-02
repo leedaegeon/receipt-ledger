@@ -1,0 +1,36 @@
+from typing import Dict
+
+RULES: Dict[str, str] = {
+    "스타벅스": "카페",
+    "투썸": "카페",
+    "메가커피": "카페",
+    "컴포즈": "카페",
+    "빽다방": "카페",
+    "cu": "편의점",
+    "gs25": "편의점",
+    "세븐일레븐": "편의점",
+    "이마트24": "편의점",
+    "배달의민족": "식비",
+    "요기요": "식비",
+    "쿠팡이츠": "식비",
+    "카카오t": "교통",
+    "택시": "교통",
+    "버스": "교통",
+    "지하철": "교통",
+    "쿠팡": "쇼핑",
+    "11번가": "쇼핑",
+    "무신사": "쇼핑",
+    "넷플릭스": "구독",
+    "youtube": "구독",
+    "spotify": "구독",
+    "이체": "금융이체",
+    "송금": "금융이체",
+}
+
+
+def classify(merchant_name_normalized: str) -> str:
+    m = merchant_name_normalized.lower()
+    for k, v in RULES.items():
+        if k.lower() in m:
+            return v
+    return "미분류"

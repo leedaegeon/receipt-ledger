@@ -101,7 +101,7 @@ python3 verify_fixed_cost_detection.py
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
 python3 benchmark_history.py
-python3 benchmark_summary.py
+python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 ```
 - 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s

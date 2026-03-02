@@ -114,7 +114,7 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
 python3 benchmark_history.py
-python3 benchmark_summary.py
+python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 cat ../data/benchmark_summary.md
 ```
 기대 출력(요약):

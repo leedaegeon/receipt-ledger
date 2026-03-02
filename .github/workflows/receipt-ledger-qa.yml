@@ -53,7 +53,7 @@ jobs:
 
       - name: Build benchmark summary markdown
         if: always() && matrix.suite == 'benchmark'
-        run: python benchmark_summary.py
+        run: python benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 
       - name: Build integrated QA summary markdown
         if: always() && matrix.suite == 'benchmark'

@@ -40,14 +40,22 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --m
 - 파싱 건수: 160
 - 미분류 비율(지출 기준): 16.9%
 
-## 수동 분류 학습 (rules.json 누적)
+## 미분류 리스트 → 자동학습 플로우
 ```bash
-python3 learn_rule.py "씨유인덕원점" "편의점"
-python3 run_import.py ../data/tossbank_statement_2026-03.pdf
+# 1) 미분류 거래처 템플릿 추출
+python3 export_uncategorized.py ../data/tossbank_statement_2026-03.2026-02.normalized.json
+
+# 2) 생성된 *.feedback.template.json에서 category 채우기
+
+# 3) 피드백 반영 + rules.json 자동 누적 + 기존 내역 재분류
+python3 apply_feedback.py \
+  ../data/tossbank_statement_2026-03.2026-02.normalized.json \
+  ../data/tossbank_statement_2026-03.2026-02.normalized.feedback.template.json
 ```
 - `../data/rules.json`에 `normalized_merchant -> category`가 누적 저장됩니다.
+- 동일 거래처는 다음 import부터 자동 분류됩니다.
 
 ## 다음 액션
-1. Invalid row UI 연결 (행별 수정/재처리)
-2. 사용자 수정 기반 분류 학습 자동 저장(앱 연동)
+1. 앱 UI에서 미분류 리스트 화면 연결
+2. 카테고리 선택 시 apply_feedback와 동일 로직 호출
 3. 고정비 후보 로직 고도화

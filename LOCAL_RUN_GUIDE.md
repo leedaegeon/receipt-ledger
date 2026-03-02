@@ -113,6 +113,9 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 ```bash
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
+python3 benchmark_history.py
+python3 benchmark_summary.py
+cat ../data/benchmark_summary.md
 ```
 기대 출력(요약):
 - `- import: PASS avg=...s target<=5.0s`

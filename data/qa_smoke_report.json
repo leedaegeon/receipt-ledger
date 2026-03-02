@@ -1,43 +1,8 @@
 {
-  "suite": "all",
+  "suite": "benchmark",
   "cases": [
     {
       "label": "benchmark-5000",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "empty-json",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "broken-json",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "missing-header",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "invalid-option",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "bad-feedback",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "encoding-csv",
-      "pass": true,
-      "error": null
-    },
-    {
-      "label": "invalid-pdf",
       "pass": true,
       "error": null
     }

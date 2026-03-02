@@ -100,13 +100,18 @@ python3 verify_fixed_cost_detection.py
 ```bash
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
+python3 benchmark_history.py
+python3 benchmark_summary.py
 ```
 - 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s
 - 기대 출력 예:
   - `- import: PASS avg=...s target<=5.0s`
   - `- overall: PASS`
-- 결과 파일: `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
+- 결과 파일:
+  - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
+  - `../data/benchmark_history.jsonl` (실행 이력 누적)
+  - `../data/benchmark_summary.md` (최근 5회 추이 포함)
 
 ### 2) 입력 예외 처리 확인
 ```bash

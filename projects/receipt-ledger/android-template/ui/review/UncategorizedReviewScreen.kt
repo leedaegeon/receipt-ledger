@@ -80,6 +80,7 @@ fun UncategorizedReviewScreen(
             merchant = item.merchant,
             amountLabel = "${item.amount}원",
             categories = categories,
+            recentCategories = state.items.mapNotNull { it.selectedCategory }.distinct().take(5),
             currentSelection = item.selectedCategory,
             onSelect = { category ->
                 onItemCategorySelected(item.id, category)

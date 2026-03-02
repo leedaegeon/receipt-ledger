@@ -1,136 +1,181 @@
 package com.receiptledger.ui.common
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.io.File
-
-data class LedgerUiState(
-    val importStatus: String = "대기중",
-    val normalizedPath: String = "",
-    val feedbackPath: String = "",
-    val uncategorizedItems: List<UncategorizedItem> = emptyList(),
-    val reportSummary: ReportSummary = ReportSummary(0, 0, 0),
-    val uncategorizedCount: Int = 0,
-    val error: String? = null,
-)
 
 class LedgerViewModel(
-    private val runner: PipelineRunner,
-    private val outDir: File,
+    private val pipeline: LedgerPipeline,
+    private val reviewFileGateway: ReviewFileGateway,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _ui = MutableStateFlow(LedgerUiState())
-    val ui: StateFlow<LedgerUiState> = _ui.asStateFlow()
+    private val restoredRecentCategories: List<String> =
+        savedStateHandle.get<ArrayList<String>>("recentCategories")?.toList().orEmpty()
 
-    fun importStatement(inputPath: String, month: String, account: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+    private val _uploadState = MutableStateFlow(UploadUiState())
+    val uploadState: StateFlow<UploadUiState> = _uploadState.asStateFlow()
+
+    private val _reviewState = MutableStateFlow(ReviewUiState())
+    val reviewState: StateFlow<ReviewUiState> = _reviewState.asStateFlow()
+
+    private val _reportState = MutableStateFlow(ReportUiState())
+    val reportState: StateFlow<ReportUiState> = _reportState.asStateFlow()
+
+    fun onFilePicked(uri: String, displayName: String?) {
+        _uploadState.update {
+            it.copy(
+                pickedUri = uri,
+                displayName = displayName,
+                error = null,
+            )
+        }
+        savedStateHandle["pickedUri"] = uri
+        savedStateHandle["displayName"] = displayName
+    }
+
+    fun runImport(month: String, account: String) {
+        val uri = uploadState.value.pickedUri ?: return
+        viewModelScope.launch {
+            _uploadState.update { it.copy(importing = true, error = null) }
             runCatching {
-                _ui.value = _ui.value.copy(importStatus = "분석 중...", error = null)
-                runner.importStatement(inputPath, month, account, outDir.absolutePath)
-            }.onSuccess { r ->
-                _ui.value = _ui.value.copy(
-                    importStatus = "완료 (parsed=${r.parsedCount}, invalid=${r.invalidCount})",
-                    normalizedPath = r.normalizedPath,
+                pipeline.importStatement(
+                    inputPath = uri,
+                    month = month,
+                    account = account,
                 )
-                refreshReport(month, account)
+            }.onSuccess { result ->
+                _uploadState.update { it.copy(importing = false, lastImport = result) }
+                savedStateHandle["normalizedPath"] = result.normalizedPath
+                prepareReviewTemplate(result.normalizedPath)
             }.onFailure { e ->
-                _ui.value = _ui.value.copy(importStatus = "실패", error = e.message)
+                _uploadState.update { it.copy(importing = false, error = e.message ?: "import failed") }
             }
         }
     }
 
-    fun loadUncategorized() {
-        val normalized = _ui.value.normalizedPath
-        if (normalized.isBlank()) return
+    fun loadReviewTemplate(templatePath: String) {
+        runCatching {
+            reviewFileGateway.loadTemplate(templatePath)
+        }.onSuccess { items ->
+            _reviewState.value = ReviewUiState(
+                templatePath = templatePath,
+                items = items,
+                recentCategories = restoredRecentCategories,
+                pendingSelections = items.count { it.selectedCategory == null },
+            )
+        }.onFailure { e ->
+            _reviewState.value = ReviewUiState(error = e.message ?: "template load failed")
+        }
+    }
 
-        viewModelScope.launch(Dispatchers.IO) {
+    fun prepareReviewTemplate(normalizedPath: String) {
+        viewModelScope.launch {
+            _reviewState.update { it.copy(loading = true, error = null) }
             runCatching {
-                val feedbackPath = runner.exportUncategorized(normalized)
-                val obj = JSONObject(File(feedbackPath).readText())
-                val arr = obj.getJSONArray("items")
-                val items = buildList {
-                    for (i in 0 until arr.length()) {
-                        val it = arr.getJSONObject(i)
-                        add(
-                            UncategorizedItem(
-                                merchantName = it.optString("merchant_name"),
-                                normalizedMerchantName = it.optString("normalized_merchant_name"),
-                                count = it.optInt("count", 1),
-                                category = it.optString("category"),
-                            )
-                        )
-                    }
-                }
-                feedbackPath to items
-            }.onSuccess { (path, items) ->
-                _ui.value = _ui.value.copy(feedbackPath = path, uncategorizedItems = items, error = null)
-            }.onFailure { e ->
-                _ui.value = _ui.value.copy(error = e.message)
+                pipeline.exportUncategorized(normalizedPath)
+            }.onSuccess { tpl ->
+                loadReviewTemplate(tpl.path)
+                _reviewState.update { it.copy(loading = false) }
+            }.onFailure {
+                // 템플릿 I/O가 아직 연결되지 않은 환경을 위한 fallback
+                seedReviewItemsForTemplate()
+                _reviewState.update { it.copy(loading = false) }
             }
         }
     }
 
-    fun setCategory(item: UncategorizedItem, category: String) {
-        val updated = _ui.value.uncategorizedItems.map {
-            if (it.normalizedMerchantName == item.normalizedMerchantName) it.copy(category = category) else it
-        }
-        _ui.value = _ui.value.copy(uncategorizedItems = updated)
+    /**
+     * 템플릿 연결 전까지는 목데이터로 검수 화면 동작을 확인한다.
+     */
+    fun seedReviewItemsForTemplate() {
+        _reviewState.value = ReviewUiState(
+            items = SampleData.previewReviewItems,
+            recentCategories = restoredRecentCategories.ifEmpty { SampleData.previewRecentCategories },
+            pendingSelections = SampleData.previewReviewItems.count { it.selectedCategory == null },
+        )
     }
 
-    fun applyFeedback(month: String, account: String) {
-        val normalized = _ui.value.normalizedPath
-        val feedbackPath = _ui.value.feedbackPath
-        if (normalized.isBlank() || feedbackPath.isBlank()) return
+    fun seedUploadForPreview(importResult: ImportResult = SampleData.previewImportResult) {
+        _uploadState.value = UploadUiState(
+            pickedUri = "content://preview/sample.pdf",
+            displayName = "sample_tossbank_statement.pdf",
+            importing = false,
+            lastImport = importResult,
+            error = null,
+        )
+    }
 
-        viewModelScope.launch(Dispatchers.IO) {
+    fun onReviewCategorySelected(itemId: String, category: String) {
+        _reviewState.update { state ->
+            val updated = state.items.map { item ->
+                if (item.id == itemId) item.copy(selectedCategory = category) else item
+            }
+            val recent = listOf(category) + state.recentCategories.filterNot { it == category }
+            val trimmed = recent.take(5)
+            savedStateHandle["recentCategories"] = ArrayList(trimmed)
+
+            state.copy(
+                items = updated,
+                recentCategories = trimmed,
+                pendingSelections = updated.count { it.selectedCategory == null },
+                lastApplyResult = null,
+                error = null,
+            )
+        }
+    }
+
+    fun saveReviewFeedback(normalizedPath: String, feedbackPath: String) {
+        viewModelScope.launch {
+            _reviewState.update { it.copy(saving = true, lastApplyResult = null, error = null) }
             runCatching {
-                val fp = File(feedbackPath)
-                val obj = JSONObject(fp.readText())
-                val arr = obj.getJSONArray("items")
-                val mapped = _ui.value.uncategorizedItems.associateBy { it.normalizedMerchantName }
-                for (i in 0 until arr.length()) {
-                    val row = arr.getJSONObject(i)
-                    val key = row.optString("normalized_merchant_name")
-                    val chosen = mapped[key]?.category ?: ""
-                    row.put("category", chosen)
-                }
-                fp.writeText(obj.toString(2))
-                runner.applyFeedback(normalized, feedbackPath)
-            }.onSuccess {
-                refreshReport(month, account)
-                loadUncategorized()
+                reviewFileGateway.writeFeedback(feedbackPath, _reviewState.value.items)
+                pipeline.applyFeedback(normalizedPath, feedbackPath)
+            }.onSuccess { result ->
+                _reviewState.update { it.copy(saving = false, lastApplyResult = result) }
             }.onFailure { e ->
-                _ui.value = _ui.value.copy(error = e.message)
+                _reviewState.update { it.copy(saving = false, error = e.message ?: "feedback save failed") }
             }
         }
     }
 
-    fun refreshReport(month: String, account: String) {
-        val normalized = _ui.value.normalizedPath
-        if (normalized.isBlank()) return
-
-        viewModelScope.launch(Dispatchers.IO) {
+    fun buildMonthlyReport(month: String, account: String) {
+        val normalizedPath = uploadState.value.lastImport?.normalizedPath ?: return
+        viewModelScope.launch {
+            _reportState.update { it.copy(loading = true, error = null) }
             runCatching {
-                val reportPath = runner.buildReport(normalized, month, account)
-                val rep = JSONObject(File(reportPath).readText())
-                val summary = rep.getJSONObject("summary")
-                val unc = rep.getJSONObject("uncategorized").optInt("count", 0)
-                ReportSummary(
-                    totalIncome = summary.optLong("total_income", 0),
-                    totalExpense = summary.optLong("total_expense", 0),
-                    netCashflow = summary.optLong("net_cashflow", 0),
-                ) to unc
-            }.onSuccess { (sum, unc) ->
-                _ui.value = _ui.value.copy(reportSummary = sum, uncategorizedCount = unc, error = null)
+                pipeline.buildMonthlyReport(normalizedPath = normalizedPath, month = month, account = account)
+            }.onSuccess { report ->
+                _reportState.update { it.copy(loading = false, result = report) }
             }.onFailure { e ->
-                _ui.value = _ui.value.copy(error = e.message)
+                _reportState.update { it.copy(loading = false, error = e.message ?: "report build failed") }
             }
         }
+    }
+}
+
+/**
+ * ViewModel Factory Note:
+ * - Compose/NavGraph scope에서 동일 인스턴스를 쓰려면 owner(LocalViewModelStoreOwner/NavBackStackEntry) 고정 필요.
+ * - SavedStateHandle 사용 시 CreationExtras 기반 create() 구현이 안전.
+ */
+class LedgerViewModelFactory(
+    private val pipeline: LedgerPipeline,
+    private val reviewFileGateway: ReviewFileGateway = ReviewFileGateway(),
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: androidx.lifecycle.CreationExtras): T {
+        val savedStateHandle = androidx.lifecycle.SavedStateHandle.createHandle(extras, null)
+        @Suppress("UNCHECKED_CAST")
+        return LedgerViewModel(
+            pipeline = pipeline,
+            reviewFileGateway = reviewFileGateway,
+            savedStateHandle = savedStateHandle,
+        ) as T
     }
 }

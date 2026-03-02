@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "schema_version": "v1",
+    "month": "2026-03",
+    "account": "샘플",
+    "currency": "KRW"
+  },
+  "summary": {
+    "total_income": 0,
+    "total_expense": 1694000,
+    "net_cashflow": -1694000,
+    "expense_count": 6,
+    "income_count": 0
+  },
+  "category_breakdown": [
+    {
+      "category": "주거/고정비",
+      "amount": 1655000,
+      "ratio": 97.7
+    },
+    {
+      "category": "식비",
+      "amount": 39000,
+      "ratio": 2.3
+    }
+  ],
+  "top_expenses": [
+    {
+      "occurred_at": "2026-02-05 09:00:00",
+      "amount": 555000,
+      "direction": "expense",
+      "merchant_name": "행복월세",
+      "normalized_merchant_name": "행복월세",
+      "category": "주거/고정비"
+    },
+    {
+      "occurred_at": "2026-01-05 09:00:00",
+      "amount": 550000,
+      "direction": "expense",
+      "merchant_name": "행복월세",
+      "normalized_merchant_name": "행복월세",
+      "category": "주거/고정비"
+    },
+    {
+      "occurred_at": "2026-03-05 09:00:00",
+      "amount": 550000,
+      "direction": "expense",
+      "merchant_name": "행복월세",
+      "normalized_merchant_name": "행복월세",
+      "category": "주거/고정비"
+    },
+    {
+      "occurred_at": "2026-02-09 12:05:00",
+      "amount": 18000,
+      "direction": "expense",
+      "merchant_name": "점심식사",
+      "normalized_merchant_name": "점심식사",
+      "category": "식비"
+    },
+    {
+      "occurred_at": "2026-01-18 12:10:00",
+      "amount": 12000,
+      "direction": "expense",
+      "merchant_name": "점심식사",
+      "normalized_merchant_name": "점심식사",
+      "category": "식비"
+    },
+    {
+      "occurred_at": "2026-03-22 12:50:00",
+      "amount": 9000,
+      "direction": "expense",
+      "merchant_name": "점심식사",
+      "normalized_merchant_name": "점심식사",
+      "category": "식비"
+    }
+  ],
+  "fixed_candidates": [
+    {
+      "merchant_name": "행복월세",
+      "normalized_merchant_name": "행복월세",
+      "category": "주거/고정비",
+      "month_count": 3,
+      "span_months": 3,
+      "coverage": 1.0,
+      "average_amount": 551667,
+      "min_amount": 550000,
+      "max_amount": 555000,
+      "max_variation_ratio": 0.006,
+      "confidence": 0.996,
+      "last_paid_at": "2026-03-05 09:00:00",
+      "monthly_amounts": [
+        {
+          "month": "2026-01",
+          "amount": 550000
+        },
+        {
+          "month": "2026-02",
+          "amount": 555000
+        },
+        {
+          "month": "2026-03",
+          "amount": 550000
+        }
+      ]
+    }
+  ],
+  "uncategorized": {
+    "count": 0,
+    "items": []
+  }
+}

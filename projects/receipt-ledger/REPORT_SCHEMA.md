@@ -14,7 +14,9 @@
     "category": "편의점",
     "memo": null,
     "account_label": "토스뱅크",
-    "source_row_hash": "..."
+    "source_row_hash": "...",
+    "fixed_cost_candidate": false,
+    "fixed_cost_confidence": null
   }
 ]
 ```
@@ -58,7 +60,25 @@
     { "category": "쇼핑", "amount": 2173912, "ratio": 36.11 }
   ],
   "top_expenses": [],
-  "fixed_candidates": [],
+  "fixed_candidates": [
+    {
+      "merchant_name": "행복월세",
+      "normalized_merchant_name": "행복월세",
+      "category": "주거/고정비",
+      "month_count": 3,
+      "span_months": 3,
+      "coverage": 1.0,
+      "average_amount": 551667,
+      "min_amount": 550000,
+      "max_amount": 555000,
+      "max_variation_ratio": 0.006,
+      "confidence": 0.996,
+      "last_paid_at": "2026-03-05 09:00:00",
+      "monthly_amounts": [
+        { "month": "2026-01", "amount": 550000 }
+      ]
+    }
+  ],
   "uncategorized": {
     "count": 12,
     "items": []

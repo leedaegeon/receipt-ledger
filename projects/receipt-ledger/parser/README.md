@@ -74,7 +74,27 @@ python3 apply_feedback.py \
 - `../data/rules.json`에 `normalized_merchant -> category`가 누적 저장됩니다.
 - 동일 거래처는 다음 import부터 자동 분류됩니다.
 
+## D11: 고정비 후보 탐지
+- `fixed_cost.py`에서 반복 거래(월 고정비) 후보를 추정합니다.
+- 판정 기준:
+  - 거래처(`normalized_merchant_name`) + 카테고리(`category`) 그룹
+  - 월별 합계 기준으로 `min_months(기본 2)` 이상 반복
+  - 금액 변동 허용치(`±15%` 또는 `±10,000원`) 이내
+  - 기간 대비 월 커버리지 60% 이상
+- 파서 단계(`run_import.py`) 결과의 각 거래에는 아래 필드가 포함됩니다.
+  - `fixed_cost_candidate`: bool
+  - `fixed_cost_confidence`: float | null
+- `monthly_report.py`의 `fixed_candidates`는 키워드 하드코딩 대신 위 추정 결과를 사용합니다.
+
+## 최소 검증 스크립트
+```bash
+cd projects/receipt-ledger/parser
+python3 verify_fixed_cost_detection.py
+```
+- 기대 결과: `OK: fixed-cost detection verified`
+- 산출물: `../data/sample_fixed_cost.report.json`
+
 ## 다음 액션
 1. 앱 UI에서 미분류 리스트 화면 연결
 2. 카테고리 선택 시 apply_feedback와 동일 로직 호출
-3. 고정비 후보 로직 고도화
+3. 고정비 후보 UX(후보 승인/제외 피드백) 연결

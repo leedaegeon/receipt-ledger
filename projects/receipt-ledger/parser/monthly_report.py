@@ -3,14 +3,11 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from fixed_cost import detect_fixed_cost_candidates
+
 
 def load(path: Path):
     return json.loads(path.read_text())
-
-
-def is_fixed_cost(name: str) -> bool:
-    keys = ["월세", "통신요금", "구독", "현대캐피탈", "보험", "자동이체"]
-    return any(k in (name or "") for k in keys)
 
 
 def build_report(items, month: str | None = None, account: str | None = None):
@@ -27,10 +24,7 @@ def build_report(items, month: str | None = None, account: str | None = None):
 
     top_tx = sorted(expense, key=lambda x: x["amount"], reverse=True)[:10]
 
-    fixed = []
-    for x in expense:
-        if is_fixed_cost(x.get("merchant_name", "")) or x.get("category") == "주거/고정비":
-            fixed.append(x)
+    fixed_candidates = detect_fixed_cost_candidates(items)
 
     uncategorized = [x for x in expense if x.get("category") == "미분류"]
 
@@ -53,7 +47,7 @@ def build_report(items, month: str | None = None, account: str | None = None):
             for c, a in by_cat.most_common()
         ],
         "top_expenses": top_tx,
-        "fixed_candidates": fixed[:20],
+        "fixed_candidates": fixed_candidates[:20],
         "uncategorized": {
             "count": len(uncategorized),
             "items": uncategorized[:100],

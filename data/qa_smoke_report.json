@@ -1,6 +1,11 @@
 {
-  "suite": "exceptions",
+  "suite": "all",
   "cases": [
+    {
+      "label": "benchmark-5000",
+      "pass": true,
+      "error": null
+    },
     {
       "label": "empty-json",
       "pass": true,

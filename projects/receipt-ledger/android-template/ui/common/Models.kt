@@ -55,3 +55,9 @@ data class ReviewUiState(
     val pendingSelections: Int = 0,
     val error: String? = null,
 )
+
+data class ReportUiState(
+    val loading: Boolean = false,
+    val result: ReportResult? = null,
+    val error: String? = null,
+)

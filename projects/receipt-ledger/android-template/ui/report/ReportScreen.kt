@@ -17,6 +17,7 @@ import com.receiptledger.ui.common.ReportResult
 fun ReportScreen(
     report: ReportResult?,
     loading: Boolean,
+    error: String?,
     onBuildReport: () -> Unit,
 ) {
     Column(
@@ -30,6 +31,8 @@ fun ReportScreen(
         ) {
             Text(if (loading) "리포트 생성 중..." else "리포트 갱신")
         }
+
+        error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
         if (report == null) {
             Text("아직 생성된 리포트가 없습니다.")

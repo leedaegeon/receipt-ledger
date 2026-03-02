@@ -22,6 +22,9 @@ class LedgerViewModel(
     private val _reviewState = MutableStateFlow(ReviewUiState())
     val reviewState: StateFlow<ReviewUiState> = _reviewState.asStateFlow()
 
+    private val _reportState = MutableStateFlow(ReportUiState())
+    val reportState: StateFlow<ReportUiState> = _reportState.asStateFlow()
+
     fun onFilePicked(uri: String, displayName: String?) {
         _uploadState.update {
             it.copy(
@@ -47,6 +50,7 @@ class LedgerViewModel(
             }.onSuccess { result ->
                 _uploadState.update { it.copy(importing = false, lastImport = result) }
                 savedStateHandle["normalizedPath"] = result.normalizedPath
+                prepareReviewTemplate(result.normalizedPath)
             }.onFailure { e ->
                 _uploadState.update { it.copy(importing = false, error = e.message ?: "import failed") }
             }
@@ -64,6 +68,22 @@ class LedgerViewModel(
             )
         }.onFailure { e ->
             _reviewState.value = ReviewUiState(error = e.message ?: "template load failed")
+        }
+    }
+
+    fun prepareReviewTemplate(normalizedPath: String) {
+        viewModelScope.launch {
+            _reviewState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                pipeline.exportUncategorized(normalizedPath)
+            }.onSuccess { tpl ->
+                loadReviewTemplate(tpl.path)
+                _reviewState.update { it.copy(loading = false) }
+            }.onFailure {
+                // 템플릿 I/O가 아직 연결되지 않은 환경을 위한 fallback
+                seedReviewItemsForTemplate()
+                _reviewState.update { it.copy(loading = false) }
+            }
         }
     }
 
@@ -103,6 +123,20 @@ class LedgerViewModel(
                 _reviewState.update { it.copy(saving = false) }
             }.onFailure { e ->
                 _reviewState.update { it.copy(saving = false, error = e.message ?: "feedback save failed") }
+            }
+        }
+    }
+
+    fun buildMonthlyReport(month: String, account: String) {
+        val normalizedPath = uploadState.value.lastImport?.normalizedPath ?: return
+        viewModelScope.launch {
+            _reportState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                pipeline.buildMonthlyReport(normalizedPath = normalizedPath, month = month, account = account)
+            }.onSuccess { report ->
+                _reportState.update { it.copy(loading = false, result = report) }
+            }.onFailure { e ->
+                _reportState.update { it.copy(loading = false, error = e.message ?: "report build failed") }
             }
         }
     }

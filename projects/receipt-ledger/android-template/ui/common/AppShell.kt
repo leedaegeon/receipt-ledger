@@ -32,6 +32,7 @@ fun AppShell(viewModel: LedgerViewModel) {
 
     val uploadState by viewModel.uploadState.collectAsState()
     val reviewState by viewModel.reviewState.collectAsState()
+    val reportState by viewModel.reportState.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -66,9 +67,10 @@ fun AppShell(viewModel: LedgerViewModel) {
             )
 
             Tab.Report -> ReportScreen(
-                report = null,
-                loading = false,
-                onBuildReport = { /* TODO: buildMonthlyReport 연결 */ },
+                report = reportState.result,
+                loading = reportState.loading,
+                error = reportState.error,
+                onBuildReport = { viewModel.buildMonthlyReport(month = "2026-03", account = "tossbank") },
             )
         }
     }

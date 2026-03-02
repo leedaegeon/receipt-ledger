@@ -6,8 +6,10 @@
 - `ui/upload/UploadScreen.kt`
   - `ActivityResultContracts.OpenDocument()` 기반 파일 선택기 wiring
   - URI 영구 권한(`takePersistableUriPermission`) 예시
+  - `UploadScreenContent` + Preview 샘플 추가
 - `ui/review/UncategorizedReviewScreen.kt`
   - 미분류 목록 + 항목 탭 시 다이얼로그 오픈 흐름
+  - Preview 샘플 추가
 - `ui/review/CategorySelectionDialog.kt`
   - 미분류 거래 카테고리 선택 다이얼로그 템플릿(검색/최근 카테고리/empty state 포함)
 - `ui/common/Models.kt`
@@ -19,11 +21,43 @@
   - 템플릿 읽기/피드백 쓰기 I/O 샘플
 - `ui/common/LedgerViewModel.kt`
   - 상태/이벤트
+  - `seedUploadForPreview` / `seedReviewItemsForTemplate`로 샘플 상태 주입
   - `LedgerViewModelFactory` + `SavedStateHandle` 생성 노트
+- `ui/common/SampleData.kt`
+  - 프리뷰용 샘플 상태 + `DemoLedgerPipeline`
 - `ui/common/AppShell.kt`
   - 업로드/검수/리포트 탭 기반 통합 샘플
+  - `@Preview` 진입점 + 자동 탭 전환/성공 스낵바
 - `ui/report/ReportScreen.kt`
-  - 월간 요약 카드 렌더링 템플릿
+  - 월간 요약 카드 렌더링 템플릿 + Preview
+
+## Preview-friendly 개선 포인트
+- Python/파일 시스템 의존이 없어도 `DemoLedgerPipeline`으로 화면 렌더링 가능
+- `AppShellPreview`에서 샘플 import/review 상태를 미리 주입해 즉시 확인 가능
+- Upload/Review/Report 각각 단독 Preview 제공
+- Import 완료 시 Upload → Review 자동 전환 + 스낵바 표시
+- Review 저장 성공 시 스낵바(`카테고리 저장 성공`) 표시
+
+## Android Studio 실행 절차 (체크리스트)
+
+> 현재 템플릿은 `ui/**` 중심입니다. 앱 모듈의 `MainActivity`/`setContent { AppShell(...) }` 연결은 프로젝트 쪽에서 최종 구성하세요.
+
+- [ ] Android Studio 최신 안정 버전 설치
+- [ ] JDK 17 및 Android SDK(Compile SDK 34+) 준비
+- [ ] 프로젝트 열기: `projects/receipt-ledger/android-template`
+- [ ] Gradle Sync 완료 확인
+- [ ] 에뮬레이터(또는 실기기) 실행
+- [ ] 앱 진입점에서 `AppShell(viewModel)` 연결
+  - 데모/프리뷰 목적: `LedgerViewModel(DemoLedgerPipeline(), ReviewFileGateway(), SavedStateHandle())`
+  - 실제 파이프라인: `LedgerViewModelFactory(ProcessLedgerPipeline())`
+- [ ] Run 실행 후 화면 확인
+
+### 실행 확인 포인트 (체크리스트)
+- [ ] Upload 탭: 파일 선택 버튼/분석 버튼 렌더링
+- [ ] 샘플 import 성공 시 Review 탭으로 자동 이동되는지 확인
+- [ ] Review 탭: 미분류 목록 카드 + 카테고리 다이얼로그 열림 확인
+- [ ] 카테고리 저장 후 `카테고리 저장 성공` 스낵바 확인
+- [ ] Report 탭: 리포트 갱신 버튼/요약 카드 렌더링 확인
 
 ## ViewModel Factory 노트
 - Compose/NavGraph 스코프에서 동일 ViewModel을 공유하려면 동일 owner를 사용하세요.

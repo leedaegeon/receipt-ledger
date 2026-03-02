@@ -14,14 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.receiptledger.ui.common.LedgerViewModel
+import com.receiptledger.ui.common.SampleData
 import com.receiptledger.ui.common.UploadUiState
+
+interface UploadActions {
+    fun onFilePicked(uri: String, displayName: String?)
+}
 
 @Composable
 fun UploadScreen(
     state: UploadUiState,
-    viewModel: LedgerViewModel,
+    actions: UploadActions,
     onStartImport: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -35,19 +40,32 @@ fun UploadScreen(
                 android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
             val displayName = queryDisplayName(context, uri)
-            viewModel.onFilePicked(uri.toString(), displayName)
+            actions.onFilePicked(uri.toString(), displayName)
         }
     }
 
+    UploadScreenContent(
+        state = state,
+        onPickFile = {
+            pickerLauncher.launch(arrayOf("application/pdf", "text/*", "application/vnd.ms-excel"))
+        },
+        onStartImport = onStartImport,
+    )
+}
+
+@Composable
+fun UploadScreenContent(
+    state: UploadUiState,
+    onPickFile: () -> Unit,
+    onStartImport: () -> Unit,
+) {
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                pickerLauncher.launch(arrayOf("application/pdf", "text/*", "application/vnd.ms-excel"))
-            },
+            onClick = onPickFile,
         ) {
             Text("명세서 파일 선택")
         }
@@ -65,6 +83,14 @@ fun UploadScreen(
             Text(if (state.importing) "분석 중..." else "파일 분석 시작")
         }
 
+        state.lastImport?.let {
+            Text(
+                text = "분석 완료: ${it.parsedCount}건 / invalid ${it.invalidCount}건",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+
         state.error?.let {
             Text(text = it, color = MaterialTheme.colorScheme.error)
         }
@@ -76,4 +102,18 @@ private fun queryDisplayName(context: android.content.Context, uri: Uri): String
         val idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         if (idx >= 0 && cursor.moveToFirst()) cursor.getString(idx) else null
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun UploadScreenContentPreview() {
+    UploadScreenContent(
+        state = UploadUiState(
+            pickedUri = "content://preview/sample.pdf",
+            displayName = "sample_tossbank_statement.pdf",
+            lastImport = SampleData.previewImportResult,
+        ),
+        onPickFile = {},
+        onStartImport = {},
+    )
 }

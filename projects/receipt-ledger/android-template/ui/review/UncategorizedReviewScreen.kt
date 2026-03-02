@@ -18,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.receiptledger.ui.common.ReviewUiState
+import com.receiptledger.ui.common.SampleData
 import com.receiptledger.ui.common.UncategorizedItem
 
 @Composable
@@ -97,4 +99,19 @@ fun UncategorizedReviewScreen(
             onDismiss = { selectedItem = null },
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun UncategorizedReviewScreenPreview() {
+    UncategorizedReviewScreen(
+        state = ReviewUiState(
+            items = SampleData.previewReviewItems,
+            recentCategories = SampleData.previewRecentCategories,
+            pendingSelections = 2,
+        ),
+        categories = listOf("식비", "카페", "생활", "쇼핑", "교통", "주거/통신"),
+        onItemCategorySelected = { _, _ -> },
+        onSaveFeedback = {},
+    )
 }

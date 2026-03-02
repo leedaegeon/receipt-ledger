@@ -12,6 +12,11 @@
   - 미분류 거래 카테고리 선택 다이얼로그 템플릿
 - `ui/common/Models.kt`
 - `ui/common/PipelineRunner.kt` (현재 Stub 인터페이스)
+- `ui/common/FeedbackTemplateMapper.kt`
+  - `export_uncategorized.py` 결과 파싱
+  - `apply_feedback.py` 입력 JSON 직렬화
+- `ui/common/ReviewFileGateway.kt`
+  - 템플릿 읽기/피드백 쓰기 I/O 샘플
 - `ui/common/LedgerViewModel.kt`
   - 상태/이벤트
   - `LedgerViewModelFactory` + `SavedStateHandle` 생성 노트
@@ -23,7 +28,7 @@
 
 ## 연결 포인트
 - UploadScreen: 파일 선택 → `onFilePicked(uri, displayName)` → `runImport(...)`
-- Review: 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
+- Review: 템플릿 로드(`loadReviewTemplate`) → 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
 - Report: `buildMonthlyReport(...)` 호출 후 요약 표시
 
 ## 주의사항

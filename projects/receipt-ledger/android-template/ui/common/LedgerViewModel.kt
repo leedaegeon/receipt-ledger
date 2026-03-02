@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class LedgerViewModel(
     private val pipeline: LedgerPipeline,
+    private val reviewFileGateway: ReviewFileGateway,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -52,6 +53,20 @@ class LedgerViewModel(
         }
     }
 
+    fun loadReviewTemplate(templatePath: String) {
+        runCatching {
+            reviewFileGateway.loadTemplate(templatePath)
+        }.onSuccess { items ->
+            _reviewState.value = ReviewUiState(
+                templatePath = templatePath,
+                items = items,
+                pendingSelections = items.count { it.selectedCategory == null },
+            )
+        }.onFailure { e ->
+            _reviewState.value = ReviewUiState(error = e.message ?: "template load failed")
+        }
+    }
+
     /**
      * 템플릿 연결 전까지는 목데이터로 검수 화면 동작을 확인한다.
      */
@@ -82,6 +97,7 @@ class LedgerViewModel(
         viewModelScope.launch {
             _reviewState.update { it.copy(saving = true, error = null) }
             runCatching {
+                reviewFileGateway.writeFeedback(feedbackPath, _reviewState.value.items)
                 pipeline.applyFeedback(normalizedPath, feedbackPath)
             }.onSuccess {
                 _reviewState.update { it.copy(saving = false) }
@@ -99,12 +115,14 @@ class LedgerViewModel(
  */
 class LedgerViewModelFactory(
     private val pipeline: LedgerPipeline,
+    private val reviewFileGateway: ReviewFileGateway = ReviewFileGateway(),
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: androidx.lifecycle.CreationExtras): T {
         val savedStateHandle = androidx.lifecycle.SavedStateHandle.createHandle(extras, null)
         @Suppress("UNCHECKED_CAST")
         return LedgerViewModel(
             pipeline = pipeline,
+            reviewFileGateway = reviewFileGateway,
             savedStateHandle = savedStateHandle,
         ) as T
     }

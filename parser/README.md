@@ -154,12 +154,14 @@ python3 qa_report_merge.py
 cat ../data/qa_integrated_summary.md
 python3 qa_policy_brief.py
 cat ../data/qa_policy_brief.md
+cat ../data/qa_action_items.json
 ```
 - 기대 출력: `QA_SMOKE_OK`
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
 - integrated summary는 benchmark + exceptions 결과를 한 문서로 통합
 - integrated summary 상단에 policy 상태(`failed <= max_failures`)가 표시됨
 - `qa_policy_brief.md`는 실패 원인(step/case) + 우선순위(HIGH/MEDIUM) + Action Items(owner/due/verify 템플릿) 요약
+- `qa_action_items.json`은 Action Items를 구조화 형태로 저장(추적 도구 연계용)
 - 포함 검증:
   - 5,000행 벤치마크 목표 통과(`overall: PASS`)
   - `fixtures/empty.json` 빈 JSON 에러 메시지

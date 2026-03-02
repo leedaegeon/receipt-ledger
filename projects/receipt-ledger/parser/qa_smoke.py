@@ -82,6 +82,13 @@ def main():
         raise AssertionError("[bad-feedback] expected failure")
     assert_contains(out, "feedback items의 모든 항목은 객체(dict)", "bad-feedback")
 
+    # 7) cp949 encoding csv
+    cp949_csv = fixtures / "cp949.csv"
+    rc, out = run([sys.executable, "run_import.py", str(cp949_csv)], parser_dir)
+    if rc == 0:
+        raise AssertionError("[encoding-csv] expected failure")
+    assert_contains(out, "인코딩 오류", "encoding-csv")
+
     print("QA_SMOKE_OK")
 
 

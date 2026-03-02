@@ -11,7 +11,7 @@
 - `ui/review/CategorySelectionDialog.kt`
   - 미분류 거래 카테고리 선택 다이얼로그 템플릿(검색/최근 카테고리/empty state 포함)
 - `ui/common/Models.kt`
-- `ui/common/PipelineRunner.kt` (현재 Stub 인터페이스)
+- `ui/common/PipelineRunner.kt` (parser Python 스크립트 실행 계층)
 - `ui/common/FeedbackTemplateMapper.kt`
   - `export_uncategorized.py` 결과 파싱
   - `apply_feedback.py` 입력 JSON 직렬화

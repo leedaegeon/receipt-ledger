@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.receiptledger.ui.report.ReportScreen
 import com.receiptledger.ui.review.UncategorizedReviewScreen
@@ -33,6 +34,12 @@ fun AppShell(viewModel: LedgerViewModel) {
     val uploadState by viewModel.uploadState.collectAsState()
     val reviewState by viewModel.reviewState.collectAsState()
     val reportState by viewModel.reportState.collectAsState()
+
+    LaunchedEffect(uploadState.lastImport?.normalizedPath) {
+        if (uploadState.lastImport != null) {
+            tab = Tab.Review
+        }
+    }
 
     Scaffold(
         bottomBar = {

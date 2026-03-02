@@ -30,6 +30,7 @@ def main():
             for s in failing_steps:
                 lines.append(f"- 🔴 [HIGH] {s}")
                 action_items.append({
+                    "id": f"BENCH-{s}",
                     "priority": "HIGH",
                     "task": f"benchmark step `{s}` 성능 목표 미달 원인 분석/최적화",
                     "owner": "TBD",
@@ -50,6 +51,7 @@ def main():
                 err = (c.get('error') or '').replace(chr(10), ' ')
                 lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
                 action_items.append({
+                    "id": f"SMOKE-{label}",
                     "priority": "MEDIUM",
                     "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
                     "owner": "TBD",
@@ -64,6 +66,7 @@ def main():
     if action_items:
         for idx, item in enumerate(action_items, start=1):
             lines.append(f"### {idx}. [{item['priority']}] {item['task']}")
+            lines.append(f"- id: {item['id']}")
             lines.append(f"- owner: {item['owner']}")
             lines.append(f"- due: {item['due']}")
             lines.append(f"- verify: `{item['verify']}`")

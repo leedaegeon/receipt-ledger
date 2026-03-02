@@ -32,8 +32,8 @@
 
 ## 연결 포인트
 - UploadScreen: 파일 선택 → `onFilePicked(uri, displayName)` → `runImport(...)`
-- Review: 템플릿 로드(`loadReviewTemplate`) → 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
-- Report: `buildMonthlyReport(...)` 호출 후 요약 표시 (`ReportScreen`)
+- Review: Import 성공 후 `prepareReviewTemplate(normalizedPath)`로 템플릿 준비 → 아이템 탭 → `CategorySelectionDialog` → `onReviewCategorySelected()` 반영 → `saveReviewFeedback()`
+- Report: `buildMonthlyReport(...)` 결과를 `reportState`로 바인딩해 요약 표시 (`ReportScreen`)
 - 통합 샘플: `AppShell(viewModel)`에서 탭 전환으로 전체 플로우 검증
 
 ## 주의사항

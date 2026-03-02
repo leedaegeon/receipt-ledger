@@ -47,6 +47,10 @@ jobs:
         if: always()
         run: python qa_smoke_summary.py
 
+      - name: Append benchmark history row
+        if: always() && matrix.suite == 'benchmark'
+        run: python benchmark_history.py
+
       - name: Build benchmark summary markdown
         if: always() && matrix.suite == 'benchmark'
         run: python benchmark_summary.py

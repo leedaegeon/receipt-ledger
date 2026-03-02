@@ -147,6 +147,14 @@ python3 qa_smoke.py
   - 빈 JSON 에러 메시지
   - 손상 JSON 에러 메시지
   - CSV 헤더 누락 에러 메시지
+  - 고정비 옵션 유효성 에러 메시지
+  - feedback schema 에러 메시지
+
+CI 준비:
+```bash
+# GitHub Actions: .github/workflows/receipt-ledger-qa.yml
+# 수동 실행(workflow_dispatch) 또는 parser 변경 시 자동 실행
+```
 
 ## 다음 액션
 1. qa_smoke.py를 CI job으로 연결

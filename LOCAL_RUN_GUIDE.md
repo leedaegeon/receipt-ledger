@@ -131,6 +131,8 @@ print('all_pass=', d['verdict']['all_pass'])
 for k,v in d['verdict']['steps'].items():
     print(k, 'avg=', v['avg_sec'], 'target=', v['target_sec'], 'pass=', v['pass'])
 PY
+python3 benchmark_summary.py
+cat ../data/benchmark_summary.md
 ```
 
 ### 5-2) 예외 처리

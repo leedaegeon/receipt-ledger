@@ -160,6 +160,7 @@ CI 준비:
 # GitHub Actions: .github/workflows/receipt-ledger-qa.yml
 # 수동 실행(workflow_dispatch) 또는 parser 변경 시 자동 실행
 # matrix suite: benchmark / exceptions 로 분리 실행
+# benchmark job은 benchmark_summary.py로 markdown 요약 생성 후 Job Summary에 첨부
 ```
 
 ## 다음 액션

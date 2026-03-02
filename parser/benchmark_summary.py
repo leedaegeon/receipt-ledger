@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 
@@ -24,13 +25,22 @@ def _fmt_delta(curr, prev):
     return f"{sign}{d}"
 
 
+def parse_args():
+    ap = argparse.ArgumentParser(description="Build benchmark summary markdown")
+    ap.add_argument("--regression-threshold-sec", type=float, default=0.2)
+    ap.add_argument("--fail-on-regression", action="store_true")
+    return ap.parse_args()
+
+
 def main():
+    args = parse_args()
+
     root = Path(__file__).resolve().parents[1]
     result_path = root / "data" / "benchmark_pipeline_result.json"
     history_path = root / "data" / "benchmark_history.jsonl"
     out_path = root / "data" / "benchmark_summary.md"
 
-    regression_threshold_sec = 0.2
+    regression_threshold_sec = args.regression_threshold_sec
 
     data = json.loads(result_path.read_text(encoding="utf-8"))
     verdict = data.get("verdict", {})
@@ -110,6 +120,9 @@ def main():
     out_path.write_text(text, encoding="utf-8")
     print(text)
     print(f"saved -> {out_path}")
+
+    if args.fail_on_regression and regressions:
+        raise SystemExit("benchmark regression detected")
 
 
 if __name__ == "__main__":

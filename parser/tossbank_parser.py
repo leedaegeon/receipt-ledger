@@ -9,6 +9,7 @@ from normalize import parse_datetime, parse_amount, normalize_merchant, resolve_
 from classifier import classify
 from dedup import make_hash, deduplicate
 from user_rules import apply_user_rule
+from fixed_cost import detect_fixed_cost_candidates, annotate_fixed_cost_candidates
 
 DATE_HEADERS = ["거래일시", "거래일", "일시", "승인일시"]
 AMOUNT_HEADERS = ["거래금액", "출금금액", "입금금액", "금액", "결제금액"]
@@ -82,7 +83,10 @@ def parse_csv_with_invalid(path: Path, account_label: str = "토스뱅크") -> T
             except Exception as e:
                 invalid.append({"row": idx, "reason": f"parse_error:{type(e).__name__}", "raw": r})
                 continue
-    return deduplicate(rows), invalid
+    deduped = deduplicate(rows)
+    fixed_candidates = detect_fixed_cost_candidates(deduped)
+    annotate_fixed_cost_candidates(deduped, fixed_candidates)
+    return deduped, invalid
 
 
 def parse_csv(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:
@@ -146,7 +150,10 @@ def parse_pdf_with_invalid(path: Path, account_label: str = "토스뱅크") -> T
                 tx.direction = "transfer"
                 tx.category = "금융이체"
 
-    return deduplicate(rows), invalid
+    deduped = deduplicate(rows)
+    fixed_candidates = detect_fixed_cost_candidates(deduped)
+    annotate_fixed_cost_candidates(deduped, fixed_candidates)
+    return deduped, invalid
 
 
 def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transaction]:

@@ -23,3 +23,5 @@ class Transaction:
     memo: Optional[str]
     account_label: Optional[str]
     source_row_hash: str
+    fixed_cost_candidate: bool = False
+    fixed_cost_confidence: Optional[float] = None

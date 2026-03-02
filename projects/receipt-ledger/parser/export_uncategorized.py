@@ -32,8 +32,14 @@ def main():
 
     if not isinstance(txs, list):
         raise SystemExit("normalized JSON은 transaction 배열(list)이어야 합니다.")
+    if not txs:
+        raise SystemExit("transaction 배열이 비어 있습니다.")
 
-    unc = [x for x in txs if isinstance(x, dict) and x.get("direction") == "expense" and x.get("category") == "미분류"]
+    non_obj = [i for i, x in enumerate(txs, start=1) if not isinstance(x, dict)]
+    if non_obj:
+        raise SystemExit(f"transaction 항목은 객체(dict)여야 합니다. 문제 인덱스: {non_obj[:5]}")
+
+    unc = [x for x in txs if x.get("direction") == "expense" and x.get("category") == "미분류"]
     cnt = Counter(x.get("normalized_merchant_name") or x.get("merchant_name") for x in unc)
 
     items = []

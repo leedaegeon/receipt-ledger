@@ -25,6 +25,15 @@ def main():
     if not p.exists():
         raise SystemExit(f"File not found: {p}")
 
+    if args.fixed_cost_amount_tolerance_ratio < 0:
+        raise SystemExit("옵션 오류: --fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.")
+    if args.fixed_cost_amount_tolerance_abs < 0:
+        raise SystemExit("옵션 오류: --fixed-cost-amount-tolerance-abs 는 0 이상이어야 합니다.")
+    if args.fixed_cost_min_months < 1:
+        raise SystemExit("옵션 오류: --fixed-cost-min-months 는 1 이상이어야 합니다.")
+    if args.fixed_cost_min_average_amount < 0:
+        raise SystemExit("옵션 오류: --fixed-cost-min-average-amount 는 0 이상이어야 합니다.")
+
     fixed_cost_options = {
         "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
         "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,

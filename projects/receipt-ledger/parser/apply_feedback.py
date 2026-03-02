@@ -44,10 +44,14 @@ def main():
 
     if not isinstance(txs, list):
         raise SystemExit("normalized JSON은 transaction 배열(list)이어야 합니다.")
+    if not all(isinstance(tx, dict) for tx in txs):
+        raise SystemExit("normalized JSON의 모든 항목은 객체(dict)여야 합니다.")
 
     items = feedback.get("items", []) if isinstance(feedback, dict) else feedback
     if not isinstance(items, list):
         raise SystemExit("feedback JSON은 items 배열(list)을 포함해야 합니다.")
+    if not all(isinstance(it, dict) for it in items):
+        raise SystemExit("feedback items의 모든 항목은 객체(dict)여야 합니다.")
 
     rules = load_rules(Path(args.rules) if args.rules else None)
 

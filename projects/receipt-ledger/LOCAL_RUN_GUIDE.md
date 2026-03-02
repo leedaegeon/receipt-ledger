@@ -179,6 +179,8 @@ python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
 cat ../data/qa_integrated_summary.md
+python3 qa_policy_brief.py
+cat ../data/qa_policy_brief.md
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`

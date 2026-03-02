@@ -90,14 +90,13 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/benchmark_summary.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Append policy status to job summary (top)
+      - name: Build policy brief markdown
         if: always() && matrix.suite == 'benchmark'
-        run: |
-          STATUS_LINE=$(grep -m1 "^- status(policy):" ../data/qa_integrated_summary.md || true)
-          if [ -n "$STATUS_LINE" ]; then
-            echo "$STATUS_LINE" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
+        run: python qa_policy_brief.py
+
+      - name: Append policy brief to job summary (top)
+        if: always() && matrix.suite == 'benchmark'
+        run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
 
       - name: Append integrated summary to job summary
         if: always() && matrix.suite == 'benchmark'
@@ -112,6 +111,7 @@ jobs:
             projects/receipt-ledger/data/benchmark_pipeline_result.json
             projects/receipt-ledger/data/benchmark_summary.md
             projects/receipt-ledger/data/qa_integrated_summary.md
+            projects/receipt-ledger/data/qa_policy_brief.md
 
       - name: Upload smoke artifacts
         if: always()

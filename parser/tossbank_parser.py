@@ -109,6 +109,9 @@ def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transacti
     )
     text = proc.stdout
 
+    owner_match = re.search(r"예금주\s+([가-힣A-Za-z0-9_]+)", text)
+    owner_name = owner_match.group(1) if owner_match else ""
+
     rows: List[Transaction] = []
     last_idx = -1
 
@@ -139,5 +142,11 @@ def parse_pdf(path: Path, account_label: str = "토스뱅크") -> List[Transacti
                 tx.merchant_name = f"{tx.merchant_name} {tail}".strip()
                 tx.normalized_merchant_name = normalize_merchant(tx.merchant_name)
                 tx.category = classify(tx.normalized_merchant_name)
+
+    if owner_name:
+        for tx in rows:
+            if owner_name in tx.merchant_name and tx.direction in ("expense", "income"):
+                tx.direction = "transfer"
+                tx.category = "금융이체"
 
     return deduplicate(rows)

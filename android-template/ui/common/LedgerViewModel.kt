@@ -51,6 +51,45 @@ class LedgerViewModel(
             }
         }
     }
+
+    /**
+     * 템플릿 연결 전까지는 목데이터로 검수 화면 동작을 확인한다.
+     */
+    fun seedReviewItemsForTemplate() {
+        _reviewState.value = ReviewUiState(
+            items = listOf(
+                UncategorizedItem(id = "1", merchant = "배달의민족", amount = 18500, date = "2026-03-01"),
+                UncategorizedItem(id = "2", merchant = "스타벅스", amount = 6100, date = "2026-03-01"),
+            ),
+            pendingSelections = 2,
+        )
+    }
+
+    fun onReviewCategorySelected(itemId: String, category: String) {
+        _reviewState.update { state ->
+            val updated = state.items.map { item ->
+                if (item.id == itemId) item.copy(selectedCategory = category) else item
+            }
+            state.copy(
+                items = updated,
+                pendingSelections = updated.count { it.selectedCategory == null },
+                error = null,
+            )
+        }
+    }
+
+    fun saveReviewFeedback(normalizedPath: String, feedbackPath: String) {
+        viewModelScope.launch {
+            _reviewState.update { it.copy(saving = true, error = null) }
+            runCatching {
+                pipeline.applyFeedback(normalizedPath, feedbackPath)
+            }.onSuccess {
+                _reviewState.update { it.copy(saving = false) }
+            }.onFailure { e ->
+                _reviewState.update { it.copy(saving = false, error = e.message ?: "feedback save failed") }
+            }
+        }
+    }
 }
 
 /**

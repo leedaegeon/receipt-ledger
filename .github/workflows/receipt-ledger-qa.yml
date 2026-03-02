@@ -16,6 +16,10 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [benchmark, exceptions]
     defaults:
       run:
         working-directory: projects/receipt-ledger/parser
@@ -36,11 +40,11 @@ jobs:
       - name: Install pdf parser dependency
         run: npm ci
 
-      - name: Run QA smoke
-        run: python qa_smoke.py
+      - name: Run QA smoke (${{ matrix.suite }})
+        run: python qa_smoke.py --suite ${{ matrix.suite }}
 
       - name: Upload benchmark result
-        if: always()
+        if: always() && matrix.suite == 'benchmark'
         uses: actions/upload-artifact@v4
         with:
           name: receipt-ledger-benchmark

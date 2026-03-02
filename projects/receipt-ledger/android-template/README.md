@@ -9,7 +9,7 @@
 - `ui/review/UncategorizedReviewScreen.kt`
   - 미분류 목록 + 항목 탭 시 다이얼로그 오픈 흐름
 - `ui/review/CategorySelectionDialog.kt`
-  - 미분류 거래 카테고리 선택 다이얼로그 템플릿(검색/최근 카테고리 섹션 포함)
+  - 미분류 거래 카테고리 선택 다이얼로그 템플릿(검색/최근 카테고리/empty state 포함)
 - `ui/common/Models.kt`
 - `ui/common/PipelineRunner.kt` (현재 Stub 인터페이스)
 - `ui/common/FeedbackTemplateMapper.kt`

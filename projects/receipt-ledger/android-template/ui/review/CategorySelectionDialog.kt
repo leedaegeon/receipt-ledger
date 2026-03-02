@@ -66,17 +66,25 @@ fun CategorySelectionDialog(
                     HorizontalDivider()
                 }
 
-                LazyColumn {
-                    items(filtered) { category ->
-                        val selected = category == currentSelection
-                        Text(
-                            text = if (selected) "✓ $category" else category,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onSelect(category) }
-                                .padding(vertical = 10.dp),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
+                if (filtered.isEmpty()) {
+                    Text(
+                        text = "검색 결과가 없습니다.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                } else {
+                    LazyColumn {
+                        items(filtered) { category ->
+                            val selected = category == currentSelection
+                            Text(
+                                text = if (selected) "✓ $category" else category,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onSelect(category) }
+                                    .padding(vertical = 10.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
                     }
                 }
             }

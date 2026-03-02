@@ -19,6 +19,7 @@ def parse_args():
     ap.add_argument("--target-export-sec", type=float, default=1.0, help="Target avg seconds for export_uncategorized step")
     ap.add_argument("--target-apply-sec", type=float, default=1.0, help="Target avg seconds for apply_feedback step")
     ap.add_argument("--target-report-sec", type=float, default=1.0, help="Target avg seconds for monthly_report step")
+    ap.add_argument("--fail-on-target", action="store_true", help="Exit with non-zero code if any target fails")
     return ap.parse_args()
 
 
@@ -153,6 +154,9 @@ def main():
             print(f"- {step}: {status} avg={info['avg_sec']}s target<={info['target_sec']}s")
         print(f"- overall: {'PASS' if result['verdict']['all_pass'] else 'FAIL'}")
         print(f"saved -> {out}")
+
+        if args.fail_on_target and not result["verdict"]["all_pass"]:
+            raise SystemExit("benchmark target failed")
 
 
 if __name__ == "__main__":

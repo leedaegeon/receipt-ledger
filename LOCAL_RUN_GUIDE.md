@@ -112,7 +112,7 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 ### 5-1) 성능 벤치마크
 ```bash
 cd projects/receipt-ledger/parser
-python3 benchmark_pipeline.py --rows 5000 --repeats 3 --out ../data/benchmark_pipeline_result.json
+python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
 ```
 기대 출력(요약):
 - `- import: PASS avg=...s target<=5.0s`
@@ -153,7 +153,16 @@ python3 run_import.py ../data/missing_header.csv
 - (c) `입력 데이터 오류: 필수 헤더 누락:`
 - 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
-### 5-3) 고정비 탐지 파라미터 조정
+### 5-3) D13 Smoke 자동 검증 (원커맨드)
+```bash
+cd projects/receipt-ledger/parser
+python3 qa_smoke.py
+```
+기대 결과:
+- 마지막 줄 `QA_SMOKE_OK`
+- 중간 출력에 `overall: PASS` 포함
+
+### 5-4) 고정비 탐지 파라미터 조정
 기본값은 유지되며 필요 시 CLI로 조정 가능합니다.
 ```bash
 python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-months 3

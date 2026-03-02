@@ -205,4 +205,6 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --f
 
 ---
 
+정책 기준은 `projects/receipt-ledger/QA_POLICY.md`를 기준으로 관리하세요.
+
 필요 시 이 문서를 기준으로 CI smoke job(예: import → export_uncategorized → monthly_report)으로 확장하세요.

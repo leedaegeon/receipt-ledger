@@ -11,6 +11,10 @@ on:
         description: 'Fail benchmark job when regression exceeds threshold (true/false)'
         required: false
         default: 'true'
+      maxAllowedFailures:
+        description: 'Allowed failed cases in qa_smoke before job failure'
+        required: false
+        default: '0'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -50,7 +54,9 @@ jobs:
         run: npm ci
 
       - name: Run QA smoke (${{ matrix.suite }})
-        run: python qa_smoke.py --suite ${{ matrix.suite }} --report-json ../data/qa_smoke_report.json
+        env:
+          MAX_FAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.maxAllowedFailures || '0' }}
+        run: python qa_smoke.py --suite ${{ matrix.suite }} --max-failures "$MAX_FAIL" --report-json ../data/qa_smoke_report.json
 
       - name: Build QA smoke summary markdown
         if: always()

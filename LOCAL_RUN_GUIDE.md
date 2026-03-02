@@ -5,9 +5,7 @@
 ## 1) 사전 요구사항
 
 - Python 3.10+
-- Node.js 18+ (`pdf_extract.js` 경유 PDF 파싱 시 필요)
-  - **권장:** Node 22+
-  - Node 18 사용 시 `pdf-parse@1.1.1` 고정 설치 필요
+- Node.js 22+ (`pdf_extract.js` 경유 PDF 파싱 시 필요, 프로젝트 기준 고정)
 - (선택) Android Studio / Gradle 환경
 
 권장 작업 위치:
@@ -24,17 +22,9 @@ cd projects/receipt-ledger/parser
 
 ### 2-1) PDF 파싱용 Node 의존성 설치 (최초 1회)
 
-#### Node 22+ 권장
 ```bash
 npm init -y
 npm i pdf-parse
-```
-
-#### Node 18 사용 시 (호환 고정)
-```bash
-rm -rf node_modules package-lock.json package.json
-npm init -y
-npm i --save-exact pdf-parse@1.1.1
 ```
 
 간단 확인:
@@ -114,8 +104,8 @@ export RECEIPT_LEDGER_DATA_DIR=/home/me/work/receipt-ledger/data
 - JSON 산출물이 실제 생성되지 않았는데 후속 단계로 진행한 경우
 - `CalledProcessError ... pdf_extract.js` 발생 시:
   1) `node pdf_extract.js <pdf경로>` 단독 실행으로 Node 에러 원문 확인
-  2) Node 18 환경이면 `pdf-parse@1.1.1`로 재설치
-  3) `PDFParse is not a constructor`가 나오면 `pdf_extract.js`를 현재 저장소 버전으로 되돌린 뒤 재시도
+  2) `node -v`가 22+인지 확인
+  3) `PDFParse is not a constructor`가 나오면 `npm i pdf-parse` 재설치 후 `pdf_extract.js`를 현재 저장소 버전으로 되돌린 뒤 재시도
 
 ---
 

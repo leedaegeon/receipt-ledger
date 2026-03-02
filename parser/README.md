@@ -33,13 +33,9 @@ cd projects/receipt-ledger/parser
 npm init -y
 ```
 
-- Node 22+:
+- Node 22+ (프로젝트 기준 고정):
 ```bash
 npm i pdf-parse
-```
-- Node 18:
-```bash
-npm i --save-exact pdf-parse@1.1.1
 ```
 
 검증:

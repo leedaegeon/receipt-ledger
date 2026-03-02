@@ -11,7 +11,7 @@ import com.receiptledger.ui.common.AppShell
 import com.receiptledger.ui.common.DemoLedgerPipeline
 import com.receiptledger.ui.common.LedgerViewModel
 import com.receiptledger.ui.common.LedgerViewModelFactory
-import com.receiptledger.ui.common.ProcessLedgerPipeline
+import com.receiptledger.ui.common.LedgerPipeline
 import com.receiptledger.ui.theme.ReceiptLedgerTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,11 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ReceiptLedgerTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    val pipeline = if (BuildConfig.USE_DEMO_PIPELINE) {
-                        DemoLedgerPipeline()
-                    } else {
-                        ProcessLedgerPipeline()
-                    }
+                    // 임시: demo 우선 실행 안정화
+                    val pipeline: LedgerPipeline = DemoLedgerPipeline()
                     val vm: LedgerViewModel = viewModel(factory = LedgerViewModelFactory(pipeline))
                     AppShell(viewModel = vm)
                 }

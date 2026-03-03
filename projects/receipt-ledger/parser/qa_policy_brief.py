@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -32,6 +33,7 @@ def main():
                 action_items.append({
                     "id": f"BENCH-{s}",
                     "priority": "HIGH",
+                    "source_suite": "benchmark",
                     "task": f"benchmark step `{s}` 성능 목표 미달 원인 분석/최적화",
                     "owner": "TBD",
                     "due": "TBD",
@@ -41,8 +43,10 @@ def main():
             lines.append("- 없음")
         lines.append("")
 
+    smoke_suite = "unknown"
     if smoke.exists():
         s = json.loads(smoke.read_text(encoding="utf-8"))
+        smoke_suite = s.get("suite") or "unknown"
         failed_cases = [c for c in s.get("cases", []) if not c.get("pass")]
         lines.append("## Smoke Failed Cases")
         if failed_cases:
@@ -53,6 +57,7 @@ def main():
                 action_items.append({
                     "id": f"SMOKE-{label}",
                     "priority": "MEDIUM",
+                    "source_suite": smoke_suite,
                     "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
                     "owner": "TBD",
                     "due": "TBD",
@@ -80,6 +85,8 @@ def main():
         json.dumps(
             {
                 "status_line": status_line,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "source_suite": smoke_suite,
                 "count": len(action_items),
                 "items": action_items,
             },

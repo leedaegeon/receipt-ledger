@@ -33,7 +33,8 @@ D12/D13 자동검증에서 사용하는 실패 기준을 명시한다.
 
 Action Item 포맷:
 - `id` (예: `BENCH-import`, `SMOKE-invalid-pdf`)
-- `priority`, `task`, `owner`, `due`, `verify`
+- `priority`, `source_suite`, `task`, `owner`, `due`, `verify`
+- 메타: `created_at`, `source_suite`(report 레벨)
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
   - `failOnUnassignedHigh` (default: false)

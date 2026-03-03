@@ -174,6 +174,7 @@ cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
 ```
 - 기대 출력: `QA_SMOKE_OK`
+- benchmark smoke는 결과 JSON(`benchmark_pipeline_result.json`)의 `rows=5000`, `fixed_cost_options.min_months=3`도 함께 검증
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
 - integrated summary는 benchmark + exceptions 결과를 한 문서로 통합
 - integrated summary 상단에 policy 상태(`failed <= max_failures`)가 표시됨

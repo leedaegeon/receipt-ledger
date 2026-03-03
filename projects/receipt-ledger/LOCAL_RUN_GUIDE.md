@@ -217,7 +217,31 @@ CI 실행 위치:
   - `policyChangeFailMin` (기본 1)
 - 성공 시 benchmark 결과 아티팩트(`receipt-ledger-benchmark`) 업로드
 
-### 5-4) 고정비 탐지 파라미터 조정
+### 5-4) D13 parser 회귀 테스트 (샘플 데이터 기준)
+파싱/미분류/리포트의 핵심 결과를 한 번에 고정값 회귀 검증합니다.
+
+```bash
+cd projects/receipt-ledger/parser
+python3 qa_parser_regression.py --report-json ../data/qa_parser_regression_report.json
+```
+
+검증 항목:
+- `run_import.py` 결과: `parsed=6`, `invalid=0`
+- `export_uncategorized.py` 결과:
+  - 미분류 지출 `2건`
+  - 고유 거래처 `2개` (`한식당 점심`, `netflix`)
+- `monthly_report.py` 결과(요약):
+  - `total_income=2500000`
+  - `total_expense=33700`
+  - `net_cashflow=2466300`
+  - 카테고리 금액: `미분류=27900`, `카페=4500`, `교통=1300`
+
+디버깅 용도(산출물 디렉터리 유지):
+```bash
+python3 qa_parser_regression.py --keep-artifacts --work-dir ../data/.tmp_regression
+```
+
+### 5-5) 고정비 탐지 파라미터 조정
 기본값은 유지되며 필요 시 CLI로 조정 가능합니다.
 ```bash
 python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-months 3

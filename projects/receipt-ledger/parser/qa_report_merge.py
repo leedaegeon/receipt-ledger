@@ -35,6 +35,7 @@ def main():
         f"- repeats: {b.get('repeats')}",
         f"- overall: {'PASS' if b.get('verdict', {}).get('all_pass') else 'FAIL'}",
         f"- pipeline_total_avg_sec: {b.get('pipeline_total_avg_sec')}",
+        f"- fixed_cost_options: {b.get('fixed_cost_options', {})}",
         "",
         "| step | avg(s) | target(s) | pass |",
         "|---|---:|---:|:---:|",

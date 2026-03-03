@@ -35,10 +35,19 @@ def main():
         raise SystemExit(f"feedback 파일이 없습니다: {feedback_path}")
 
     try:
-        txs = json.loads(normalized_path.read_text(encoding="utf-8"))
-        feedback = json.loads(feedback_path.read_text(encoding="utf-8"))
+        normalized_raw = normalized_path.read_text(encoding="utf-8")
+        feedback_raw = feedback_path.read_text(encoding="utf-8")
     except UnicodeDecodeError as e:
         raise SystemExit(f"입력 파일 인코딩 오류(UTF-8 필요): {e}")
+
+    if not normalized_raw.strip():
+        raise SystemExit("normalized JSON 파일이 비어 있습니다.")
+    if not feedback_raw.strip():
+        raise SystemExit("feedback JSON 파일이 비어 있습니다.")
+
+    try:
+        txs = json.loads(normalized_raw)
+        feedback = json.loads(feedback_raw)
     except json.JSONDecodeError as e:
         raise SystemExit(f"손상된 JSON 형식입니다: {e}")
 

@@ -1,5 +1,5 @@
 {
-  "benchmark_utc": "2026-03-03T14:17:12.268564+00:00",
+  "benchmark_utc": "2026-03-03T14:22:01.654693+00:00",
   "rows": 5000,
   "repeats": 1,
   "python": "/usr/bin/python3",
@@ -18,58 +18,58 @@
   "steps": {
     "import": {
       "samples_sec": [
-        1.0365
+        0.9575
       ],
-      "avg_sec": 1.0365,
-      "min_sec": 1.0365,
-      "max_sec": 1.0365
+      "avg_sec": 0.9575,
+      "min_sec": 0.9575,
+      "max_sec": 0.9575
     },
     "export_uncategorized": {
       "samples_sec": [
-        0.0339
+        0.0297
       ],
-      "avg_sec": 0.0339,
-      "min_sec": 0.0339,
-      "max_sec": 0.0339
+      "avg_sec": 0.0297,
+      "min_sec": 0.0297,
+      "max_sec": 0.0297
     },
     "apply_feedback": {
       "samples_sec": [
-        0.0636
+        0.0625
       ],
-      "avg_sec": 0.0636,
-      "min_sec": 0.0636,
-      "max_sec": 0.0636
+      "avg_sec": 0.0625,
+      "min_sec": 0.0625,
+      "max_sec": 0.0625
     },
     "monthly_report": {
       "samples_sec": [
-        0.0762
+        0.0682
       ],
-      "avg_sec": 0.0762,
-      "min_sec": 0.0762,
-      "max_sec": 0.0762
+      "avg_sec": 0.0682,
+      "min_sec": 0.0682,
+      "max_sec": 0.0682
     }
   },
-  "pipeline_total_avg_sec": 1.2102,
+  "pipeline_total_avg_sec": 1.1179,
   "verdict": {
     "all_pass": true,
     "steps": {
       "import": {
-        "avg_sec": 1.0365,
+        "avg_sec": 0.9575,
         "target_sec": 5.0,
         "pass": true
       },
       "export_uncategorized": {
-        "avg_sec": 0.0339,
+        "avg_sec": 0.0297,
         "target_sec": 1.0,
         "pass": true
       },
       "apply_feedback": {
-        "avg_sec": 0.0636,
+        "avg_sec": 0.0625,
         "target_sec": 1.0,
         "pass": true
       },
       "monthly_report": {
-        "avg_sec": 0.0762,
+        "avg_sec": 0.0682,
         "target_sec": 1.0,
         "pass": true
       }

@@ -117,7 +117,10 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: |
           python qa_policy_sanity.py | tee /tmp/qa_policy_sanity.md
+          echo "## QA Policy Sanity" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
           cat /tmp/qa_policy_sanity.md >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Append action-item history rows
         if: always() && matrix.suite == 'benchmark'

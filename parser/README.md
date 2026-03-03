@@ -185,6 +185,8 @@ cat ../data/qa_policy_snapshot_diff.md
   - `fixtures/missing_header.csv` 헤더 누락 에러 메시지
   - `fixtures/cp949.csv` 인코딩 에러 메시지
   - `fixtures/empty.csv` 빈 CSV 에러 메시지
+  - `fixtures/bad_quoted.csv` 손상 CSV(따옴표/구분자) 에러 메시지
+  - `fixtures/bad_nul.csv` 손상 CSV(NUL 바이트) 에러 메시지
   - `fixtures/invalid.pdf` PDF 추출/형식 에러 메시지
   - `fixtures/empty.pdf` 빈 PDF 에러 메시지
   - 고정비 옵션 유효성 에러 메시지

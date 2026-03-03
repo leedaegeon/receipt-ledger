@@ -88,6 +88,9 @@ def parse_csv_with_invalid(
             f"CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요, cp949 등 비지원): {e}"
         ) from e
 
+    if "\x00" in decoded:
+        raise ValueError("CSV 파일 손상 오류(NUL 바이트 포함): 파일을 다시 내려받아 주세요.")
+
     with io.StringIO(decoded, newline="") as f:
         try:
             reader = csv.DictReader(f)
@@ -126,6 +129,8 @@ def parse_csv_with_invalid(
             raise ValueError(f"CSV 형식 오류(따옴표/구분자 손상 가능): {e}") from e
 
     deduped = deduplicate(rows)
+    if not deduped and invalid:
+        raise ValueError("CSV 형식 오류: 유효 거래 행을 파싱하지 못했습니다. (따옴표/구분자/열값 손상 가능)")
     fixed_candidates = detect_fixed_cost_candidates(deduped, **(fixed_cost_options or {}))
     annotate_fixed_cost_candidates(deduped, fixed_candidates)
     return deduped, invalid

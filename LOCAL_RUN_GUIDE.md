@@ -167,10 +167,16 @@ python3 run_import.py ./fixtures/cp949.csv
 # (e) 빈 CSV fixture
 python3 run_import.py ./fixtures/empty.csv
 
-# (f) 손상 PDF fixture
+# (f) 손상 CSV fixture(따옴표/구분자)
+python3 run_import.py ./fixtures/bad_quoted.csv
+
+# (g) 손상 CSV fixture(NUL)
+python3 run_import.py ./fixtures/bad_nul.csv
+
+# (h) 손상 PDF fixture
 python3 run_import.py ./fixtures/invalid.pdf
 
-# (g) 빈 PDF fixture
+# (i) 빈 PDF fixture
 python3 run_import.py ./fixtures/empty.pdf
 ```
 기대 결과(문구 일부 일치 기준):
@@ -179,8 +185,10 @@ python3 run_import.py ./fixtures/empty.pdf
 - (c) `입력 데이터 오류: 필수 헤더 누락:`
 - (d) `CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요, cp949 등 비지원)`
 - (e) `CSV 파일이 비어 있습니다.`
-- (f) `PDF 텍스트 추출 실패` 또는 `지원되지 않는 형식`
-- (g) `PDF 파일이 비어 있습니다.`
+- (f) `CSV 형식 오류: 유효 거래 행을 파싱하지 못했습니다.`
+- (g) `CSV 파일 손상 오류(NUL 바이트 포함)`
+- (h) `PDF 텍스트 추출 실패` 또는 `지원되지 않는 형식`
+- (i) `PDF 파일이 비어 있습니다.`
 - 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)

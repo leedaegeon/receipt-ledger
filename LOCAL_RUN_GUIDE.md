@@ -247,7 +247,7 @@ python3 qa_policy_sanity.py
 # CI Job Summary의 "QA Policy Sanity" 섹션에서도 동일 결과+체크리스트 확인 가능
 cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
-# fixed_cost_options.* 및 pipeline_total_avg_sec 변화도 함께 확인
+# fixed_cost_options.*, pipeline_total_avg_sec, stddev_threshold_sec 변화도 함께 확인
 # CI에서도 동일하게 qa_policy_snapshot_diff.py fail 옵션으로 정책 변화 gate 적용
 # qa_policy_sanity.py로 QA_POLICY.md와 workflow_dispatch 기본값 일치 여부 확인
 ```

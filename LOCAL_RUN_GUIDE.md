@@ -116,7 +116,7 @@ python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../
 # 고정비 임계값 오버라이드 포함 측정(선택)
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fixed-cost-min-months 3 --out ../data/benchmark_pipeline_result.json
 python3 benchmark_history.py
-python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
+python3 benchmark_summary.py --regression-threshold-sec 0.2 --stddev-threshold-sec 0.05 --fail-on-regression
 python3 qa_report_merge.py
 cat ../data/benchmark_summary.md
 cat ../data/qa_integrated_summary.md
@@ -137,6 +137,7 @@ python3 benchmark_pipeline.py --rows 0
 - `qa_integrated_summary.md`의 `pipeline_total_avg_sec`, `fixed_cost_options`, smoke policy 상태 확인
 - `benchmark_pipeline.py --rows 0` 실행 시 `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.` 출력
 - Δ가 +0.2s 초과인 step은 `Regression Warning` 섹션에 표시
+- stddev가 0.05s 초과인 step은 `Variance Warning` 섹션에 표시
 
 정밀 확인 명령:
 ```bash

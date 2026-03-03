@@ -28,6 +28,7 @@ def _fmt_delta(curr, prev):
 def parse_args():
     ap = argparse.ArgumentParser(description="Build benchmark summary markdown")
     ap.add_argument("--regression-threshold-sec", type=float, default=0.2)
+    ap.add_argument("--stddev-threshold-sec", type=float, default=0.05)
     ap.add_argument("--fail-on-regression", action="store_true")
     return ap.parse_args()
 
@@ -41,6 +42,7 @@ def main():
     out_path = root / "data" / "benchmark_summary.md"
 
     regression_threshold_sec = args.regression_threshold_sec
+    stddev_threshold_sec = args.stddev_threshold_sec
 
     data = json.loads(result_path.read_text(encoding="utf-8"))
     verdict = data.get("verdict", {})
@@ -73,8 +75,11 @@ def main():
         lines.append(
             f"| {step} | {info.get('avg_sec')} | {stddev} | {info.get('target_sec')} | {'✅' if info.get('pass') else '❌'} |"
         )
+        if stddev is not None and float(stddev) > stddev_threshold_sec:
+            stddev_warnings.append(f"{step} stddev={stddev}s")
 
     regressions = []
+    stddev_warnings = []
 
     if recent:
         lines.extend([
@@ -127,6 +132,16 @@ def main():
         ])
         for r in regressions:
             lines.append(f"- ⚠️ {r}")
+
+    if stddev_warnings:
+        lines.extend([
+            "",
+            "## Variance Warning",
+            "",
+            f"- stddev threshold: {stddev_threshold_sec}s",
+        ])
+        for w in stddev_warnings:
+            lines.append(f"- ⚠️ {w}")
 
     text = "\n".join(lines) + "\n"
     out_path.write_text(text, encoding="utf-8")

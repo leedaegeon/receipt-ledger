@@ -105,7 +105,7 @@ python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fixed-cost-min-months 3 
 # 옵션 검증 확인(실패 기대):
 python3 benchmark_pipeline.py --rows 0
 python3 benchmark_history.py
-python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
+python3 benchmark_summary.py --regression-threshold-sec 0.2 --stddev-threshold-sec 0.05 --fail-on-regression
 ```
 - 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s
@@ -120,7 +120,7 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 - 결과 파일:
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
   - `../data/benchmark_history.jsonl` (실행 이력 누적)
-  - `../data/benchmark_summary.md` (최근 5회 추이 + 이전 실행 대비 Δ + 회귀 경고 포함)
+  - `../data/benchmark_summary.md` (최근 5회 추이 + 이전 실행 대비 Δ + 회귀 경고 + 변동성 경고 포함)
 
 ### 2) 입력 예외 처리 확인
 ```bash

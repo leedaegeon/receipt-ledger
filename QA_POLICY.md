@@ -40,6 +40,8 @@ Action Item 포맷:
 - 반복 요약: `qa_action_recurrence.md`에서 id별 출현 횟수 확인
 - smoke 반복 승격 기준: `smokeEscalateThreshold` (기본 3, workflow_dispatch로 조정 가능)
 - 정책 스냅샷: `qa_policy_snapshot.json`에 실행 시점 정책값/결과 저장
+- 스냅샷 이력: `qa_policy_snapshot_history.jsonl` 누적
+- 스냅샷 diff: `qa_policy_snapshot_diff.md`로 직전 실행과 변경점 비교
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
   - `failOnUnassignedHigh` (default: false)

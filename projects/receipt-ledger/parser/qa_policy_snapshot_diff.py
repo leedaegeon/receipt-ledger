@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 
@@ -16,6 +17,13 @@ KEYS = [
 ]
 
 
+def parse_args():
+    ap = argparse.ArgumentParser(description="Build policy snapshot diff and optionally fail on changes")
+    ap.add_argument("--fail-on-policy-change", action="store_true")
+    ap.add_argument("--policy-change-fail-min", type=int, default=1)
+    return ap.parse_args()
+
+
 def _get(d, path):
     cur = d
     for p in path:
@@ -26,6 +34,10 @@ def _get(d, path):
 
 
 def main():
+    args = parse_args()
+    if args.policy_change_fail_min < 1:
+        raise SystemExit("policy diff 옵션 오류: --policy-change-fail-min 은 1 이상이어야 합니다.")
+
     root = Path(__file__).resolve().parents[1]
     hist = root / "data" / "qa_policy_snapshot_history.jsonl"
     out = root / "data" / "qa_policy_snapshot_diff.md"
@@ -96,6 +108,11 @@ def main():
 
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"saved -> {out}")
+
+    if args.fail_on_policy_change and len(changes) >= args.policy_change_fail_min:
+        raise SystemExit(
+            f"policy snapshot changed: changed_count={len(changes)} (threshold={args.policy_change_fail_min})"
+        )
 
 
 if __name__ == "__main__":

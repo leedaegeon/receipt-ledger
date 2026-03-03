@@ -232,6 +232,8 @@ python3 qa_policy_snapshot.py
 cat ../data/qa_policy_snapshot.json
 python3 qa_policy_snapshot_history.py
 python3 qa_policy_snapshot_diff.py
+# 정책 변화 fail gate(옵션)
+python3 qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-min 1
 cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
 # fixed_cost_options.* 및 pipeline_total_avg_sec 변화도 함께 확인

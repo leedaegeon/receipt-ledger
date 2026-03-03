@@ -131,7 +131,15 @@ jobs:
 
       - name: Build policy snapshot diff markdown
         if: always() && matrix.suite == 'benchmark'
-        run: python qa_policy_snapshot_diff.py
+        env:
+          FAIL_ON_POLICY_CHANGE: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnPolicyChange || 'false' }}
+          POLICY_CHANGE_FAIL_MIN: ${{ github.event_name == 'workflow_dispatch' && inputs.policyChangeFailMin || '1' }}
+        run: |
+          if [ "$FAIL_ON_POLICY_CHANGE" = "true" ]; then
+            python qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-min "$POLICY_CHANGE_FAIL_MIN"
+          else
+            python qa_policy_snapshot_diff.py --policy-change-fail-min "$POLICY_CHANGE_FAIL_MIN"
+          fi
 
       - name: Append policy brief to job summary (top)
         if: always() && matrix.suite == 'benchmark'
@@ -157,22 +165,9 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Warn/Fail on policy parameter changes
+      - name: Policy-change failure is handled by qa_policy_snapshot_diff.py flags
         if: always() && matrix.suite == 'benchmark'
-        env:
-          FAIL_ON_POLICY_CHANGE: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnPolicyChange || 'false' }}
-          POLICY_CHANGE_FAIL_MIN: ${{ github.event_name == 'workflow_dispatch' && inputs.policyChangeFailMin || '1' }}
-        run: |
-          CHANGED=$(grep -m1 "^- changed_count:" ../data/qa_policy_snapshot_diff.md | awk '{print $3}')
-          if [ -n "$CHANGED" ] && [ "$CHANGED" != "0" ]; then
-            echo "## ⚠️ Policy parameters changed (count=$CHANGED)" >> $GITHUB_STEP_SUMMARY
-            grep '^- `' ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY || true
-            echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "$FAIL_ON_POLICY_CHANGE" = "true" ] && [ "$CHANGED" -ge "$POLICY_CHANGE_FAIL_MIN" ]; then
-              echo "Failing due to policy change (count=$CHANGED, min=$POLICY_CHANGE_FAIL_MIN)"
-              exit 1
-            fi
-          fi
+        run: echo "policy-change gate handled in prior step" >> $GITHUB_STEP_SUMMARY
 
       - name: Append action-item recurrence to job summary
         if: always() && matrix.suite == 'benchmark'

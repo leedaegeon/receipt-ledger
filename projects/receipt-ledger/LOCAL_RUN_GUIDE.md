@@ -237,6 +237,7 @@ python3 qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-
 cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
 # fixed_cost_options.* 및 pipeline_total_avg_sec 변화도 함께 확인
+# CI에서도 동일하게 qa_policy_snapshot_diff.py fail 옵션으로 정책 변화 gate 적용
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`

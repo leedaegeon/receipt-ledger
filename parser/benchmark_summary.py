@@ -64,12 +64,14 @@ def main():
             f"min_average_amount={fco.get('min_average_amount')}"
         )
     lines.append("")
-    lines.append("| step | avg(s) | target(s) | pass |")
-    lines.append("|---|---:|---:|:---:|")
+    lines.append("| step | avg(s) | stddev(s) | target(s) | pass |")
+    lines.append("|---|---:|---:|---:|:---:|")
 
+    raw_steps = data.get("steps", {})
     for step, info in steps.items():
+        stddev = (raw_steps.get(step) or {}).get("stddev_sec")
         lines.append(
-            f"| {step} | {info.get('avg_sec')} | {info.get('target_sec')} | {'✅' if info.get('pass') else '❌'} |"
+            f"| {step} | {info.get('avg_sec')} | {stddev} | {info.get('target_sec')} | {'✅' if info.get('pass') else '❌'} |"
         )
 
     regressions = []

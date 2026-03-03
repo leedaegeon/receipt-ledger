@@ -7,7 +7,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from statistics import mean
+from statistics import mean, pstdev
 from time import perf_counter
 
 from fixed_cost import DEFAULT_FIXED_COST_OPTIONS, normalize_fixed_cost_options
@@ -72,6 +72,7 @@ def measure(cmd: list[str], cwd: Path, repeats: int) -> dict:
     return {
         "samples_sec": [round(x, 4) for x in samples],
         "avg_sec": round(mean(samples), 4),
+        "stddev_sec": round(pstdev(samples), 4) if len(samples) > 1 else 0.0,
         "min_sec": round(min(samples), 4),
         "max_sec": round(max(samples), 4),
     }
@@ -216,7 +217,8 @@ def main():
         print("\n[benchmark summary]")
         for step, info in result["verdict"]["steps"].items():
             status = "PASS" if info["pass"] else "FAIL"
-            print(f"- {step}: {status} avg={info['avg_sec']}s target<={info['target_sec']}s")
+            sd = result["steps"][step]["stddev_sec"]
+            print(f"- {step}: {status} avg={info['avg_sec']}s stddev={sd}s target<={info['target_sec']}s")
         print(f"- pipeline_total_avg_sec: {result['pipeline_total_avg_sec']}s")
         print(f"- overall: {'PASS' if result['verdict']['all_pass'] else 'FAIL'}")
         print(f"saved -> {out}")

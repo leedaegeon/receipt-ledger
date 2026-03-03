@@ -128,6 +128,7 @@ python3 benchmark_pipeline.py --rows 0
 - `- export_uncategorized: PASS avg=...s target<=1.0s`
 - `- apply_feedback: PASS avg=...s target<=1.0s`
 - `- monthly_report: PASS avg=...s target<=1.0s`
+- `- import: PASS avg=...s stddev=...s target<=5.0s`
 - `- pipeline_total_avg_sec: ...s`
 - `- overall: PASS`
 - `benchmark_summary.md`의 Recent Runs에서 Δ(이전 실행 대비 증감) 확인

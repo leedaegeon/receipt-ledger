@@ -116,6 +116,7 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 - 추가 기대 출력(옵션 검증):
   - `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.`
 - 결과 JSON에는 `fixed_cost_options`(실행 시점 임계값) 필드가 저장됩니다.
+- `benchmark_summary.md` 상단에도 동일 옵션이 `fixed_cost_options: ...` 한 줄로 표시됩니다.
 - 결과 파일:
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
   - `../data/benchmark_history.jsonl` (실행 이력 누적)

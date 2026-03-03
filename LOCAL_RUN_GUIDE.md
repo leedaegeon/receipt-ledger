@@ -229,6 +229,7 @@ cat ../data/qa_action_items.json
 python3 qa_action_history.py
 python3 qa_action_recurrence.py
 cat ../data/qa_action_recurrence.md
+# recurrence 표의 source_suites(top)로 POLICY-SANITY 반복 여부 확인
 python3 qa_policy_snapshot.py
 cat ../data/qa_policy_snapshot.json
 python3 qa_policy_snapshot_history.py

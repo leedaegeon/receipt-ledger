@@ -98,6 +98,10 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: python qa_policy_brief.py
 
+      - name: Append action-item history rows
+        if: always() && matrix.suite == 'benchmark'
+        run: python qa_action_history.py
+
       - name: Append policy brief to job summary (top)
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
@@ -129,6 +133,7 @@ jobs:
             projects/receipt-ledger/data/qa_integrated_summary.md
             projects/receipt-ledger/data/qa_policy_brief.md
             projects/receipt-ledger/data/qa_action_items.json
+            projects/receipt-ledger/data/qa_action_history.jsonl
 
       - name: Upload smoke artifacts
         if: always()

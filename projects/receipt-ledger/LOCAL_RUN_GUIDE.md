@@ -190,7 +190,8 @@ cat ../data/qa_action_items.json
 - `qa_smoke_summary.md`에 passed/failed 카운트 + 실패 케이스 테이블 표시
 - `qa_integrated_summary.md` 상단에서 policy 상태(`failed <= max_failures`) 확인
 - `qa_policy_brief.md`에서 우선순위(HIGH/MEDIUM)와 Action Items(owner/due/verify) 확인
-- `qa_action_items.json`에서 `created_at`, `source_suite`, `id` 메타 확인
+- `qa_action_items.json`에서 `created_at`, `source_suite`, `id`, `status` 메타 확인
+- `qa_action_history.jsonl`로 action item 반복 출현 여부 확인
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

@@ -13,10 +13,10 @@
 
 | step | avg(s) | target(s) | pass |
 |---|---:|---:|:---:|
-| import | 1.0176 | 5.0 | ✅ |
-| export_uncategorized | 0.0544 | 1.0 | ✅ |
-| apply_feedback | 0.0799 | 1.0 | ✅ |
-| monthly_report | 0.0882 | 1.0 | ✅ |
+| import | 0.9907 | 5.0 | ✅ |
+| export_uncategorized | 0.0318 | 1.0 | ✅ |
+| apply_feedback | 0.0645 | 1.0 | ✅ |
+| monthly_report | 0.0714 | 1.0 | ✅ |
 
 ## Exceptions/Smoke (D13)
 

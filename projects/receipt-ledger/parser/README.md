@@ -160,7 +160,7 @@ python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
 cat ../data/qa_integrated_summary.md
-python3 qa_policy_brief.py
+python3 qa_policy_brief.py --default-owner parser-owner --default-due-days 3
 cat ../data/qa_policy_brief.md
 cat ../data/qa_action_items.json
 python3 qa_action_history.py

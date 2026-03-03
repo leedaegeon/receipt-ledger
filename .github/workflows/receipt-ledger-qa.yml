@@ -113,6 +113,10 @@ jobs:
           SMOKE_ESCALATE_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.smokeEscalateThreshold || '3' }}
         run: python qa_policy_brief.py --smoke-escalate-threshold "$SMOKE_ESCALATE_THRESHOLD"
 
+      - name: QA policy/workflow sanity check
+        if: always() && matrix.suite == 'benchmark'
+        run: python qa_policy_sanity.py
+
       - name: Append action-item history rows
         if: always() && matrix.suite == 'benchmark'
         run: python qa_action_history.py

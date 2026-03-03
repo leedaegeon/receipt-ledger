@@ -183,6 +183,22 @@ cat ../data/qa_policy_snapshot_diff.md
   - 고정비 옵션 유효성 에러 메시지
   - `fixtures/bad_feedback.json` feedback schema 에러 메시지
 
+## D13 QA 자동화 1단계: parser 회귀 테스트 (샘플 데이터 기준)
+```bash
+cd projects/receipt-ledger/parser
+python3 qa_parser_regression.py --report-json ../data/qa_parser_regression_report.json
+```
+- 기대 출력: `PARSER_REGRESSION_OK`
+- 자동 검증 범위:
+  1. `run_import.py` 파싱 결과(`parsed=6`, `invalid=0`)
+  2. `export_uncategorized.py` 미분류 지출/거래처 개수 및 거래처 목록
+  3. `monthly_report.py` 요약 수치(수입/지출/순현금흐름/건수) + 카테고리 금액 + 미분류 건수
+- 기본 샘플: `../data/sample_tossbank.csv`
+- 디버깅 시 산출물 보존:
+```bash
+python3 qa_parser_regression.py --keep-artifacts --work-dir ../data/.tmp_regression
+```
+
 CI 준비:
 ```bash
 # GitHub Actions: .github/workflows/receipt-ledger-qa.yml

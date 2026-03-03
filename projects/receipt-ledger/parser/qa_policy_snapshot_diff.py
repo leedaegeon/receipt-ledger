@@ -45,15 +45,33 @@ def main():
 
     prev, cur = rows[-2], rows[-1]
 
+    changes = []
+    for path in KEYS:
+        k = ".".join(path)
+        pv = _get(prev, path)
+        cv = _get(cur, path)
+        if pv != cv:
+            changes.append((k, pv, cv))
+
     lines = [
         "# QA Policy Snapshot Diff",
         "",
         f"- prev: {prev.get('created_at')}",
         f"- curr: {cur.get('created_at')}",
+        f"- changed_count: {len(changes)}",
         "",
+    ]
+
+    if changes:
+        lines.extend(["## Key Changes", ""])
+        for k, pv, cv in changes:
+            lines.append(f"- `{k}`: `{pv}` -> `{cv}`")
+        lines.append("")
+
+    lines.extend([
         "| key | prev | curr | changed |",
         "|---|---|---|:---:|",
-    ]
+    ])
 
     for path in KEYS:
         k = ".".join(path)

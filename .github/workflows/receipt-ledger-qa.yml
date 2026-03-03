@@ -149,6 +149,16 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Warn on policy parameter changes
+        if: always() && matrix.suite == 'benchmark'
+        run: |
+          CHANGED=$(grep -m1 "^- changed_count:" ../data/qa_policy_snapshot_diff.md | awk '{print $3}')
+          if [ -n "$CHANGED" ] && [ "$CHANGED" != "0" ]; then
+            echo "## ⚠️ Policy parameters changed (count=$CHANGED)" >> $GITHUB_STEP_SUMMARY
+            grep '^- `' ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY || true
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Append action-item recurrence to job summary
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_action_recurrence.md >> $GITHUB_STEP_SUMMARY

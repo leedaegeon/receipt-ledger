@@ -4,6 +4,11 @@ from pathlib import Path
 
 KEYS = [
     ("benchmark", "all_pass"),
+    ("benchmark", "pipeline_total_avg_sec"),
+    ("benchmark", "fixed_cost_options", "amount_tolerance_ratio"),
+    ("benchmark", "fixed_cost_options", "amount_tolerance_abs"),
+    ("benchmark", "fixed_cost_options", "min_months"),
+    ("benchmark", "fixed_cost_options", "min_average_amount"),
     ("smoke", "failed_count"),
     ("smoke", "max_failures"),
     ("action_policy", "smoke_escalate_threshold"),

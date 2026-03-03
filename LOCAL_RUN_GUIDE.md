@@ -190,6 +190,9 @@ python3 monthly_report.py ./fixtures/minimal.normalized.json --fixed-cost-amount
 
 # (l) apply_feedback 빈 feedback 파일
 python3 apply_feedback.py ./fixtures/minimal.normalized.json ./fixtures/empty.json
+
+# (m) apply_feedback 빈 normalized 배열
+python3 apply_feedback.py ./fixtures/empty_list.json ./fixtures/bad_feedback.json
 ```
 기대 결과(문구 일부 일치 기준):
 - (a) `리포트 생성 실패: 입력 JSON 파일이 비어 있습니다.`
@@ -204,6 +207,7 @@ python3 apply_feedback.py ./fixtures/minimal.normalized.json ./fixtures/empty.js
 - (j) `지원하지 않는 파일 형식입니다(.txt)`
 - (k) `리포트 생성 실패: --fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.`
 - (l) `feedback JSON 파일이 비어 있습니다.`
+- (m) `normalized transaction 배열이 비어 있습니다.`
 - 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)

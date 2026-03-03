@@ -197,6 +197,7 @@ cat ../data/qa_policy_snapshot_diff.md
   - 고정비 옵션 유효성 에러 메시지(`run_import.py`, `monthly_report.py` 모두)
   - `fixtures/bad_feedback.json` feedback schema 에러 메시지
   - `fixtures/empty.json` + `apply_feedback.py` 빈 feedback 에러 메시지
+  - `fixtures/empty_list.json` + `apply_feedback.py` 빈 normalized 배열 에러 메시지
 
 ## D13 QA 자동화 1단계: parser 회귀 테스트 (샘플 데이터 기준)
 ```bash

@@ -53,6 +53,8 @@ def main():
 
     if not isinstance(txs, list):
         raise SystemExit("normalized JSON은 transaction 배열(list)이어야 합니다.")
+    if not txs:
+        raise SystemExit("normalized transaction 배열이 비어 있습니다.")
     if not all(isinstance(tx, dict) for tx in txs):
         raise SystemExit("normalized JSON의 모든 항목은 객체(dict)여야 합니다.")
 

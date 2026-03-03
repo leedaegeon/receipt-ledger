@@ -199,6 +199,7 @@ CI 준비:
 #   smokeEscalateThreshold (기본 3)
 #   (qa_smoke report + qa_policy_brief + policy snapshot에 반영)
 #   failOnPolicyChange (기본 false)
+#   policyChangeFailMin (기본 1)
 ```
 
 정책 기준 문서: `../QA_POLICY.md`

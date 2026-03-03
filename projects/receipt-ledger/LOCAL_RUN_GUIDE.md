@@ -158,15 +158,23 @@ python3 run_import.py ../data/missing_header.csv
 # (d) CSV 인코딩 오류(cp949 fixture)
 python3 run_import.py ./fixtures/cp949.csv
 
-# (e) 손상 PDF fixture
+# (e) 빈 CSV fixture
+python3 run_import.py ./fixtures/empty.csv
+
+# (f) 손상 PDF fixture
 python3 run_import.py ./fixtures/invalid.pdf
+
+# (g) 빈 PDF fixture
+python3 run_import.py ./fixtures/empty.pdf
 ```
 기대 결과(문구 일부 일치 기준):
 - (a) `리포트 생성 실패: 입력 JSON 파일이 비어 있습니다.`
 - (b) `손상된 JSON 형식입니다:`
 - (c) `입력 데이터 오류: 필수 헤더 누락:`
 - (d) `CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요, cp949 등 비지원)`
-- (e) `PDF 텍스트 추출 실패` 또는 `PDF 파일이 비어 있습니다`
+- (e) `CSV 파일이 비어 있습니다.`
+- (f) `PDF 텍스트 추출 실패` 또는 `지원되지 않는 형식`
+- (g) `PDF 파일이 비어 있습니다.`
 - 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)

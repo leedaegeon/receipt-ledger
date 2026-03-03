@@ -1,7 +1,7 @@
 {
-  "benchmark_utc": "2026-03-03T12:59:24.299160+00:00",
+  "benchmark_utc": "2026-03-03T13:02:33.177066+00:00",
   "rows": 5000,
-  "repeats": 1,
+  "repeats": 3,
   "python": "/usr/bin/python3",
   "targets_sec": {
     "import": 5.0,
@@ -12,58 +12,66 @@
   "steps": {
     "import": {
       "samples_sec": [
-        1.0582
+        0.9559,
+        0.9768,
+        0.9705
       ],
-      "avg_sec": 1.0582,
-      "min_sec": 1.0582,
-      "max_sec": 1.0582
+      "avg_sec": 0.9677,
+      "min_sec": 0.9559,
+      "max_sec": 0.9768
     },
     "export_uncategorized": {
       "samples_sec": [
-        0.0318
+        0.0311,
+        0.0295,
+        0.0294
       ],
-      "avg_sec": 0.0318,
-      "min_sec": 0.0318,
-      "max_sec": 0.0318
+      "avg_sec": 0.03,
+      "min_sec": 0.0294,
+      "max_sec": 0.0311
     },
     "apply_feedback": {
       "samples_sec": [
-        0.0995
+        0.0665,
+        0.0629,
+        0.0619
       ],
-      "avg_sec": 0.0995,
-      "min_sec": 0.0995,
-      "max_sec": 0.0995
+      "avg_sec": 0.0638,
+      "min_sec": 0.0619,
+      "max_sec": 0.0665
     },
     "monthly_report": {
       "samples_sec": [
-        0.0975
+        0.0696,
+        0.0812,
+        0.0744
       ],
-      "avg_sec": 0.0975,
-      "min_sec": 0.0975,
-      "max_sec": 0.0975
+      "avg_sec": 0.0751,
+      "min_sec": 0.0696,
+      "max_sec": 0.0812
     }
   },
-  "pipeline_total_avg_sec": 1.287,
+  "pipeline_total_avg_sec": 1.1366,
   "verdict": {
     "all_pass": true,
     "steps": {
       "import": {
-        "avg_sec": 1.0582,
+        "avg_sec": 0.9677,
         "target_sec": 5.0,
         "pass": true
       },
       "export_uncategorized": {
-        "avg_sec": 0.0318,
+        "avg_sec": 0.03,
         "target_sec": 1.0,
         "pass": true
       },
       "apply_feedback": {
-        "avg_sec": 0.0995,
+        "avg_sec": 0.0638,
         "target_sec": 1.0,
         "pass": true
       },
       "monthly_report": {
-        "avg_sec": 0.0975,
+        "avg_sec": 0.0751,
         "target_sec": 1.0,
         "pass": true
       }

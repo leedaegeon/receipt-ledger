@@ -198,6 +198,7 @@ CI 준비:
 #   failOnUnassignedHigh (기본 false)
 #   smokeEscalateThreshold (기본 3)
 #   (qa_smoke report + qa_policy_brief + policy snapshot에 반영)
+#   failOnPolicyChange (기본 false)
 ```
 
 정책 기준 문서: `../QA_POLICY.md`

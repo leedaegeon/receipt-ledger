@@ -63,10 +63,19 @@ def main():
     ]
 
     if changes:
-        lines.extend(["## Key Changes", ""])
+        groups = {"benchmark": [], "smoke": [], "action_policy": [], "other": []}
         for k, pv, cv in changes:
-            lines.append(f"- `{k}`: `{pv}` -> `{cv}`")
-        lines.append("")
+            head = k.split(".", 1)[0]
+            groups[head if head in groups else "other"].append((k, pv, cv))
+
+        lines.extend(["## Key Changes", ""])
+        for g in ("benchmark", "smoke", "action_policy", "other"):
+            if not groups[g]:
+                continue
+            lines.append(f"### {g}")
+            for k, pv, cv in groups[g]:
+                lines.append(f"- `{k}`: `{pv}` -> `{cv}`")
+            lines.append("")
 
     lines.extend([
         "| key | prev | curr | changed |",

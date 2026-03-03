@@ -179,6 +179,7 @@ cat ../data/qa_policy_snapshot_diff.md
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
 - integrated summary는 benchmark + exceptions 결과를 한 문서로 통합
 - integrated summary 상단에 policy 상태(`failed <= max_failures`)가 표시됨
+- integrated summary의 Benchmark 섹션에 `fixed_cost_options`가 표시됨
 - `qa_policy_brief.md`는 실패 원인(step/case) + 우선순위(HIGH/MEDIUM) + Action Items(owner/due/verify 템플릿) 요약
 - `qa_action_items.json`은 Action Items를 구조화 형태(id/status/source_suite/created_at 포함)로 저장(추적 도구 연계용)
 - `qa_action_history.jsonl`은 action item 출현 이력을 누적(반복 이슈 추적용)

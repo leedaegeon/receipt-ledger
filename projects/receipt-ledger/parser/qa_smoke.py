@@ -130,6 +130,14 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError("[empty-feedback] expected failure")
         assert_contains(out, "feedback JSON 파일이 비어 있습니다", "empty-feedback")
 
+    def _empty_normalized_for_feedback():
+        empty_normalized = fixtures / "empty_list.json"
+        feedback = fixtures / "bad_feedback.json"
+        rc, out = run([sys.executable, "apply_feedback.py", str(empty_normalized), str(feedback)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[empty-normalized-feedback] expected failure")
+        assert_contains(out, "normalized transaction 배열이 비어 있습니다", "empty-normalized-feedback")
+
     def _encoding_csv():
         cp949_csv = fixtures / "cp949.csv"
         rc, out = run([sys.executable, "run_import.py", str(cp949_csv)], parser_dir)
@@ -187,6 +195,7 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
     _case("invalid-report-option", _invalid_report_option, results)
     _case("bad-feedback", _bad_feedback, results)
     _case("empty-feedback", _empty_feedback, results)
+    _case("empty-normalized-feedback", _empty_normalized_for_feedback, results)
     _case("encoding-csv", _encoding_csv, results)
     _case("empty-csv", _empty_csv, results)
     _case("bad-quoted-csv", _bad_quoted_csv, results)

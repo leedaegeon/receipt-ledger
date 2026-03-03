@@ -42,6 +42,11 @@
       "error": null
     },
     {
+      "label": "empty-normalized-feedback",
+      "pass": true,
+      "error": null
+    },
+    {
       "label": "encoding-csv",
       "pass": true,
       "error": null

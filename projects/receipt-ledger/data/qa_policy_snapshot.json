@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-03-03T14:52:23.174060+00:00",
+  "created_at": "2026-03-03T14:57:03.777384+00:00",
   "benchmark": {
     "all_pass": true,
     "targets_sec": {
@@ -8,7 +8,7 @@
       "apply_feedback": 1.0,
       "monthly_report": 1.0
     },
-    "pipeline_total_avg_sec": 1.12,
+    "pipeline_total_avg_sec": 1.1444,
     "fixed_cost_options": {
       "amount_tolerance_ratio": 0.15,
       "amount_tolerance_abs": 10000,

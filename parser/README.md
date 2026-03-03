@@ -107,6 +107,7 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s
 - 기대 출력 예:
   - `- import: PASS avg=...s target<=5.0s`
+  - `- pipeline_total_avg_sec: ...s`
   - `- overall: PASS`
 - 결과 파일:
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
@@ -126,7 +127,7 @@ python3 export_uncategorized.py ../data/broken.json
 # 잘못된 인코딩(예: cp949 파일)
 python3 run_import.py ../data/sample_cp949.csv
 ```
-- 기대: 각 스크립트가 `입력 파일 인코딩 오류`, `손상된 JSON 형식`, `필수 헤더 누락`, `CSV 형식 오류`, `PDF 텍스트 추출 실패` 등 명확한 에러 메시지 출력
+- 기대: 각 스크립트가 `입력 파일 인코딩 오류`, `손상된 JSON 형식`, `필수 헤더 누락`, `CSV 파일이 비어 있습니다`, `CSV 형식 오류`, `PDF 파일이 비어 있습니다`, `PDF 텍스트 추출 실패` 등 명확한 에러 메시지를 출력
 
 ### 3) 고정비 탐지 파라미터 튜닝
 기본값은 유지하면서 아래 CLI 옵션으로 조정 가능합니다.

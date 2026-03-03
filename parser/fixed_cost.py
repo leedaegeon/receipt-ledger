@@ -6,6 +6,13 @@ from datetime import datetime
 from statistics import mean
 from typing import Any
 
+DEFAULT_FIXED_COST_OPTIONS: dict[str, float | int] = {
+    "amount_tolerance_ratio": 0.15,
+    "amount_tolerance_abs": 10000,
+    "min_months": 2,
+    "min_average_amount": 30000,
+}
+
 
 def _to_dict(item: Any) -> dict:
     if isinstance(item, dict):
@@ -32,6 +39,27 @@ def _parse_occurred_at(value: Any) -> datetime:
 
 def _month_index(dt: datetime) -> int:
     return dt.year * 12 + dt.month
+
+
+def normalize_fixed_cost_options(overrides: dict | None = None) -> dict[str, float | int]:
+    opts = dict(DEFAULT_FIXED_COST_OPTIONS)
+    if overrides:
+        opts.update(overrides)
+
+    if opts["amount_tolerance_ratio"] < 0:
+        raise ValueError("--fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.")
+    if opts["amount_tolerance_abs"] < 0:
+        raise ValueError("--fixed-cost-amount-tolerance-abs 는 0 이상이어야 합니다.")
+    if int(opts["min_months"]) < 1:
+        raise ValueError("--fixed-cost-min-months 는 1 이상이어야 합니다.")
+    if int(opts["min_average_amount"]) < 0:
+        raise ValueError("--fixed-cost-min-average-amount 는 0 이상이어야 합니다.")
+
+    opts["min_months"] = int(opts["min_months"])
+    opts["amount_tolerance_abs"] = int(opts["amount_tolerance_abs"])
+    opts["amount_tolerance_ratio"] = float(opts["amount_tolerance_ratio"])
+    opts["min_average_amount"] = int(opts["min_average_amount"])
+    return opts
 
 
 def detect_fixed_cost_candidates(

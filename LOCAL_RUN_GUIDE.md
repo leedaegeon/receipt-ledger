@@ -122,6 +122,7 @@ cat ../data/benchmark_summary.md
 - `- export_uncategorized: PASS avg=...s target<=1.0s`
 - `- apply_feedback: PASS avg=...s target<=1.0s`
 - `- monthly_report: PASS avg=...s target<=1.0s`
+- `- pipeline_total_avg_sec: ...s`
 - `- overall: PASS`
 - `benchmark_summary.md`의 Recent Runs에서 Δ(이전 실행 대비 증감) 확인
 - Δ가 +0.2s 초과인 step은 `Regression Warning` 섹션에 표시
@@ -160,12 +161,12 @@ python3 run_import.py ./fixtures/cp949.csv
 # (e) 손상 PDF fixture
 python3 run_import.py ./fixtures/invalid.pdf
 ```
-기대 결과:
+기대 결과(문구 일부 일치 기준):
 - (a) `리포트 생성 실패: 입력 JSON 파일이 비어 있습니다.`
 - (b) `손상된 JSON 형식입니다:`
 - (c) `입력 데이터 오류: 필수 헤더 누락:`
-- (d) `입력 파일 인코딩 오류` 또는 `CSV 인코딩 오류`
-- (e) `PDF 텍스트 추출 실패` 또는 `지원되지 않는 형식`
+- (d) `CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요, cp949 등 비지원)`
+- (e) `PDF 텍스트 추출 실패` 또는 `PDF 파일이 비어 있습니다`
 - 추가 확인(선택): 손상 CSV/PDF에서 `CSV 형식 오류`, `PDF 텍스트 추출 실패` 메시지 확인
 
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)
@@ -242,7 +243,7 @@ python3 qa_parser_regression.py --keep-artifacts --work-dir ../data/.tmp_regress
 ```
 
 ### 5-5) 고정비 탐지 파라미터 조정
-기본값은 유지되며 필요 시 CLI로 조정 가능합니다.
+기본값은 `fixed_cost.py`의 공통 설정(`ratio=0.15`, `abs=10000`, `min_months=2`, `min_average_amount=30000`)을 사용하며, 필요 시 CLI로 조정 가능합니다.
 ```bash
 python3 run_import.py ../data/tossbank_statement_2026-03.pdf --fixed-cost-min-months 3
 python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --fixed-cost-min-months 3

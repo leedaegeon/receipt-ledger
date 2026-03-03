@@ -4,6 +4,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from tossbank_parser import parse_csv_with_invalid, parse_pdf_with_invalid
+from fixed_cost import DEFAULT_FIXED_COST_OPTIONS, normalize_fixed_cost_options
 
 
 def parse_args():
@@ -12,10 +13,10 @@ def parse_args():
     ap.add_argument("--out-dir", default=None, help="Output directory (default: input file directory)")
     ap.add_argument("--month", default=None, help="Target month label (e.g. 2026-02)")
     ap.add_argument("--account", default="토스뱅크", help="Account label")
-    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=0.15)
-    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=10000)
-    ap.add_argument("--fixed-cost-min-months", type=int, default=2)
-    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=30000)
+    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_ratio"])
+    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_abs"])
+    ap.add_argument("--fixed-cost-min-months", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_months"])
+    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_average_amount"])
     return ap.parse_args()
 
 
@@ -25,21 +26,17 @@ def main():
     if not p.exists():
         raise SystemExit(f"File not found: {p}")
 
-    if args.fixed_cost_amount_tolerance_ratio < 0:
-        raise SystemExit("옵션 오류: --fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.")
-    if args.fixed_cost_amount_tolerance_abs < 0:
-        raise SystemExit("옵션 오류: --fixed-cost-amount-tolerance-abs 는 0 이상이어야 합니다.")
-    if args.fixed_cost_min_months < 1:
-        raise SystemExit("옵션 오류: --fixed-cost-min-months 는 1 이상이어야 합니다.")
-    if args.fixed_cost_min_average_amount < 0:
-        raise SystemExit("옵션 오류: --fixed-cost-min-average-amount 는 0 이상이어야 합니다.")
-
-    fixed_cost_options = {
-        "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
-        "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
-        "min_months": args.fixed_cost_min_months,
-        "min_average_amount": args.fixed_cost_min_average_amount,
-    }
+    try:
+        fixed_cost_options = normalize_fixed_cost_options(
+            {
+                "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
+                "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
+                "min_months": args.fixed_cost_min_months,
+                "min_average_amount": args.fixed_cost_min_average_amount,
+            }
+        )
+    except ValueError as e:
+        raise SystemExit(f"옵션 오류: {e}")
 
     try:
         if p.suffix.lower() == ".csv":

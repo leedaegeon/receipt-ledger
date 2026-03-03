@@ -8,6 +8,9 @@
 ## Benchmark Fail Steps
 - 없음
 
+## Benchmark Variance
+- 없음
+
 ## Smoke Failed Cases
 - 없음
 

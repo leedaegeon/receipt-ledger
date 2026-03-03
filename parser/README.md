@@ -121,6 +121,7 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --stddev-threshold-s
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
   - `../data/benchmark_history.jsonl` (실행 이력 누적)
   - `../data/benchmark_summary.md` (최근 5회 추이 + 이전 실행 대비 Δ + 회귀 경고 + 변동성 경고 포함)
+- `qa_policy_brief.py`는 Variance Warning을 읽어 `VAR-*` action item(반복 시 HIGH 승격)을 자동 생성
 
 ### 2) 입력 예외 처리 확인
 ```bash

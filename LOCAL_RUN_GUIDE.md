@@ -138,6 +138,7 @@ python3 benchmark_pipeline.py --rows 0
 - `benchmark_pipeline.py --rows 0` 실행 시 `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.` 출력
 - Δ가 +0.2s 초과인 step은 `Regression Warning` 섹션에 표시
 - stddev가 0.05s 초과인 step은 `Variance Warning` 섹션에 표시
+- `qa_policy_brief.py` 실행 시 Variance Warning 기반 `VAR-*` action item이 자동 생성됨(반복 시 HIGH 승격)
 
 정밀 확인 명령:
 ```bash

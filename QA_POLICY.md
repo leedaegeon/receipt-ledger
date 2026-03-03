@@ -42,6 +42,7 @@ Action Item 포맷:
 - 정책 스냅샷: `qa_policy_snapshot.json`에 실행 시점 정책값/결과 저장
 - 스냅샷 이력: `qa_policy_snapshot_history.jsonl` 누적
 - 스냅샷 diff: `qa_policy_snapshot_diff.md`로 직전 실행과 변경점 비교
+  - `changed_count`와 `Key Changes` 섹션으로 핵심 변경점 빠르게 확인
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
   - `failOnUnassignedHigh` (default: false)

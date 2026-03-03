@@ -187,6 +187,9 @@ python3 qa_action_recurrence.py
 cat ../data/qa_action_recurrence.md
 python3 qa_policy_snapshot.py
 cat ../data/qa_policy_snapshot.json
+python3 qa_policy_snapshot_history.py
+python3 qa_policy_snapshot_diff.py
+cat ../data/qa_policy_snapshot_diff.md
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`

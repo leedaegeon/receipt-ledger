@@ -169,6 +169,7 @@ python3 qa_action_history.py
 python3 qa_action_recurrence.py
 cat ../data/qa_action_recurrence.md
 # recurrence 표에서 source_suites(top)로 반복 이슈 출처(benchmark/exceptions/policy) 확인
+# POLICY-SANITY는 policy 출처 반복 횟수가 smokeEscalateThreshold 이상이면 HIGH로 승격
 python3 qa_policy_snapshot.py
 cat ../data/qa_policy_snapshot.json
 python3 qa_policy_snapshot_history.py

@@ -37,6 +37,7 @@ def main():
     sanity = root / "data" / "qa_policy_sanity_checklist.md"
 
     recur = Counter()
+    recur_policy = Counter()
     if hist.exists():
         for line in hist.read_text(encoding="utf-8").splitlines():
             if not line.strip():
@@ -45,8 +46,11 @@ def main():
                 row = json.loads(line)
             except json.JSONDecodeError:
                 continue
-            if row.get("id"):
-                recur[row["id"]] += 1
+            rid = row.get("id")
+            if rid:
+                recur[rid] += 1
+                if (row.get("source_suite") or "") == "policy":
+                    recur_policy[rid] += 1
 
     status_line = "- status(policy): (unknown)"
     if integrated.exists():
@@ -72,17 +76,22 @@ def main():
     if sanity_status == "FAIL":
         aid = "POLICY-SANITY"
         occ = recur.get(aid, 0)
-        lines.append("- 🔴 [HIGH] 정책 문서/워크플로우 기본값 불일치")
+        occ_policy = recur_policy.get(aid, 0)
+        pr = "HIGH" if occ_policy >= args.smoke_escalate_threshold else "MEDIUM"
+        if pr == "HIGH":
+            escalated_high.append((aid, occ_policy))
+        lines.append(f"- {'🔴 [HIGH]' if pr == 'HIGH' else '🟠 [MEDIUM]'} 정책 문서/워크플로우 기본값 불일치 (policy_occurrences={occ_policy})")
         action_items.append({
             "id": aid,
             "status": "open",
-            "priority": "HIGH",
+            "priority": pr,
             "source_suite": "policy",
             "task": "qa_policy_sanity_checklist.md FAIL 항목 정리 및 정책 기준/워크플로우 기본값 동기화",
             "owner": args.default_owner,
             "due": _default_due(args.default_due_days),
             "verify": "python3 qa_policy_sanity.py",
             "occurrences": occ,
+            "policy_occurrences": occ_policy,
         })
     lines.append("")
 
@@ -156,6 +165,8 @@ def main():
             lines.append(f"- id: {item['id']}")
             lines.append(f"- status: {item['status']}")
             lines.append(f"- occurrences: {item.get('occurrences', 0)}")
+            if "policy_occurrences" in item:
+                lines.append(f"- policy_occurrences: {item.get('policy_occurrences', 0)}")
             lines.append(f"- owner: {item['owner']}")
             lines.append(f"- due: {item['due']}")
             lines.append(f"- verify: `{item['verify']}`")

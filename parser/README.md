@@ -190,7 +190,7 @@ cat ../data/qa_policy_snapshot_diff.md
   - `fixtures/invalid.pdf` PDF 추출/형식 에러 메시지
   - `fixtures/empty.pdf` 빈 PDF 에러 메시지
   - `fixtures/unsupported.txt` 지원하지 않는 확장자 에러 메시지
-  - 고정비 옵션 유효성 에러 메시지
+  - 고정비 옵션 유효성 에러 메시지(`run_import.py`, `monthly_report.py` 모두)
   - `fixtures/bad_feedback.json` feedback schema 에러 메시지
 
 ## D13 QA 자동화 1단계: parser 회귀 테스트 (샘플 데이터 기준)

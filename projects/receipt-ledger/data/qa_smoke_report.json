@@ -42,6 +42,16 @@
       "error": null
     },
     {
+      "label": "bad-quoted-csv",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "bad-nul-csv",
+      "pass": true,
+      "error": null
+    },
+    {
       "label": "invalid-pdf",
       "pass": true,
       "error": null

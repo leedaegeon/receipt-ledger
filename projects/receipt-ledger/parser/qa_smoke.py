@@ -116,6 +116,20 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError("[empty-csv] expected failure")
         assert_contains(out, "CSV 파일이 비어 있습니다", "empty-csv")
 
+    def _bad_quoted_csv():
+        bad_quoted = fixtures / "bad_quoted.csv"
+        rc, out = run([sys.executable, "run_import.py", str(bad_quoted)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[bad-quoted-csv] expected failure")
+        assert_contains(out, "CSV 형식 오류", "bad-quoted-csv")
+
+    def _bad_nul_csv():
+        bad_nul = fixtures / "bad_nul.csv"
+        rc, out = run([sys.executable, "run_import.py", str(bad_nul)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[bad-nul-csv] expected failure")
+        assert_contains(out, "CSV 파일 손상 오류(NUL 바이트 포함)", "bad-nul-csv")
+
     def _invalid_pdf():
         invalid_pdf = fixtures / "invalid.pdf"
         rc, out = run([sys.executable, "run_import.py", str(invalid_pdf)], parser_dir)
@@ -138,6 +152,8 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
     _case("bad-feedback", _bad_feedback, results)
     _case("encoding-csv", _encoding_csv, results)
     _case("empty-csv", _empty_csv, results)
+    _case("bad-quoted-csv", _bad_quoted_csv, results)
+    _case("bad-nul-csv", _bad_nul_csv, results)
     _case("invalid-pdf", _invalid_pdf, results)
     _case("empty-pdf", _empty_pdf, results)
     return results

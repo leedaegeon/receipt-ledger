@@ -94,6 +94,16 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError("[invalid-option] expected failure")
         assert_contains(out, "--fixed-cost-min-months 는 1 이상", "invalid-option")
 
+    def _invalid_report_option():
+        minimal = fixtures / "minimal.normalized.json"
+        rc, out = run(
+            [sys.executable, "monthly_report.py", str(minimal), "--fixed-cost-amount-tolerance-ratio", "-0.1"],
+            parser_dir,
+        )
+        if rc == 0:
+            raise AssertionError("[invalid-report-option] expected failure")
+        assert_contains(out, "--fixed-cost-amount-tolerance-ratio 는 0 이상", "invalid-report-option")
+
     def _bad_feedback():
         normalized = fixtures / "minimal.normalized.json"
         bad_feedback = fixtures / "bad_feedback.json"
@@ -156,6 +166,7 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
     _case("broken-json", _broken_json, results)
     _case("missing-header", _missing_header, results)
     _case("invalid-option", _invalid_option, results)
+    _case("invalid-report-option", _invalid_report_option, results)
     _case("bad-feedback", _bad_feedback, results)
     _case("encoding-csv", _encoding_csv, results)
     _case("empty-csv", _empty_csv, results)

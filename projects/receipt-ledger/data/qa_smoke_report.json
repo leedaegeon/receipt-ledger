@@ -27,6 +27,11 @@
       "error": null
     },
     {
+      "label": "invalid-report-option",
+      "pass": true,
+      "error": null
+    },
+    {
       "label": "bad-feedback",
       "pass": true,
       "error": null

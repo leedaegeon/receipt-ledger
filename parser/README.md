@@ -241,6 +241,7 @@ CI 준비:
 # benchmark job summary 최상단에 status(policy) 한 줄 우선 표시
 # workflow_dispatch 입력으로 기준 외부화 가능:
 #   regressionThresholdSec (기본 0.2)
+#   stddevThresholdSec (기본 0.05)
 #   failOnRegression (기본 true)
 #   maxAllowedFailures (기본 0)
 #   failOnUnassignedHigh (기본 false)

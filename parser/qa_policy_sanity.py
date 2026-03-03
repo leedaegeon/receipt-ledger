@@ -12,6 +12,7 @@ CHECKLIST_HINTS = {
 def _extract_workflow_defaults(workflow_text: str) -> dict[str, str]:
     keys = [
         "regressionThresholdSec",
+        "stddevThresholdSec",
         "failOnRegression",
         "maxAllowedFailures",
         "failOnUnassignedHigh",
@@ -77,6 +78,7 @@ def main():
     defaults = _extract_workflow_defaults(wf_text)
     required_defaults = {
         "regressionThresholdSec": "0.2",
+        "stddevThresholdSec": "0.05",
         "failOnRegression": "true",
         "maxAllowedFailures": "0",
         "failOnUnassignedHigh": "false",

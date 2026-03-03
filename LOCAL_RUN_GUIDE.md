@@ -269,6 +269,7 @@ CI 실행 위치:
 - `.github/workflows/receipt-ledger-qa.yml`
 - workflow_dispatch에서 기준 조정 가능:
   - `regressionThresholdSec` (기본 0.2)
+  - `stddevThresholdSec` (기본 0.05)
   - `failOnRegression` (기본 true)
   - `maxAllowedFailures` (기본 0)
   - `failOnUnassignedHigh` (기본 false)

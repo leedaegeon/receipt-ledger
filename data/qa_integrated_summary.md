@@ -10,14 +10,14 @@
 - rows: 5000
 - repeats: 1
 - overall: PASS
-- pipeline_total_avg_sec: 1.1182
+- pipeline_total_avg_sec: 1.1596
 
 | step | avg(s) | target(s) | pass |
 |---|---:|---:|:---:|
-| import | 0.9512 | 5.0 | ✅ |
-| export_uncategorized | 0.0324 | 1.0 | ✅ |
-| apply_feedback | 0.0667 | 1.0 | ✅ |
-| monthly_report | 0.0679 | 1.0 | ✅ |
+| import | 0.987 | 5.0 | ✅ |
+| export_uncategorized | 0.0294 | 1.0 | ✅ |
+| apply_feedback | 0.0777 | 1.0 | ✅ |
+| monthly_report | 0.0655 | 1.0 | ✅ |
 
 ## Exceptions/Smoke (D13)
 
@@ -25,7 +25,7 @@
 - overall(reported): PASS
 - policy: PASS (failed=0, allowed=0)
 - smoke_escalate_threshold: 3
-- cases: 12
+- cases: 13
 
 ### All Cases
 
@@ -43,3 +43,4 @@
 | bad-nul-csv | ✅ |
 | invalid-pdf | ✅ |
 | empty-pdf | ✅ |
+| unsupported-extension | ✅ |

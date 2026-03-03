@@ -189,6 +189,7 @@ cat ../data/qa_policy_snapshot_diff.md
   - `fixtures/bad_nul.csv` 손상 CSV(NUL 바이트) 에러 메시지
   - `fixtures/invalid.pdf` PDF 추출/형식 에러 메시지
   - `fixtures/empty.pdf` 빈 PDF 에러 메시지
+  - `fixtures/unsupported.txt` 지원하지 않는 확장자 에러 메시지
   - 고정비 옵션 유효성 에러 메시지
   - `fixtures/bad_feedback.json` feedback schema 에러 메시지
 

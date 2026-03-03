@@ -19,6 +19,8 @@ def main():
         "benchmark": {
             "all_pass": b.get("verdict", {}).get("all_pass"),
             "targets_sec": b.get("targets_sec", {}),
+            "pipeline_total_avg_sec": b.get("pipeline_total_avg_sec"),
+            "fixed_cost_options": b.get("fixed_cost_options", {}),
         },
         "smoke": {
             "suite": s.get("suite"),

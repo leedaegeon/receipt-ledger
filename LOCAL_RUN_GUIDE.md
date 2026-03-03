@@ -132,6 +132,7 @@ python3 benchmark_pipeline.py --rows 0
 - `- overall: PASS`
 - `benchmark_summary.md`의 Recent Runs에서 Δ(이전 실행 대비 증감) 확인
 - `benchmark_pipeline_result.json`에서 `fixed_cost_options`가 전달값과 일치하는지 확인
+- `benchmark_summary.md` 상단의 `fixed_cost_options: ...` 표시 확인
 - `qa_integrated_summary.md`의 `pipeline_total_avg_sec`와 smoke policy 상태 확인
 - `benchmark_pipeline.py --rows 0` 실행 시 `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.` 출력
 - Δ가 +0.2s 초과인 step은 `Regression Warning` 섹션에 표시

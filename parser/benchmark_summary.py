@@ -54,6 +54,15 @@ def main():
     lines.append(f"- repeats: {data.get('repeats')}")
     lines.append(f"- overall: {'PASS' if verdict.get('all_pass') else 'FAIL'}")
     lines.append(f"- pipeline_total_avg_sec: {data.get('pipeline_total_avg_sec')}")
+    fco = data.get("fixed_cost_options") or {}
+    if fco:
+        lines.append(
+            "- fixed_cost_options: "
+            f"ratio={fco.get('amount_tolerance_ratio')}, "
+            f"abs={fco.get('amount_tolerance_abs')}, "
+            f"min_months={fco.get('min_months')}, "
+            f"min_average_amount={fco.get('min_average_amount')}"
+        )
     lines.append("")
     lines.append("| step | avg(s) | target(s) | pass |")
     lines.append("|---|---:|---:|:---:|")

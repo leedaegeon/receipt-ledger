@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -10,6 +11,19 @@ def main():
     smoke = root / "data" / "qa_smoke_report.json"
     out = root / "data" / "qa_policy_brief.md"
     out_json = root / "data" / "qa_action_items.json"
+    hist = root / "data" / "qa_action_history.jsonl"
+
+    recur = Counter()
+    if hist.exists():
+        for line in hist.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if row.get("id"):
+                recur[row["id"]] += 1
 
     status_line = "- status(policy): (unknown)"
     if integrated.exists():
@@ -30,8 +44,10 @@ def main():
         if failing_steps:
             for s in failing_steps:
                 lines.append(f"- 🔴 [HIGH] {s}")
+                aid = f"BENCH-{s}"
+                occ = recur.get(aid, 0)
                 action_items.append({
-                    "id": f"BENCH-{s}",
+                    "id": aid,
                     "status": "open",
                     "priority": "HIGH",
                     "source_suite": "benchmark",
@@ -39,6 +55,7 @@ def main():
                     "owner": "TBD",
                     "due": "TBD",
                     "verify": "python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json",
+                    "occurrences": occ,
                 })
         else:
             lines.append("- 없음")
@@ -55,15 +72,19 @@ def main():
                 label = c.get('label')
                 err = (c.get('error') or '').replace(chr(10), ' ')
                 lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
+                aid = f"SMOKE-{label}"
+                occ = recur.get(aid, 0)
+                pr = "HIGH" if occ >= 3 else "MEDIUM"
                 action_items.append({
-                    "id": f"SMOKE-{label}",
+                    "id": aid,
                     "status": "open",
-                    "priority": "MEDIUM",
+                    "priority": pr,
                     "source_suite": smoke_suite,
                     "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
                     "owner": "TBD",
                     "due": "TBD",
                     "verify": "python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json",
+                    "occurrences": occ,
                 })
         else:
             lines.append("- 없음")
@@ -75,6 +96,7 @@ def main():
             lines.append(f"### {idx}. [{item['priority']}] {item['task']}")
             lines.append(f"- id: {item['id']}")
             lines.append(f"- status: {item['status']}")
+            lines.append(f"- occurrences: {item.get('occurrences', 0)}")
             lines.append(f"- owner: {item['owner']}")
             lines.append(f"- due: {item['due']}")
             lines.append(f"- verify: `{item['verify']}`")

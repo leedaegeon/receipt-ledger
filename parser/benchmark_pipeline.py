@@ -10,6 +10,8 @@ from pathlib import Path
 from statistics import mean
 from time import perf_counter
 
+from fixed_cost import DEFAULT_FIXED_COST_OPTIONS, normalize_fixed_cost_options
+
 
 def parse_args():
     ap = argparse.ArgumentParser(description="Benchmark parser pipeline (import/export_uncategorized/apply_feedback/monthly_report)")
@@ -21,6 +23,10 @@ def parse_args():
     ap.add_argument("--target-apply-sec", type=float, default=1.0, help="Target avg seconds for apply_feedback step")
     ap.add_argument("--target-report-sec", type=float, default=1.0, help="Target avg seconds for monthly_report step")
     ap.add_argument("--fail-on-target", action="store_true", help="Exit with non-zero code if any target fails")
+    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_ratio"])
+    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_abs"])
+    ap.add_argument("--fixed-cost-min-months", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_months"])
+    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_average_amount"])
     return ap.parse_args()
 
 
@@ -80,6 +86,18 @@ def main():
 
     parser_dir = Path(__file__).resolve().parent
 
+    try:
+        fixed_cost_options = normalize_fixed_cost_options(
+            {
+                "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
+                "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
+                "min_months": args.fixed_cost_min_months,
+                "min_average_amount": args.fixed_cost_min_average_amount,
+            }
+        )
+    except ValueError as e:
+        raise SystemExit(f"benchmark 옵션 오류: {e}")
+
     with tempfile.TemporaryDirectory(prefix="receipt-ledger-bench-") as td:
         work = Path(td)
         csv_path = work / "synthetic.csv"
@@ -96,10 +114,32 @@ def main():
             str(work),
             "--month",
             "2026-03",
+            "--fixed-cost-amount-tolerance-ratio",
+            str(fixed_cost_options["amount_tolerance_ratio"]),
+            "--fixed-cost-amount-tolerance-abs",
+            str(fixed_cost_options["amount_tolerance_abs"]),
+            "--fixed-cost-min-months",
+            str(fixed_cost_options["min_months"]),
+            "--fixed-cost-min-average-amount",
+            str(fixed_cost_options["min_average_amount"]),
         ]
         export_cmd = [sys.executable, "export_uncategorized.py", str(normalized_path)]
         apply_cmd = [sys.executable, "apply_feedback.py", str(normalized_path), str(feedback_path)]
-        report_cmd = [sys.executable, "monthly_report.py", str(normalized_path), "--month", "2026-03"]
+        report_cmd = [
+            sys.executable,
+            "monthly_report.py",
+            str(normalized_path),
+            "--month",
+            "2026-03",
+            "--fixed-cost-amount-tolerance-ratio",
+            str(fixed_cost_options["amount_tolerance_ratio"]),
+            "--fixed-cost-amount-tolerance-abs",
+            str(fixed_cost_options["amount_tolerance_abs"]),
+            "--fixed-cost-min-months",
+            str(fixed_cost_options["min_months"]),
+            "--fixed-cost-min-average-amount",
+            str(fixed_cost_options["min_average_amount"]),
+        ]
 
         # warmup import + feedback file 생성
         run(import_cmd, parser_dir)
@@ -114,7 +154,21 @@ def main():
         normalized_path = work / "synthetic.2026-03.normalized.json"
         export_cmd = [sys.executable, "export_uncategorized.py", str(normalized_path)]
         apply_cmd = [sys.executable, "apply_feedback.py", str(normalized_path), str(feedback_path)]
-        report_cmd = [sys.executable, "monthly_report.py", str(normalized_path), "--month", "2026-03"]
+        report_cmd = [
+            sys.executable,
+            "monthly_report.py",
+            str(normalized_path),
+            "--month",
+            "2026-03",
+            "--fixed-cost-amount-tolerance-ratio",
+            str(fixed_cost_options["amount_tolerance_ratio"]),
+            "--fixed-cost-amount-tolerance-abs",
+            str(fixed_cost_options["amount_tolerance_abs"]),
+            "--fixed-cost-min-months",
+            str(fixed_cost_options["min_months"]),
+            "--fixed-cost-min-average-amount",
+            str(fixed_cost_options["min_average_amount"]),
+        ]
 
         steps = {
             "import": measure(import_cmd, parser_dir, args.repeats),
@@ -146,6 +200,7 @@ def main():
             "repeats": args.repeats,
             "python": sys.executable,
             "targets_sec": targets,
+            "fixed_cost_options": fixed_cost_options,
             "steps": steps,
             "pipeline_total_avg_sec": total_avg_sec,
             "verdict": {

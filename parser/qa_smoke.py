@@ -44,6 +44,8 @@ def run_benchmark_suite(parser_dir: Path) -> list[dict]:
                 "5000",
                 "--repeats",
                 "1",
+                "--fixed-cost-min-months",
+                "3",
                 "--fail-on-target",
                 "--out",
                 "../data/benchmark_pipeline_result.json",

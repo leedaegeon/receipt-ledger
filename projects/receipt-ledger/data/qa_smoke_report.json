@@ -37,6 +37,11 @@
       "error": null
     },
     {
+      "label": "empty-feedback",
+      "pass": true,
+      "error": null
+    },
+    {
       "label": "encoding-csv",
       "pass": true,
       "error": null

@@ -53,6 +53,7 @@ def main():
     lines.append(f"- rows: {data.get('rows')}")
     lines.append(f"- repeats: {data.get('repeats')}")
     lines.append(f"- overall: {'PASS' if verdict.get('all_pass') else 'FAIL'}")
+    lines.append(f"- pipeline_total_avg_sec: {data.get('pipeline_total_avg_sec')}")
     lines.append("")
     lines.append("| step | avg(s) | target(s) | pass |")
     lines.append("|---|---:|---:|:---:|")

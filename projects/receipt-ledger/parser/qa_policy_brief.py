@@ -30,6 +30,7 @@ def main():
     root = Path(__file__).resolve().parents[1]
     integrated = root / "data" / "qa_integrated_summary.md"
     bench = root / "data" / "benchmark_pipeline_result.json"
+    bench_summary = root / "data" / "benchmark_summary.md"
     smoke = root / "data" / "qa_smoke_report.json"
     out = root / "data" / "qa_policy_brief.md"
     out_json = root / "data" / "qa_action_items.json"
@@ -120,6 +121,42 @@ def main():
         else:
             lines.append("- 없음")
         lines.append("")
+
+    lines.append("## Benchmark Variance")
+    variance_items = []
+    if bench_summary.exists():
+        in_variance = False
+        for ln in bench_summary.read_text(encoding="utf-8").splitlines():
+            if ln.strip() == "## Variance Warning":
+                in_variance = True
+                continue
+            if in_variance and ln.startswith("## "):
+                break
+            if in_variance and ln.startswith("- ⚠️ "):
+                variance_items.append(ln.replace("- ⚠️ ", "", 1).strip())
+
+    if variance_items:
+        for v in variance_items:
+            lines.append(f"- 🟠 [MEDIUM] {v}")
+            aid = f"VAR-{v.split()[0]}"
+            occ = recur.get(aid, 0)
+            pr = "HIGH" if occ >= args.smoke_escalate_threshold else "MEDIUM"
+            if pr == "HIGH":
+                escalated_high.append((aid, occ))
+            action_items.append({
+                "id": aid,
+                "status": "open",
+                "priority": pr,
+                "source_suite": "benchmark",
+                "task": f"benchmark 변동성 경고 `{v}` 원인 분석 및 안정화",
+                "owner": _owner_for_suite("benchmark", args.default_owner),
+                "due": _default_due(args.default_due_days),
+                "verify": "python3 benchmark_summary.py --regression-threshold-sec 0.2 --stddev-threshold-sec 0.05 --fail-on-regression",
+                "occurrences": occ,
+            })
+    else:
+        lines.append("- 없음")
+    lines.append("")
 
     smoke_suite = "unknown"
     if smoke.exists():

@@ -34,6 +34,7 @@ def main():
     out = root / "data" / "qa_policy_brief.md"
     out_json = root / "data" / "qa_action_items.json"
     hist = root / "data" / "qa_action_history.jsonl"
+    sanity = root / "data" / "qa_policy_sanity_checklist.md"
 
     recur = Counter()
     if hist.exists():
@@ -57,6 +58,33 @@ def main():
     lines = ["# QA Policy Brief", "", status_line, ""]
     action_items = []
     escalated_high = []
+
+    sanity_status = "unknown"
+    if sanity.exists():
+        txt = sanity.read_text(encoding="utf-8")
+        if "- status: PASS" in txt:
+            sanity_status = "PASS"
+        elif "- status: FAIL" in txt:
+            sanity_status = "FAIL"
+
+    lines.append("## Policy Sanity")
+    lines.append(f"- qa_policy_sanity_checklist: {sanity_status}")
+    if sanity_status == "FAIL":
+        aid = "POLICY-SANITY"
+        occ = recur.get(aid, 0)
+        lines.append("- 🔴 [HIGH] 정책 문서/워크플로우 기본값 불일치")
+        action_items.append({
+            "id": aid,
+            "status": "open",
+            "priority": "HIGH",
+            "source_suite": "policy",
+            "task": "qa_policy_sanity_checklist.md FAIL 항목 정리 및 정책 기준/워크플로우 기본값 동기화",
+            "owner": args.default_owner,
+            "due": _default_due(args.default_due_days),
+            "verify": "python3 qa_policy_sanity.py",
+            "occurrences": occ,
+        })
+    lines.append("")
 
     if bench.exists():
         b = json.loads(bench.read_text(encoding="utf-8"))
@@ -144,6 +172,7 @@ def main():
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "source_suite": smoke_suite,
                 "smoke_escalate_threshold": args.smoke_escalate_threshold,
+                "sanity_status": sanity_status,
                 "escalated_high": [
                     {"id": aid, "occurrences": occ}
                     for aid, occ in escalated_high

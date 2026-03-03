@@ -225,6 +225,7 @@ cat ../data/qa_integrated_summary.md
 python3 qa_policy_brief.py --default-owner parser-owner --default-due-days 3
 cat ../data/qa_policy_brief.md
 cat ../data/qa_action_items.json
+# 참고: qa_policy_sanity_checklist.md가 FAIL이면 POLICY-SANITY(HIGH) action item 자동 생성
 python3 qa_action_history.py
 python3 qa_action_recurrence.py
 cat ../data/qa_action_recurrence.md

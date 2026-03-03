@@ -234,11 +234,12 @@ python3 qa_policy_snapshot_history.py
 python3 qa_policy_snapshot_diff.py
 # 정책 변화 fail gate(옵션)
 python3 qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-min 1
+python3 qa_policy_sanity.py
 cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
 # fixed_cost_options.* 및 pipeline_total_avg_sec 변화도 함께 확인
 # CI에서도 동일하게 qa_policy_snapshot_diff.py fail 옵션으로 정책 변화 gate 적용
-# 정책 기준 문서(QA_POLICY.md)와 workflow_dispatch 입력값 일치 여부 확인
+# qa_policy_sanity.py로 QA_POLICY.md와 workflow_dispatch 기본값 일치 여부 확인
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`

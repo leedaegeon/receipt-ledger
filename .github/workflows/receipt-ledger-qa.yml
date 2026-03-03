@@ -23,6 +23,10 @@ on:
         description: 'Recurrence count to escalate smoke action item priority to HIGH'
         required: false
         default: '3'
+      failOnPolicyChange:
+        description: 'Fail benchmark job when policy snapshot changed_count > 0 (true/false)'
+        required: false
+        default: 'false'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -149,14 +153,20 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Warn on policy parameter changes
+      - name: Warn/Fail on policy parameter changes
         if: always() && matrix.suite == 'benchmark'
+        env:
+          FAIL_ON_POLICY_CHANGE: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnPolicyChange || 'false' }}
         run: |
           CHANGED=$(grep -m1 "^- changed_count:" ../data/qa_policy_snapshot_diff.md | awk '{print $3}')
           if [ -n "$CHANGED" ] && [ "$CHANGED" != "0" ]; then
             echo "## ⚠️ Policy parameters changed (count=$CHANGED)" >> $GITHUB_STEP_SUMMARY
             grep '^- `' ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY || true
             echo "" >> $GITHUB_STEP_SUMMARY
+            if [ "$FAIL_ON_POLICY_CHANGE" = "true" ]; then
+              echo "Failing due to policy change (failOnPolicyChange=true)"
+              exit 1
+            fi
           fi
 
       - name: Append action-item recurrence to job summary

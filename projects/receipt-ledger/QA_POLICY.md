@@ -24,6 +24,7 @@ D12/D13 자동검증에서 사용하는 실패 기준을 명시한다.
 - benchmark 결과 JSON(`benchmark_pipeline_result.json`)의 `fixed_cost_options`/`pipeline_total_avg_sec`를 정책 추적 대상으로 사용
 - workflow_dispatch input:
   - `regressionThresholdSec` (default: 0.2)
+  - `stddevThresholdSec` (default: 0.05)
   - `failOnRegression` (default: true)
 
 ## 2) Smoke/Exception 정책 (D13)

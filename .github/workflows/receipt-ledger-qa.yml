@@ -7,6 +7,10 @@ on:
         description: 'Benchmark regression threshold in seconds (delta vs previous run)'
         required: false
         default: '0.2'
+      stddevThresholdSec:
+        description: 'Benchmark stddev warning threshold in seconds'
+        required: false
+        default: '0.05'
       failOnRegression:
         description: 'Fail benchmark job when regression exceeds threshold (true/false)'
         required: false
@@ -87,12 +91,13 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         env:
           REG_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.regressionThresholdSec || '0.2' }}
+          STDDEV_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.stddevThresholdSec || '0.05' }}
           FAIL_ON_REG: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnRegression || 'true' }}
         run: |
           if [ "$FAIL_ON_REG" = "true" ]; then
-            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD" --fail-on-regression
+            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD" --stddev-threshold-sec "$STDDEV_THRESHOLD" --fail-on-regression
           else
-            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD"
+            python benchmark_summary.py --regression-threshold-sec "$REG_THRESHOLD" --stddev-threshold-sec "$STDDEV_THRESHOLD"
           fi
 
       - name: Build integrated QA summary markdown

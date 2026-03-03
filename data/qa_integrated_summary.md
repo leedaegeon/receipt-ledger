@@ -10,15 +10,15 @@
 - rows: 5000
 - repeats: 1
 - overall: PASS
-- pipeline_total_avg_sec: 1.2806
+- pipeline_total_avg_sec: 1.2611
 - fixed_cost_options: {'amount_tolerance_ratio': 0.15, 'amount_tolerance_abs': 10000, 'min_months': 3, 'min_average_amount': 30000}
 
 | step | avg(s) | target(s) | pass |
 |---|---:|---:|:---:|
-| import | 1.0925 | 5.0 | ✅ |
-| export_uncategorized | 0.0304 | 1.0 | ✅ |
-| apply_feedback | 0.0764 | 1.0 | ✅ |
-| monthly_report | 0.0813 | 1.0 | ✅ |
+| import | 1.0741 | 5.0 | ✅ |
+| export_uncategorized | 0.0311 | 1.0 | ✅ |
+| apply_feedback | 0.0823 | 1.0 | ✅ |
+| monthly_report | 0.0736 | 1.0 | ✅ |
 
 ## Exceptions/Smoke (D13)
 

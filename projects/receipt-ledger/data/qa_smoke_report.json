@@ -37,7 +37,17 @@
       "error": null
     },
     {
+      "label": "empty-csv",
+      "pass": true,
+      "error": null
+    },
+    {
       "label": "invalid-pdf",
+      "pass": true,
+      "error": null
+    },
+    {
+      "label": "empty-pdf",
       "pass": true,
       "error": null
     }

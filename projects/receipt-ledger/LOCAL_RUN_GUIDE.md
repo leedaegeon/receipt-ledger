@@ -115,7 +115,11 @@ cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
 python3 benchmark_history.py
 python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
+python3 qa_report_merge.py
 cat ../data/benchmark_summary.md
+cat ../data/qa_integrated_summary.md
+# 옵션 검증(실패 기대)
+python3 benchmark_pipeline.py --rows 0
 ```
 기대 출력(요약):
 - `- import: PASS avg=...s target<=5.0s`
@@ -125,6 +129,8 @@ cat ../data/benchmark_summary.md
 - `- pipeline_total_avg_sec: ...s`
 - `- overall: PASS`
 - `benchmark_summary.md`의 Recent Runs에서 Δ(이전 실행 대비 증감) 확인
+- `qa_integrated_summary.md`의 `pipeline_total_avg_sec`와 smoke policy 상태 확인
+- `benchmark_pipeline.py --rows 0` 실행 시 `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.` 출력
 - Δ가 +0.2s 초과인 step은 `Regression Warning` 섹션에 표시
 
 정밀 확인 명령:

@@ -20,6 +20,7 @@ def parse_args():
     ap.add_argument("--suite", choices=["all", "benchmark", "exceptions"], default="all")
     ap.add_argument("--report-json", default=None, help="Optional path to save suite/case pass-fail report")
     ap.add_argument("--max-failures", type=int, default=0, help="Allowed failure count before non-zero exit")
+    ap.add_argument("--smoke-escalate-threshold", type=int, default=3, help="Metadata: threshold used to escalate recurring smoke issues")
     return ap.parse_args()
 
 
@@ -51,6 +52,7 @@ def run_benchmark_suite(parser_dir: Path) -> list[dict]:
         )
         if rc != 0:
             raise AssertionError(f"[benchmark] failed\n{out}")
+        assert_contains(out, "pipeline_total_avg_sec", "benchmark")
         assert_contains(out, "overall: PASS", "benchmark")
 
     _case("benchmark-5000", _benchmark, results)
@@ -107,6 +109,13 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError("[encoding-csv] expected failure")
         assert_contains(out, "인코딩 오류", "encoding-csv")
 
+    def _empty_csv():
+        empty_csv = fixtures / "empty.csv"
+        rc, out = run([sys.executable, "run_import.py", str(empty_csv)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[empty-csv] expected failure")
+        assert_contains(out, "CSV 파일이 비어 있습니다", "empty-csv")
+
     def _invalid_pdf():
         invalid_pdf = fixtures / "invalid.pdf"
         rc, out = run([sys.executable, "run_import.py", str(invalid_pdf)], parser_dir)
@@ -115,13 +124,22 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
         if ("PDF 텍스트 추출 실패" not in out) and ("지원되지 않는 형식" not in out):
             raise AssertionError(f"[invalid-pdf] expected PDF extraction failure message, got:\n{out}")
 
+    def _empty_pdf():
+        empty_pdf = fixtures / "empty.pdf"
+        rc, out = run([sys.executable, "run_import.py", str(empty_pdf)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[empty-pdf] expected failure")
+        assert_contains(out, "PDF 파일이 비어 있습니다", "empty-pdf")
+
     _case("empty-json", _empty_json, results)
     _case("broken-json", _broken_json, results)
     _case("missing-header", _missing_header, results)
     _case("invalid-option", _invalid_option, results)
     _case("bad-feedback", _bad_feedback, results)
     _case("encoding-csv", _encoding_csv, results)
+    _case("empty-csv", _empty_csv, results)
     _case("invalid-pdf", _invalid_pdf, results)
+    _case("empty-pdf", _empty_pdf, results)
     return results
 
 
@@ -138,6 +156,7 @@ def main():
         report["cases"].extend(run_exception_suite(parser_dir))
 
     report["all_pass"] = all(c["pass"] for c in report["cases"])
+    report["smoke_escalate_threshold"] = args.smoke_escalate_threshold
 
     if args.report_json:
         p = Path(args.report_json)

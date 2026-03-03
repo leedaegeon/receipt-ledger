@@ -3,7 +3,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from fixed_cost import detect_fixed_cost_candidates
+from fixed_cost import detect_fixed_cost_candidates, DEFAULT_FIXED_COST_OPTIONS, normalize_fixed_cost_options
 
 REQUIRED_FIELDS = ["occurred_at", "amount", "direction", "merchant_name"]
 
@@ -88,10 +88,10 @@ def parse_args():
     ap.add_argument("--month", default=None)
     ap.add_argument("--account", default=None)
     ap.add_argument("--out", default=None, help="Output path for report json")
-    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=0.15)
-    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=10000)
-    ap.add_argument("--fixed-cost-min-months", type=int, default=2)
-    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=30000)
+    ap.add_argument("--fixed-cost-amount-tolerance-ratio", type=float, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_ratio"])
+    ap.add_argument("--fixed-cost-amount-tolerance-abs", type=int, default=DEFAULT_FIXED_COST_OPTIONS["amount_tolerance_abs"])
+    ap.add_argument("--fixed-cost-min-months", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_months"])
+    ap.add_argument("--fixed-cost-min-average-amount", type=int, default=DEFAULT_FIXED_COST_OPTIONS["min_average_amount"])
     return ap.parse_args()
 
 
@@ -100,21 +100,17 @@ def main():
     p = Path(args.normalized_json)
     if not p.exists():
         raise SystemExit(f"리포트 생성 실패: 입력 파일이 없습니다: {p}")
-    if args.fixed_cost_amount_tolerance_ratio < 0:
-        raise SystemExit("리포트 생성 실패: --fixed-cost-amount-tolerance-ratio 는 0 이상이어야 합니다.")
-    if args.fixed_cost_amount_tolerance_abs < 0:
-        raise SystemExit("리포트 생성 실패: --fixed-cost-amount-tolerance-abs 는 0 이상이어야 합니다.")
-    if args.fixed_cost_min_months < 1:
-        raise SystemExit("리포트 생성 실패: --fixed-cost-min-months 는 1 이상이어야 합니다.")
-    if args.fixed_cost_min_average_amount < 0:
-        raise SystemExit("리포트 생성 실패: --fixed-cost-min-average-amount 는 0 이상이어야 합니다.")
-
-    fixed_cost_options = {
-        "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
-        "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
-        "min_months": args.fixed_cost_min_months,
-        "min_average_amount": args.fixed_cost_min_average_amount,
-    }
+    try:
+        fixed_cost_options = normalize_fixed_cost_options(
+            {
+                "amount_tolerance_ratio": args.fixed_cost_amount_tolerance_ratio,
+                "amount_tolerance_abs": args.fixed_cost_amount_tolerance_abs,
+                "min_months": args.fixed_cost_min_months,
+                "min_average_amount": args.fixed_cost_min_average_amount,
+            }
+        )
+    except ValueError as e:
+        raise SystemExit(f"리포트 생성 실패: {e}")
 
     try:
         data = load(p)

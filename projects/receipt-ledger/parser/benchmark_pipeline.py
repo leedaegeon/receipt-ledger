@@ -5,6 +5,7 @@ import random
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 from time import perf_counter
@@ -132,12 +133,16 @@ def main():
             for step in steps
         }
 
+        total_avg_sec = round(sum(info["avg_sec"] for info in steps.values()), 4)
+
         result = {
+            "benchmark_utc": datetime.now(timezone.utc).isoformat(),
             "rows": args.rows,
             "repeats": args.repeats,
             "python": sys.executable,
             "targets_sec": targets,
             "steps": steps,
+            "pipeline_total_avg_sec": total_avg_sec,
             "verdict": {
                 "all_pass": all(v["pass"] for v in verdicts.values()),
                 "steps": verdicts,
@@ -152,6 +157,7 @@ def main():
         for step, info in result["verdict"]["steps"].items():
             status = "PASS" if info["pass"] else "FAIL"
             print(f"- {step}: {status} avg={info['avg_sec']}s target<={info['target_sec']}s")
+        print(f"- pipeline_total_avg_sec: {result['pipeline_total_avg_sec']}s")
         print(f"- overall: {'PASS' if result['verdict']['all_pass'] else 'FAIL'}")
         print(f"saved -> {out}")
 

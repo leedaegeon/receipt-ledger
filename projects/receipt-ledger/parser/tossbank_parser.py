@@ -1,4 +1,5 @@
 import csv
+import io
 import re
 import subprocess
 from pathlib import Path
@@ -73,11 +74,21 @@ def parse_csv_with_invalid(
     invalid: list[dict] = []
 
     try:
-        f = path.open("r", encoding="utf-8-sig", newline="")
-    except UnicodeDecodeError as e:
-        raise ValueError(f"CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요): {e}") from e
+        raw = path.read_bytes()
+    except OSError as e:
+        raise ValueError(f"CSV 파일을 읽을 수 없습니다: {e}") from e
 
-    with f:
+    if not raw:
+        raise ValueError("CSV 파일이 비어 있습니다.")
+
+    try:
+        decoded = raw.decode("utf-8-sig")
+    except UnicodeDecodeError as e:
+        raise ValueError(
+            f"CSV 인코딩 오류(UTF-8/UTF-8-SIG 필요, cp949 등 비지원): {e}"
+        ) from e
+
+    with io.StringIO(decoded, newline="") as f:
         try:
             reader = csv.DictReader(f)
             if not reader.fieldnames:
@@ -135,6 +146,10 @@ def parse_pdf_with_invalid(
     fixed_cost_options: dict | None = None,
 ) -> Tuple[List[Transaction], list[dict]]:
     parser_js = Path(__file__).with_name("pdf_extract.js")
+    if not path.exists():
+        raise ValueError(f"PDF 파일이 없습니다: {path}")
+    if path.stat().st_size == 0:
+        raise ValueError("PDF 파일이 비어 있습니다.")
     try:
         proc = subprocess.run(
             ["node", str(parser_js), str(path)],

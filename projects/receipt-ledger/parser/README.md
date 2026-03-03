@@ -190,6 +190,7 @@ CI 준비:
 #   failOnRegression (기본 true)
 #   maxAllowedFailures (기본 0)
 #   failOnUnassignedHigh (기본 false)
+#   smokeEscalateThreshold (기본 3)
 ```
 
 정책 기준 문서: `../QA_POLICY.md`

@@ -19,6 +19,10 @@ on:
         description: 'Fail when HIGH action items have owner/due as TBD (true/false)'
         required: false
         default: 'false'
+      smokeEscalateThreshold:
+        description: 'Recurrence count to escalate smoke action item priority to HIGH'
+        required: false
+        default: '3'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -96,7 +100,9 @@ jobs:
 
       - name: Build policy brief markdown
         if: always() && matrix.suite == 'benchmark'
-        run: python qa_policy_brief.py
+        env:
+          SMOKE_ESCALATE_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.smokeEscalateThreshold || '3' }}
+        run: python qa_policy_brief.py --smoke-escalate-threshold "$SMOKE_ESCALATE_THRESHOLD"
 
       - name: Append action-item history rows
         if: always() && matrix.suite == 'benchmark'

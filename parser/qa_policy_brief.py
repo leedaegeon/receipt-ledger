@@ -32,6 +32,7 @@ def main():
                 lines.append(f"- 🔴 [HIGH] {s}")
                 action_items.append({
                     "id": f"BENCH-{s}",
+                    "status": "open",
                     "priority": "HIGH",
                     "source_suite": "benchmark",
                     "task": f"benchmark step `{s}` 성능 목표 미달 원인 분석/최적화",
@@ -56,6 +57,7 @@ def main():
                 lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
                 action_items.append({
                     "id": f"SMOKE-{label}",
+                    "status": "open",
                     "priority": "MEDIUM",
                     "source_suite": smoke_suite,
                     "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
@@ -72,6 +74,7 @@ def main():
         for idx, item in enumerate(action_items, start=1):
             lines.append(f"### {idx}. [{item['priority']}] {item['task']}")
             lines.append(f"- id: {item['id']}")
+            lines.append(f"- status: {item['status']}")
             lines.append(f"- owner: {item['owner']}")
             lines.append(f"- due: {item['due']}")
             lines.append(f"- verify: `{item['verify']}`")

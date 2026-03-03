@@ -24,9 +24,13 @@ on:
         required: false
         default: '3'
       failOnPolicyChange:
-        description: 'Fail benchmark job when policy snapshot changed_count > 0 (true/false)'
+        description: 'Fail benchmark job when policy snapshot changed_count exceeds threshold (true/false)'
         required: false
         default: 'false'
+      policyChangeFailMin:
+        description: 'Minimum changed_count to trigger failure when failOnPolicyChange=true'
+        required: false
+        default: '1'
   push:
     paths:
       - 'projects/receipt-ledger/parser/**'
@@ -157,14 +161,15 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         env:
           FAIL_ON_POLICY_CHANGE: ${{ github.event_name == 'workflow_dispatch' && inputs.failOnPolicyChange || 'false' }}
+          POLICY_CHANGE_FAIL_MIN: ${{ github.event_name == 'workflow_dispatch' && inputs.policyChangeFailMin || '1' }}
         run: |
           CHANGED=$(grep -m1 "^- changed_count:" ../data/qa_policy_snapshot_diff.md | awk '{print $3}')
           if [ -n "$CHANGED" ] && [ "$CHANGED" != "0" ]; then
             echo "## ⚠️ Policy parameters changed (count=$CHANGED)" >> $GITHUB_STEP_SUMMARY
             grep '^- `' ../data/qa_policy_snapshot_diff.md >> $GITHUB_STEP_SUMMARY || true
             echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "$FAIL_ON_POLICY_CHANGE" = "true" ]; then
-              echo "Failing due to policy change (failOnPolicyChange=true)"
+            if [ "$FAIL_ON_POLICY_CHANGE" = "true" ] && [ "$CHANGED" -ge "$POLICY_CHANGE_FAIL_MIN" ]; then
+              echo "Failing due to policy change (count=$CHANGED, min=$POLICY_CHANGE_FAIL_MIN)"
               exit 1
             fi
           fi

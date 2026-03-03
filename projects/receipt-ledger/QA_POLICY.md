@@ -44,7 +44,8 @@ Action Item 포맷:
 - 스냅샷 diff: `qa_policy_snapshot_diff.md`로 직전 실행과 변경점 비교
   - `changed_count`와 `Key Changes` 섹션으로 핵심 변경점 빠르게 확인
   - Key Changes는 `benchmark/smoke/action_policy` 그룹으로 정리
-  - CI 입력 `failOnPolicyChange=true`면 `changed_count>0`에서 실패 처리 가능
+  - CI 입력 `failOnPolicyChange=true`면 실패 처리 가능
+  - `policyChangeFailMin` 이상 changed_count일 때 실패 (기본 1)
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
   - `failOnUnassignedHigh` (default: false)

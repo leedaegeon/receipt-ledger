@@ -42,5 +42,6 @@
       "error": null
     }
   ],
-  "all_pass": true
+  "all_pass": true,
+  "smoke_escalate_threshold": 3
 }

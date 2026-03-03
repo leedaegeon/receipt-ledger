@@ -13,16 +13,17 @@
 
 | step | avg(s) | target(s) | pass |
 |---|---:|---:|:---:|
-| import | 0.955 | 5.0 | ✅ |
-| export_uncategorized | 0.0295 | 1.0 | ✅ |
-| apply_feedback | 0.0633 | 1.0 | ✅ |
-| monthly_report | 0.0663 | 1.0 | ✅ |
+| import | 1.113 | 5.0 | ✅ |
+| export_uncategorized | 0.0305 | 1.0 | ✅ |
+| apply_feedback | 0.0652 | 1.0 | ✅ |
+| monthly_report | 0.0702 | 1.0 | ✅ |
 
 ## Exceptions/Smoke (D13)
 
 - suite: all
 - overall(reported): PASS
 - policy: PASS (failed=0, allowed=0)
+- smoke_escalate_threshold: 3
 - cases: 8
 
 ### All Cases

@@ -2,6 +2,9 @@
 
 - status(policy): ✅ PASS
 
+## Policy Sanity
+- qa_policy_sanity_checklist: PASS
+
 ## Benchmark Fail Steps
 - 없음
 

@@ -37,7 +37,8 @@ Action Item 포맷:
 - `priority`, `source_suite`, `task`, `owner`, `due`, `verify`
 - 메타: `created_at`, `source_suite`(report 레벨)
 - 히스토리: `qa_action_history.jsonl`에 `id/status/priority/source_suite` 누적
-- 반복 요약: `qa_action_recurrence.md`에서 id별 출현 횟수 확인 (기본적으로 smoke 항목 3회 이상 반복 시 HIGH 승격)
+- 반복 요약: `qa_action_recurrence.md`에서 id별 출현 횟수 확인
+- smoke 반복 승격 기준: `smokeEscalateThreshold` (기본 3, workflow_dispatch로 조정 가능)
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)
   - `failOnUnassignedHigh` (default: false)

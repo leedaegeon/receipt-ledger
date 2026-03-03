@@ -1,10 +1,18 @@
+import argparse
 import json
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
 
+def parse_args():
+    ap = argparse.ArgumentParser(description="Build QA policy brief")
+    ap.add_argument("--smoke-escalate-threshold", type=int, default=3)
+    return ap.parse_args()
+
+
 def main():
+    args = parse_args()
     root = Path(__file__).resolve().parents[1]
     integrated = root / "data" / "qa_integrated_summary.md"
     bench = root / "data" / "benchmark_pipeline_result.json"
@@ -74,7 +82,7 @@ def main():
                 lines.append(f"- 🟠 [MEDIUM] {label}: {err}")
                 aid = f"SMOKE-{label}"
                 occ = recur.get(aid, 0)
-                pr = "HIGH" if occ >= 3 else "MEDIUM"
+                pr = "HIGH" if occ >= args.smoke_escalate_threshold else "MEDIUM"
                 action_items.append({
                     "id": aid,
                     "status": "open",
@@ -112,6 +120,7 @@ def main():
                 "status_line": status_line,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "source_suite": smoke_suite,
+                "smoke_escalate_threshold": args.smoke_escalate_threshold,
                 "count": len(action_items),
                 "items": action_items,
             },

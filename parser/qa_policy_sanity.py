@@ -25,6 +25,14 @@ def _expect_contains(policy_text: str, token: str, label: str, errors: list[str]
         errors.append(f"QA_POLICY.md 누락: {label} ({token})")
 
 
+def _hint_for_error(err: str) -> str:
+    if err.startswith("workflow default mismatch:"):
+        return "hint: .github/workflows/receipt-ledger-qa.yml 의 workflow_dispatch.inputs 기본값을 QA_POLICY.md와 맞추세요."
+    if "QA_POLICY.md 누락" in err:
+        return "hint: projects/receipt-ledger/QA_POLICY.md에 해당 정책 키/설명을 추가하세요."
+    return "hint: parser/qa_policy_sanity.py 규칙과 문서/워크플로우를 동기화하세요."
+
+
 def main():
     root = Path(__file__).resolve().parents[1]
     workflow = root.parents[1] / ".github" / "workflows" / "receipt-ledger-qa.yml"
@@ -64,6 +72,7 @@ def main():
         print("QA_POLICY_SANITY_FAIL")
         for e in errors:
             print(f"- {e}")
+            print(f"  {_hint_for_error(e)}")
         raise SystemExit(1)
 
     print("QA_POLICY_SANITY_OK")

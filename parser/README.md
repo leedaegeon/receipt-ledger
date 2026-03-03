@@ -175,6 +175,7 @@ python3 qa_policy_snapshot_diff.py
 python3 qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-min 1
 python3 qa_policy_sanity.py
 # 기대 출력: QA_POLICY_SANITY_OK
+# 실패 시 각 오류 아래 hint 라인으로 수정 위치(.github/workflows/... 또는 QA_POLICY.md) 안내
 cat ../data/qa_policy_snapshot_diff.md
 # changed_count, Key Changes 섹션 확인
 # fixed_cost_options.* 및 pipeline_total_avg_sec 변화도 diff 대상에 포함

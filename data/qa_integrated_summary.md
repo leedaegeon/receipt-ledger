@@ -10,14 +10,14 @@
 - rows: 5000
 - repeats: 1
 - overall: PASS
-- pipeline_total_avg_sec: 1.2261
+- pipeline_total_avg_sec: 1.1301
 
 | step | avg(s) | target(s) | pass |
 |---|---:|---:|:---:|
-| import | 1.0383 | 5.0 | ✅ |
-| export_uncategorized | 0.0459 | 1.0 | ✅ |
-| apply_feedback | 0.0722 | 1.0 | ✅ |
-| monthly_report | 0.0697 | 1.0 | ✅ |
+| import | 0.9574 | 5.0 | ✅ |
+| export_uncategorized | 0.0294 | 1.0 | ✅ |
+| apply_feedback | 0.0632 | 1.0 | ✅ |
+| monthly_report | 0.0801 | 1.0 | ✅ |
 
 ## Exceptions/Smoke (D13)
 

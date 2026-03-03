@@ -1,14 +1,28 @@
 import argparse
 import json
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 
 def parse_args():
     ap = argparse.ArgumentParser(description="Build QA policy brief")
     ap.add_argument("--smoke-escalate-threshold", type=int, default=3)
+    ap.add_argument("--default-owner", default="data-pipeline")
+    ap.add_argument("--default-due-days", type=int, default=3)
     return ap.parse_args()
+
+
+def _default_due(days: int) -> str:
+    return (datetime.now(timezone.utc) + timedelta(days=days)).date().isoformat()
+
+
+def _owner_for_suite(suite: str, fallback: str) -> str:
+    if suite == "benchmark":
+        return "perf-owner"
+    if suite in ("exceptions", "all"):
+        return "parser-owner"
+    return fallback
 
 
 def main():
@@ -61,8 +75,8 @@ def main():
                     "priority": "HIGH",
                     "source_suite": "benchmark",
                     "task": f"benchmark step `{s}` 성능 목표 미달 원인 분석/최적화",
-                    "owner": "TBD",
-                    "due": "TBD",
+                    "owner": _owner_for_suite("benchmark", args.default_owner),
+                    "due": _default_due(args.default_due_days),
                     "verify": "python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json",
                     "occurrences": occ,
                 })
@@ -92,8 +106,8 @@ def main():
                     "priority": pr,
                     "source_suite": smoke_suite,
                     "task": f"smoke case `{label}` 실패 수정 및 fixture/메시지 재검증",
-                    "owner": "TBD",
-                    "due": "TBD",
+                    "owner": _owner_for_suite(smoke_suite, args.default_owner),
+                    "due": _default_due(args.default_due_days),
                     "verify": "python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json",
                     "occurrences": occ,
                 })

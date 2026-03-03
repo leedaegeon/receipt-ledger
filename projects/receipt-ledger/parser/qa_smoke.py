@@ -145,6 +145,13 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError("[empty-pdf] expected failure")
         assert_contains(out, "PDF 파일이 비어 있습니다", "empty-pdf")
 
+    def _unsupported_extension():
+        unsupported = fixtures / "unsupported.txt"
+        rc, out = run([sys.executable, "run_import.py", str(unsupported)], parser_dir)
+        if rc == 0:
+            raise AssertionError("[unsupported-extension] expected failure")
+        assert_contains(out, "지원하지 않는 파일 형식", "unsupported-extension")
+
     _case("empty-json", _empty_json, results)
     _case("broken-json", _broken_json, results)
     _case("missing-header", _missing_header, results)
@@ -156,6 +163,7 @@ def run_exception_suite(parser_dir: Path) -> list[dict]:
     _case("bad-nul-csv", _bad_nul_csv, results)
     _case("invalid-pdf", _invalid_pdf, results)
     _case("empty-pdf", _empty_pdf, results)
+    _case("unsupported-extension", _unsupported_extension, results)
     return results
 
 

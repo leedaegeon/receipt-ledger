@@ -44,7 +44,7 @@ def main():
         elif p.suffix.lower() == ".pdf":
             txs, invalid = parse_pdf_with_invalid(p, account_label=args.account, fixed_cost_options=fixed_cost_options)
         else:
-            raise SystemExit("Unsupported format. Use .csv or .pdf")
+            raise SystemExit(f"입력 데이터 오류: 지원하지 않는 파일 형식입니다({p.suffix or 'no-ext'}). .csv 또는 .pdf를 사용하세요.")
     except UnicodeDecodeError as e:
         raise SystemExit(f"입력 파일 인코딩 오류(UTF-8 필요): {p} ({e})")
     except json.JSONDecodeError as e:

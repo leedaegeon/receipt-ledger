@@ -144,10 +144,10 @@ python3 monthly_report.py ../data/tossbank_statement_2026-03.normalized.json --f
 ## D13 QA 자동화 준비 (Smoke)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite all --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark --max-failures 0 --report-json ../data/qa_smoke_report.json
-python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite benchmark --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
 python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
@@ -158,6 +158,8 @@ cat ../data/qa_action_items.json
 python3 qa_action_history.py
 python3 qa_action_recurrence.py
 cat ../data/qa_action_recurrence.md
+python3 qa_policy_snapshot.py
+cat ../data/qa_policy_snapshot.json
 ```
 - 기대 출력: `QA_SMOKE_OK`
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
@@ -191,6 +193,7 @@ CI 준비:
 #   maxAllowedFailures (기본 0)
 #   failOnUnassignedHigh (기본 false)
 #   smokeEscalateThreshold (기본 3)
+#   (qa_smoke report + qa_policy_brief + policy snapshot에 반영)
 ```
 
 정책 기준 문서: `../QA_POLICY.md`

@@ -42,6 +42,7 @@ def main():
 
     lines = ["# QA Policy Brief", "", status_line, ""]
     action_items = []
+    escalated_high = []
 
     if bench.exists():
         b = json.loads(bench.read_text(encoding="utf-8"))
@@ -83,6 +84,8 @@ def main():
                 aid = f"SMOKE-{label}"
                 occ = recur.get(aid, 0)
                 pr = "HIGH" if occ >= args.smoke_escalate_threshold else "MEDIUM"
+                if pr == "HIGH":
+                    escalated_high.append((aid, occ))
                 action_items.append({
                     "id": aid,
                     "status": "open",
@@ -96,6 +99,12 @@ def main():
                 })
         else:
             lines.append("- 없음")
+
+    if escalated_high:
+        lines.append("")
+        lines.append("## Escalated HIGH (recurrence)")
+        for aid, occ in escalated_high:
+            lines.append(f"- 🔺 {aid} (occurrences={occ}, threshold={args.smoke_escalate_threshold})")
 
     lines.append("")
     lines.append("## Action Items")
@@ -121,6 +130,10 @@ def main():
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "source_suite": smoke_suite,
                 "smoke_escalate_threshold": args.smoke_escalate_threshold,
+                "escalated_high": [
+                    {"id": aid, "occurrences": occ}
+                    for aid, occ in escalated_high
+                ],
                 "count": len(action_items),
                 "items": action_items,
             },

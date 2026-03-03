@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-03-03T00:34:14.241563+00:00",
+  "benchmark": {
+    "all_pass": true,
+    "targets_sec": {
+      "import": 5.0,
+      "export_uncategorized": 1.0,
+      "apply_feedback": 1.0,
+      "monthly_report": 1.0
+    }
+  },
+  "smoke": {
+    "suite": "all",
+    "failed_count": null,
+    "max_failures": null
+  },
+  "action_policy": {
+    "smoke_escalate_threshold": 3,
+    "escalated_high_count": 0
+  }
+}

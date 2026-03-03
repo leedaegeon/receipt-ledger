@@ -171,10 +171,10 @@ python3 run_import.py ./fixtures/invalid.pdf
 ### 5-3) D13 Smoke 자동 검증 (원커맨드)
 ```bash
 cd projects/receipt-ledger/parser
-python3 qa_smoke.py --suite all --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite all --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
 # 또는 분리 실행
-python3 qa_smoke.py --suite benchmark --max-failures 0 --report-json ../data/qa_smoke_report.json
-python3 qa_smoke.py --suite exceptions --max-failures 0 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite benchmark --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
+python3 qa_smoke.py --suite exceptions --max-failures 0 --smoke-escalate-threshold 3 --report-json ../data/qa_smoke_report.json
 python3 qa_smoke_summary.py
 cat ../data/qa_smoke_summary.md
 python3 qa_report_merge.py
@@ -182,6 +182,11 @@ cat ../data/qa_integrated_summary.md
 python3 qa_policy_brief.py
 cat ../data/qa_policy_brief.md
 cat ../data/qa_action_items.json
+python3 qa_action_history.py
+python3 qa_action_recurrence.py
+cat ../data/qa_action_recurrence.md
+python3 qa_policy_snapshot.py
+cat ../data/qa_policy_snapshot.json
 ```
 기대 결과:
 - 마지막 줄 `QA_SMOKE_OK`
@@ -193,6 +198,7 @@ cat ../data/qa_action_items.json
 - `qa_action_items.json`에서 `created_at`, `source_suite`, `id`, `status` 메타 확인
 - `qa_action_history.jsonl`로 action item 반복 출현 여부 확인
 - `qa_action_recurrence.md`에서 id별 반복 횟수 확인
+- `qa_policy_snapshot.json`으로 실행 시점 정책값/결과 스냅샷 비교
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

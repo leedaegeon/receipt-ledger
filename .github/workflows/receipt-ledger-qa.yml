@@ -64,7 +64,8 @@ jobs:
       - name: Run QA smoke (${{ matrix.suite }})
         env:
           MAX_FAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.maxAllowedFailures || '0' }}
-        run: python qa_smoke.py --suite ${{ matrix.suite }} --max-failures "$MAX_FAIL" --report-json ../data/qa_smoke_report.json
+          SMOKE_ESCALATE_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && inputs.smokeEscalateThreshold || '3' }}
+        run: python qa_smoke.py --suite ${{ matrix.suite }} --max-failures "$MAX_FAIL" --smoke-escalate-threshold "$SMOKE_ESCALATE_THRESHOLD" --report-json ../data/qa_smoke_report.json
 
       - name: Build QA smoke summary markdown
         if: always()
@@ -112,6 +113,10 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: python qa_action_recurrence.py
 
+      - name: Build policy snapshot json
+        if: always() && matrix.suite == 'benchmark'
+        run: python qa_policy_snapshot.py
+
       - name: Append policy brief to job summary (top)
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
@@ -149,6 +154,7 @@ jobs:
             projects/receipt-ledger/data/qa_action_items.json
             projects/receipt-ledger/data/qa_action_history.jsonl
             projects/receipt-ledger/data/qa_action_recurrence.md
+            projects/receipt-ledger/data/qa_policy_snapshot.json
 
       - name: Upload smoke artifacts
         if: always()

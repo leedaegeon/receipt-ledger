@@ -73,6 +73,11 @@ def measure(cmd: list[str], cwd: Path, repeats: int) -> dict:
 
 def main():
     args = parse_args()
+    if args.rows < 1:
+        raise SystemExit("benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.")
+    if args.repeats < 1:
+        raise SystemExit("benchmark 옵션 오류: --repeats 는 1 이상이어야 합니다.")
+
     parser_dir = Path(__file__).resolve().parent
 
     with tempfile.TemporaryDirectory(prefix="receipt-ledger-bench-") as td:

@@ -100,6 +100,8 @@ python3 verify_fixed_cost_detection.py
 ```bash
 cd projects/receipt-ledger/parser
 python3 benchmark_pipeline.py --rows 5000 --repeats 3 --fail-on-target --out ../data/benchmark_pipeline_result.json
+# 옵션 검증 확인(실패 기대):
+python3 benchmark_pipeline.py --rows 0
 python3 benchmark_history.py
 python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 ```
@@ -109,6 +111,8 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
   - `- import: PASS avg=...s target<=5.0s`
   - `- pipeline_total_avg_sec: ...s`
   - `- overall: PASS`
+- 추가 기대 출력(옵션 검증):
+  - `benchmark 옵션 오류: --rows 는 1 이상이어야 합니다.`
 - 결과 파일:
   - `../data/benchmark_pipeline_result.json` (`verdict.all_pass` 포함)
   - `../data/benchmark_history.jsonl` (실행 이력 누적)

@@ -13,8 +13,10 @@ def main():
 
     bench_pass = bool(b.get("verdict", {}).get("all_pass"))
     failed = [c for c in s.get("cases", []) if not c.get("pass")]
-    failed_count = int(s.get("failed_count", len(failed)))
+    # 저장 시점/도구 버전에 따라 failed_count가 없거나 stale할 수 있어 재계산 우선
+    failed_count = len(failed)
     max_failures = int(s.get("max_failures", 0))
+    smoke_escalate_threshold = s.get("smoke_escalate_threshold")
     smoke_policy_pass = failed_count <= max_failures
     smoke_reported_pass = bool(s.get("all_pass"))
     overall_policy_pass = bench_pass and smoke_policy_pass
@@ -32,6 +34,7 @@ def main():
         f"- rows: {b.get('rows')}",
         f"- repeats: {b.get('repeats')}",
         f"- overall: {'PASS' if b.get('verdict', {}).get('all_pass') else 'FAIL'}",
+        f"- pipeline_total_avg_sec: {b.get('pipeline_total_avg_sec')}",
         "",
         "| step | avg(s) | target(s) | pass |",
         "|---|---:|---:|:---:|",
@@ -47,6 +50,7 @@ def main():
         f"- suite: {s.get('suite')}",
         f"- overall(reported): {'PASS' if smoke_reported_pass else 'FAIL'}",
         f"- policy: {'PASS' if smoke_policy_pass else 'FAIL'} (failed={failed_count}, allowed={max_failures})",
+        f"- smoke_escalate_threshold: {smoke_escalate_threshold}",
         f"- cases: {len(s.get('cases', []))}",
         "",
     ])

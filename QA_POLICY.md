@@ -16,7 +16,12 @@ D12/D13 자동검증에서 사용하는 실패 기준을 명시한다.
 
 관련 옵션:
 - `benchmark_pipeline.py --fail-on-target`
+- `benchmark_pipeline.py --fixed-cost-amount-tolerance-ratio <float>`
+- `benchmark_pipeline.py --fixed-cost-amount-tolerance-abs <int>`
+- `benchmark_pipeline.py --fixed-cost-min-months <int>`
+- `benchmark_pipeline.py --fixed-cost-min-average-amount <int>`
 - `benchmark_summary.py --regression-threshold-sec <sec> --fail-on-regression`
+- benchmark 결과 JSON(`benchmark_pipeline_result.json`)의 `fixed_cost_options`/`pipeline_total_avg_sec`를 정책 추적 대상으로 사용
 - workflow_dispatch input:
   - `regressionThresholdSec` (default: 0.2)
   - `failOnRegression` (default: true)
@@ -44,7 +49,9 @@ Action Item 포맷:
 - 스냅샷 diff: `qa_policy_snapshot_diff.md`로 직전 실행과 변경점 비교
   - `changed_count`와 `Key Changes` 섹션으로 핵심 변경점 빠르게 확인
   - Key Changes는 `benchmark/smoke/action_policy` 그룹으로 정리
-  - CI 입력 `failOnPolicyChange=true`면 실패 처리 가능
+  - benchmark 그룹에서 `pipeline_total_avg_sec`, `fixed_cost_options.*` 변화도 감지
+  - CI/로컬 공통 게이트: `qa_policy_snapshot_diff.py --fail-on-policy-change --policy-change-fail-min <n>`
+  - CI 입력 `failOnPolicyChange=true`면 동일 로직으로 실패 처리
   - `policyChangeFailMin` 이상 changed_count일 때 실패 (기본 1)
 - workflow_dispatch input:
   - `maxAllowedFailures` (default: 0)

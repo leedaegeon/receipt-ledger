@@ -102,6 +102,10 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: python qa_action_history.py
 
+      - name: Build action-item recurrence summary
+        if: always() && matrix.suite == 'benchmark'
+        run: python qa_action_recurrence.py
+
       - name: Append policy brief to job summary (top)
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_policy_brief.md >> $GITHUB_STEP_SUMMARY
@@ -122,6 +126,10 @@ jobs:
         if: always() && matrix.suite == 'benchmark'
         run: cat ../data/qa_integrated_summary.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Append action-item recurrence to job summary
+        if: always() && matrix.suite == 'benchmark'
+        run: cat ../data/qa_action_recurrence.md >> $GITHUB_STEP_SUMMARY
+
       - name: Upload benchmark artifacts
         if: always() && matrix.suite == 'benchmark'
         uses: actions/upload-artifact@v4
@@ -134,6 +142,7 @@ jobs:
             projects/receipt-ledger/data/qa_policy_brief.md
             projects/receipt-ledger/data/qa_action_items.json
             projects/receipt-ledger/data/qa_action_history.jsonl
+            projects/receipt-ledger/data/qa_action_recurrence.md
 
       - name: Upload smoke artifacts
         if: always()

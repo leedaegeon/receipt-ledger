@@ -155,6 +155,9 @@ cat ../data/qa_integrated_summary.md
 python3 qa_policy_brief.py
 cat ../data/qa_policy_brief.md
 cat ../data/qa_action_items.json
+python3 qa_action_history.py
+python3 qa_action_recurrence.py
+cat ../data/qa_action_recurrence.md
 ```
 - 기대 출력: `QA_SMOKE_OK`
 - summary에는 `passed/failed` 카운트와 실패 케이스 테이블이 포함됨
@@ -163,6 +166,7 @@ cat ../data/qa_action_items.json
 - `qa_policy_brief.md`는 실패 원인(step/case) + 우선순위(HIGH/MEDIUM) + Action Items(owner/due/verify 템플릿) 요약
 - `qa_action_items.json`은 Action Items를 구조화 형태(id/status/source_suite/created_at 포함)로 저장(추적 도구 연계용)
 - `qa_action_history.jsonl`은 action item 출현 이력을 누적(반복 이슈 추적용)
+- `qa_action_recurrence.md`는 id별 반복 출현 횟수 요약(반복 이슈 승격 기준)
 - 포함 검증:
   - 5,000행 벤치마크 목표 통과(`overall: PASS`)
   - `fixtures/empty.json` 빈 JSON 에러 메시지

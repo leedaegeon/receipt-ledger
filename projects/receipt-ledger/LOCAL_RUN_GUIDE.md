@@ -192,6 +192,7 @@ cat ../data/qa_action_items.json
 - `qa_policy_brief.md`에서 우선순위(HIGH/MEDIUM)와 Action Items(owner/due/verify) 확인
 - `qa_action_items.json`에서 `created_at`, `source_suite`, `id`, `status` 메타 확인
 - `qa_action_history.jsonl`로 action item 반복 출현 여부 확인
+- `qa_action_recurrence.md`에서 id별 반복 횟수 확인
 - 재현용 fixture 위치: `projects/receipt-ledger/parser/fixtures/`
 
 CI 실행 위치:

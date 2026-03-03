@@ -36,6 +36,7 @@ def run_benchmark_suite(parser_dir: Path) -> list[dict]:
     results: list[dict] = []
 
     def _benchmark():
+        out_path = parser_dir.parent / "data" / "benchmark_pipeline_result.json"
         rc, out = run(
             [
                 sys.executable,
@@ -48,7 +49,7 @@ def run_benchmark_suite(parser_dir: Path) -> list[dict]:
                 "3",
                 "--fail-on-target",
                 "--out",
-                "../data/benchmark_pipeline_result.json",
+                str(out_path),
             ],
             parser_dir,
         )
@@ -56,6 +57,13 @@ def run_benchmark_suite(parser_dir: Path) -> list[dict]:
             raise AssertionError(f"[benchmark] failed\n{out}")
         assert_contains(out, "pipeline_total_avg_sec", "benchmark")
         assert_contains(out, "overall: PASS", "benchmark")
+
+        payload = json.loads(out_path.read_text(encoding="utf-8"))
+        if payload.get("rows") != 5000:
+            raise AssertionError(f"[benchmark] expected rows=5000, got={payload.get('rows')}")
+        fc = payload.get("fixed_cost_options") or {}
+        if fc.get("min_months") != 3:
+            raise AssertionError(f"[benchmark] expected fixed_cost_options.min_months=3, got={fc.get('min_months')}")
 
     _case("benchmark-5000", _benchmark, results)
     return results

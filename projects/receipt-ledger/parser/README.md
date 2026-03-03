@@ -110,7 +110,7 @@ python3 benchmark_summary.py --regression-threshold-sec 0.2 --fail-on-regression
 - 측정 단계: `run_import.py` → `export_uncategorized.py` → `apply_feedback.py` → `monthly_report.py`
 - 기본 목표(평균): import ≤ 5s, export ≤ 1s, apply ≤ 1s, report ≤ 1s
 - 기대 출력 예:
-  - `- import: PASS avg=...s target<=5.0s`
+  - `- import: PASS avg=...s stddev=...s target<=5.0s`
   - `- pipeline_total_avg_sec: ...s`
   - `- overall: PASS`
 - 추가 기대 출력(옵션 검증):

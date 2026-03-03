@@ -121,6 +121,9 @@ jobs:
           echo '```text' >> $GITHUB_STEP_SUMMARY
           cat /tmp/qa_policy_sanity.md >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ -f ../data/qa_policy_sanity_checklist.md ]; then
+            cat ../data/qa_policy_sanity_checklist.md >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Append action-item history rows
         if: always() && matrix.suite == 'benchmark'

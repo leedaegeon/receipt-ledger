@@ -6,6 +6,7 @@ from pathlib import Path
 KEYS = [
     ("benchmark", "all_pass"),
     ("benchmark", "pipeline_total_avg_sec"),
+    ("benchmark", "stddev_threshold_sec"),
     ("benchmark", "fixed_cost_options", "amount_tolerance_ratio"),
     ("benchmark", "fixed_cost_options", "amount_tolerance_abs"),
     ("benchmark", "fixed_cost_options", "min_months"),

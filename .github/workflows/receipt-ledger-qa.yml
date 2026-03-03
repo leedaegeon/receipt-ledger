@@ -115,7 +115,9 @@ jobs:
 
       - name: QA policy/workflow sanity check
         if: always() && matrix.suite == 'benchmark'
-        run: python qa_policy_sanity.py
+        run: |
+          python qa_policy_sanity.py | tee /tmp/qa_policy_sanity.md
+          cat /tmp/qa_policy_sanity.md >> $GITHUB_STEP_SUMMARY
 
       - name: Append action-item history rows
         if: always() && matrix.suite == 'benchmark'

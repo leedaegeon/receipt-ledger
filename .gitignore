@@ -1,40 +1,10 @@
-<<<<<<< HEAD
-# Python cache
-__pycache__/
-*.pyc
-
 # macOS
 .DS_Store
 
-# Dependencies
-node_modules/
-**/node_modules/
-
-=======
-# macOS
-.DS_Store
-
->>>>>>> 7bc2504 (chore: ignore local/gradle/cache artifacts)
 # IDE
 .idea/
 **/.idea/
 
-<<<<<<< HEAD
-# OpenClaw assistant-local artifacts (not project source)
-memory/
-.openclaw/
-AGENTS.md
-SOUL.md
-USER.md
-TOOLS.md
-IDENTITY.md
-HEARTBEAT.md
-BOOTSTRAP.md
-MEMORY.md
-NOTION_KEY_BACKUP.txt
-luma_test.py
-videos/
-=======
 # Python
 __pycache__/
 *.pyc
@@ -56,4 +26,7 @@ data/qa_parser_regression_report.json
 data/*.invalid.json
 data/*.normalized.feedback.template.json
 data/*.normalized.report.json
->>>>>>> 7bc2504 (chore: ignore local/gradle/cache artifacts)
+
+# Local sensitive/raw input artifacts
+data/tossbank_statement_2026-03.pdf
+data/tossbank_statement_2026-03.2026-03.normalized.json

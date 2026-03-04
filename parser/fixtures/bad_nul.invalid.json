@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "source_file": "fixtures/bad_nul.csv",
+    "month": null,
+    "account": "토스뱅크",
+    "count": 0
+  },
+  "rows": []
+}

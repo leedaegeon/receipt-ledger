@@ -1,0 +1,15 @@
+[
+  {
+    "occurred_at": "2026-03-01 10:00:00",
+    "amount": 1000,
+    "direction": "expense",
+    "merchant_name": "테스트\u0000",
+    "normalized_merchant_name": "테스트\u0000",
+    "category": "미분류",
+    "memo": null,
+    "account_label": "토스뱅크",
+    "source_row_hash": "555c32fbba6676d648da7c477dc7d98bb1937f41",
+    "fixed_cost_candidate": false,
+    "fixed_cost_confidence": null
+  }
+]

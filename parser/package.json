@@ -1,0 +1,15 @@
+{
+  "name": "parser",
+  "version": "1.0.0",
+  "description": "> 로컬 실행 + Android 파이프라인 smoke test 통합 문서: [`../LOCAL_RUN_GUIDE.md`](../LOCAL_RUN_GUIDE.md)",
+  "main": "pdf_extract.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}

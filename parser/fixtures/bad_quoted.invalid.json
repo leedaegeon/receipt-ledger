@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "source_file": "fixtures/bad_quoted.csv",
+    "month": null,
+    "account": "토스뱅크",
+    "count": 1
+  },
+  "rows": [
+    {
+      "row": 2,
+      "reason": "parse_error:ValueError",
+      "raw": {
+        "거래일시": "2026-03-01 10:00:00,출금,-1000,테스트\n",
+        "거래구분": null,
+        "거래금액": null,
+        "적요": null
+      }
+    }
+  ]
+}

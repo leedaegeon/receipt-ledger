@@ -1,4 +1,29 @@
-
 # Python cache
 __pycache__/
 *.pyc
+
+# macOS
+.DS_Store
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# IDE
+.idea/
+**/.idea/
+
+# OpenClaw assistant-local artifacts (not project source)
+memory/
+.openclaw/
+AGENTS.md
+SOUL.md
+USER.md
+TOOLS.md
+IDENTITY.md
+HEARTBEAT.md
+BOOTSTRAP.md
+MEMORY.md
+NOTION_KEY_BACKUP.txt
+luma_test.py
+videos/

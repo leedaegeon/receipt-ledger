@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python cache
 __pycache__/
 *.pyc
@@ -9,10 +10,16 @@ __pycache__/
 node_modules/
 **/node_modules/
 
+=======
+# macOS
+.DS_Store
+
+>>>>>>> 7bc2504 (chore: ignore local/gradle/cache artifacts)
 # IDE
 .idea/
 **/.idea/
 
+<<<<<<< HEAD
 # OpenClaw assistant-local artifacts (not project source)
 memory/
 .openclaw/
@@ -27,3 +34,26 @@ MEMORY.md
 NOTION_KEY_BACKUP.txt
 luma_test.py
 videos/
+=======
+# Python
+__pycache__/
+*.pyc
+parser/__pycache__/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Android/Gradle
+.gradle/
+**/.gradle/
+build/
+**/build/
+local.properties
+
+# Generated reports / local artifacts
+data/qa_parser_regression_report.json
+data/*.invalid.json
+data/*.normalized.feedback.template.json
+data/*.normalized.report.json
+>>>>>>> 7bc2504 (chore: ignore local/gradle/cache artifacts)
